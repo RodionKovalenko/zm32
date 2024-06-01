@@ -1,0 +1,27 @@
+parameters:
+    # Pfad zu Sencha Command
+    sencha_cmd_path: 'path\to\sencha\cmd\7.1'
+
+    # Beliebige Anzahl an E-Mail Adressen, die bei entdeckten Sicherheitsproblemen benachrichtigt werden
+    email_notifications_security: null
+
+    # Absender Adresse fuer Mails
+    mails_from: noreply@kitaplus.de
+
+    # Schwellwert der Ausfuehrungszeit in ms, ab dem Informationen zu einem Request in der DB geloggt werden
+    request_log_threshold: 1000
+
+    # Virus Scan von hochgeladenen Dateien aktivieren
+    enable_virus_scan: false
+    # Pfad zum Virus-Scanner Executable; %PATH_QUARANTINE% = Quarantaene Verzeichnis, %PATH_FILE% = zu scannende Datei
+    virus_scan_exec_path: 'clamdscan --fdpass --move="[PATH_QUARANTINE]" "[PATH_FILE]"'
+
+    # SSL enforcen
+    enforce_ssl: false
+
+    # Session Einstellungen
+    session_cookie_domain: ~
+    # Nach dieser Zeit Inaktivitaet wird die Benutzer Session zerstoert
+    session_max_idle_time: 3600
+    # Nach dieser Zeit gilt die Session als abgelaufen, unabhaengig von der Aktivitaet
+    max_session_lifetime: 86400

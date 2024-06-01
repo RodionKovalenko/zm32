@@ -1,0 +1,69 @@
+imports:
+    - { resource: parameters.yaml }
+    - { resource: cond_params.php }
+
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'de'
+    login_path: index
+    path_uploads_root: "%kernel.project_dir%/var/uploads"
+    path_quarantine: "%path_uploads_root%/_quarantine"
+    path_web_images: "%kernel.project_dir%/public/images"
+    keys_dir_relative: '%env(KEYS_DIR)%'
+    app_url: '%env(APP_URL)%'
+    kplus_url: '%env(KPLUS_URL)%'
+    keys_dir: '%kernel.project_dir%/%keys_dir_relative%'
+    token_ttl: 86400 # 24 Stunden
+    path_exporte: "%kernel.project_dir%/var/exporte"
+    path_templates: "%kernel.project_dir%/templates"
+    stats_mail_recipients: '%env(STATS_MAIL_RECIPIENTS)%'
+    env(STATS_MAIL_RECIPIENTS): null
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+          # fetching services directly from the container via $container->get() won't work.
+        # The best practice is to be explicit about your dependencies anyway.
+        bind:
+            $projectDir: '%kernel.project_dir%'
+            $environment: '%kernel.environment%'
+            $mailsFrom: '%mails_from%'
+            $pathWebImages: '%path_web_images%'
+            $pathUploadsRoot: "%path_uploads_root%"
+            $routingHost: '%router.request_context.host%'
+            $keysDir: '%keys_dir%'
+            $tokenTtl: '%token_ttl%'
+            $mailerLogger: '@monolog.logger.mailer'
+            $konflikteLogger: '@monolog.logger.konflikte'
+            $pathTemplates: '%path_templates%'
+            $pathExporte: '%path_exporte%'
+            $appUrl: '%app_url%'
+            $kplusUrl: '%kplus_url%'
+            $jwtPassphraseKplus: '%env(JWT_PASSPHRASE_KPLUS)%'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{Dto,Events,Entity,Kernel.php,Traits}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # Security
+
+    # Drittanbieter (Overrides)
+    jms_serializer.naming_strategy:
+        alias: jms_serializer.identical_property_naming_strategy
+    App\Security\LoginFormAuthenticator:
+        autowire: true

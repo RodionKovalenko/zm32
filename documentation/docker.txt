@@ -1,0 +1,45 @@
+
+# start docker server with loading the file docker-compose.yml
+
+docker-compose -f docker-compose.yml build
+docker-compose -f docker-compose.yml up
+
+# start docker in detached mode
+docker-compose -f docker-compose.yml up -d
+
+#build and run the docker
+docker-compose -f docker-compose.yml up --build
+
+# execute commands inside docker container
+docker-compose exec symfony bash
+
+php bin/console doctrine:database:create
+
+// ngixt certificate
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx.key -out nginx.crt
+
+
+// Apache certifcate
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+
+
+mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local-backend localhost 127.0.0.1 ::1
+mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local-frontend localhost 127.0.0.1 ::1
+
+
+FRONTEND:
+// start frontend in dev mode
+docker-compose -f docker-compose.yml up --build
+
+// build frontend
+// ddev exec npm run build
+
+BACKEND:
+// start backend in dev mode in iba-app/backend directory
+ddev restart
+
+//
+docker compose run node npm i && docker compose up
+docker compose run node npm i && docker compose run node npm i && docker-compose -f docker-compose.yml up --build

@@ -1,0 +1,20 @@
+# Hier koennen beliebige Werte aus der config.yaml fuer die lokale Entwicklung (testweise) ueberschrieben werden,
+# das sollte insbesondere fuer den "name" key gemacht werden (entsprechend des jeweiligen Produkts, was in der instanz laufen soll)
+# Dazu diese Datei kopieren, das .dist entfernen und in der Kopie die jeweiligen Werte anpassen.
+# Die Datei wird nicht committed (steht auf gitignore).
+# siehe auch https://ddev.readthedocs.io/en/latest/users/extend/customization-extendibility/#extending-configyaml-with-custom-configyaml-files
+
+name: iba
+#php_version: "8.2"
+#xdebug_enabled: false
+#additional_hostnames: []
+#additional_fqdns: []
+host_db_port: "3381"
+#database:
+#  type: mariadb
+#  version: "10.3"
+#web_environment:
+#  - BLACKFIRE_SERVER_ID=<siehe 1pass Eintrag "Blackfire">
+#  - BLACKFIRE_SERVER_TOKEN=<siehe 1pass Eintrag "Blackfire">
+#  - BLACKFIRE_CLIENT_ID=<siehe 1pass Eintrag "Blackfire">
+#  - BLACKFIRE_CLIENT_TOKEN=<siehe 1pass Eintrag "Blackfire">

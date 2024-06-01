@@ -1,0 +1,7 @@
+services:
+  web:
+    external_links:
+      - "ddev-router:storage-broker.ddev.site"
+      - "ddev-router:eapp-backend.ddev.site"
+
+

@@ -1,0 +1,143 @@
+{
+    "name": "iba/local",
+    "license": "public",
+    "config": {
+        "platform": {
+            "php": "8.2"
+        },
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "cweagans/composer-patches": true,
+            "dantleech/what-changed": true,
+            "phpro/grumphp": true,
+            "symfony/flex": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "symfony/runtime": true
+        }
+    },
+    "require": {
+        "php": ">=8.2",
+        "ext-bcmath": "*",
+        "ext-ctype": "*",
+        "ext-fileinfo": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "beberlei/doctrineextensions": "^1.3",
+        "composer/package-versions-deprecated": "1.11.99.4",
+        "crunzphp/crunz": "^3.4",
+        "cweagans/composer-patches": "^1.7",
+        "damienharper/auditor-bundle": "^5.0",
+        "defuse/php-encryption": "^2.3",
+        "doctrine/doctrine-bundle": "^2",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2",
+        "elvanto/litemoji": "^4.3",
+        "friendsofsymfony/rest-bundle": "^3.1",
+        "gitonomy/gitlib": "^1.3",
+        "incenteev/composer-parameter-handler": "^2.1",
+        "jms/serializer-bundle": "^5.0",
+        "lcobucci/jwt": "^4.3",
+        "league/csv": "^9.8",
+        "league/factory-muffin": "^3.3",
+        "league/factory-muffin-faker": "^2.3",
+        "lexik/jwt-authentication-bundle": "^2.16",
+        "liip/imagine-bundle": "^2.10",
+        "neitanod/forceutf8": "^2.0",
+        "nelmio/cors-bundle": "^2.2",
+        "nelmio/security-bundle": "^3.0",
+        "paragonie/random-lib": "^2.0",
+        "phpoffice/phpspreadsheet": "^1.26",
+        "phpseclib/phpseclib": "^2.0",
+        "ramsey/uuid": "^3.9",
+        "spatie/period": "^2.4",
+        "sroze/companienv": "^1.0",
+        "stof/doctrine-extensions-bundle": "^1.7",
+        "symfony/apache-pack": "*",
+        "symfony/asset": "*",
+        "symfony/console": "*",
+        "symfony/dotenv": "*",
+        "symfony/expression-language": "*",
+        "symfony/flex": "^1.19",
+        "symfony/form": "*",
+        "symfony/framework-bundle": "*",
+        "symfony/mailer": "*",
+        "symfony/messenger": "*",
+        "symfony/monolog-bundle": "^3.8",
+        "symfony/process": "*",
+        "symfony/property-access": "*",
+        "symfony/security-bundle": "*",
+        "symfony/templating": "*",
+        "symfony/twig-bundle": "*",
+        "symfony/validator": "*",
+        "symfony/yaml": "*",
+        "thecodingmachine/safe": "^2.5",
+        "twig/extra-bundle": "^3.4",
+        "voku/anti-xss": "^4.1",
+        "zircote/swagger-php": "^4.5"
+    },
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "*",
+        "friendsofphp/php-cs-fixer": "^3.13",
+        "liip/functional-test-bundle": "^4.6",
+        "liip/test-fixtures-bundle": "^2.5",
+        "phpcompatibility/php-compatibility": "*",
+        "phpro/grumphp": "^1.13",
+        "phpspec/phpspec": "^7.3",
+        "phpstan/phpstan": "^1.9",
+        "phpunit/phpunit": "^9.5",
+        "rector/rector": "^0.15.2",
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "*",
+        "symfony/browser-kit": "*",
+        "symfony/css-selector": "*",
+        "symfony/debug-bundle": "*",
+        "symfony/maker-bundle": "^1.43",
+        "symfony/phpunit-bridge": "*",
+        "symfony/stopwatch": "*",
+        "symfony/web-profiler-bundle": "*"
+    },
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts",
+            "Companienv\\Composer\\ScriptHandler::run",
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "5.4.*"
+        },
+        "incenteev-parameters": {
+            "file": "config/parameters.yaml",
+            "dist-file": "config/parameters.yaml.dist"
+        },
+        "companienv-parameters": [{
+            "file": ".env.local",
+            "dist-file": ".env"
+        }]
+    }
+}

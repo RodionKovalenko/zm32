@@ -1,0 +1,74 @@
+version: "3.4"
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8795:80"
+      - "8797:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./backend/iba:/var/www/html  # Mount only to Nginx
+      - ./backend/iba/ssl/server-backend.crt:/etc/nginx/ssl/server-backend.crt
+      - ./backend/iba/ssl/server-backend.key:/etc/nginx/ssl/server-backend.key
+      - ./frontend/ssl/server-frontend.crt:/etc/nginx/ssl/server-frontend.crt
+      - ./frontend/ssl/server-frontend.key:/etc/nginx/ssl/server-frontend.key
+      - ./backend/iba/ssl:/etc/ssl/certs
+      - ./backend/iba/ssl/server.crt:/etc/ssl/certs/server.crt
+      - ./backend/iba/ssl/server.key:/etc/ssl/private/server.key
+      - ./fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf
+    working_dir: /var/www/html
+    networks:
+      - iba_default
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Remove the volume mount for the backend directory
+    environment:
+      MYSQL_ROOT_PASSWORD: zm32
+      MYSQL_DATABASE: zm32
+      MYSQL_USER: zm32
+      MYSQL_PASSWORD: zm32
+      DB_PORT: 3306
+      APP_ENV: dev
+    networks:
+      - iba_default
+    hostname: iba.local-backend
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: zm32
+      MYSQL_DATABASE: zm32
+      MYSQL_USER: zm32
+      MYSQL_PASSWORD: zm32
+    ports:
+      - "33060:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    hostname: zm32
+    domainname: zm32
+    networks:
+      - iba_default
+
+  nodejs:
+    image: node:latest
+    ports:
+      - "4200:4200"
+    command: tail -f /dev/null # Keep container running
+    volumes:
+      - ./frontend/dist/browser:/app
+    working_dir: /app
+    networks:
+      - iba_default
+
+networks:
+  iba_default:
+    driver: bridge
+

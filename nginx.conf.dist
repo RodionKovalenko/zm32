@@ -1,0 +1,53 @@
+events {
+    worker_connections 1024;
+}
+
+http {
+      server {
+        listen 443 ssl;
+        server_name iba.local-frontend;  # Use a unique name for each server block
+
+        ssl_certificate  /etc/nginx/ssl/server-frontend.crt;
+        ssl_certificate_key /etc/nginx/ssl/server-frontend.key;
+
+        # Additional SSL configurations (optional)
+
+        location / {
+             root /usr/share/nginx/html;
+             index index.html index.htm;
+             try_files $uri $uri/ /index.html;
+        }
+
+        location /api {
+            # Proxy requests to the backend service
+            proxy_pass https://iba.local-backend;  # Remove the port from the proxy_pass directive
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_redirect off;  # Disable automatic redirection
+        }
+
+       types {
+           text/html                             html htm shtml;
+           text/css                              css;
+           application/javascript                js;
+           application/octet-stream              bin exe dll;
+           application/font-woff                 woff;
+           application/font-woff2                woff2;
+           image/gif                             gif;
+           image/jpeg                            jpeg jpg;
+           image/png                             png;
+           image/svg+xml                         svg svgz;
+           image/tiff                            tif tiff;
+           image/vnd.microsoft.icon              ico;
+           image/webp                            webp;
+           application/font-otf                  otf;
+           application/font-ttf                  ttf;
+           font/opentype                         otf;
+           font/truetype                         ttf;
+           font/woff                             woff;
+           font/woff2                            woff2;
+       }
+    }
+}

@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Artikelliste bearbeiten</h1>
+<div mat-dialog-content fxLayout="column" fxLayoutGap="16px" fxFlexFill>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="data.name">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Anzahl</mat-label>
+        <input matInput [(ngModel)]="data.quantity">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Beschrebiung</mat-label>
+        <input matInput [(ngModel)]="data.description">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Hersteller</mat-label>
+        <input matInput [(ngModel)]="data.manufacturer">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button (click)="save()">Save</button>
+</div>

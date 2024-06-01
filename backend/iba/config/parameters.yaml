@@ -1,0 +1,12 @@
+# This file is auto-generated during the composer install
+parameters:
+    sencha_cmd_path: 'C:\Users\rkovalenko\Projects\dienstplan\dienstplan-frontend\ext'
+    email_notifications_security: null
+    mails_from: smtp-developer-rkovalenko@npo-applications.de
+    request_log_threshold: 1000
+    enable_virus_scan: false
+    virus_scan_exec_path: null
+    enforce_ssl: false
+    session_cookie_domain: null
+    session_max_idle_time: 3600
+    max_session_lifetime: 86400

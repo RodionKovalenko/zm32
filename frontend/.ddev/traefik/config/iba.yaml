@@ -1,0 +1,86 @@
+#ddev-generated
+
+http:
+  routers:
+    
+    
+    iba-web-80-http:
+      
+      rule: HostRegexp(`iba.ddev.site`)
+      
+      service: "iba-web-80-http"
+      tls: false
+      entrypoints:
+        - http-8081
+    
+    
+    iba-web-8025-http:
+      
+      rule: HostRegexp(`iba.ddev.site`)
+      
+      service: "iba-web-8025-http"
+      tls: false
+      entrypoints:
+        - http-8025
+    
+    
+    
+    
+    
+    
+    iba-web-80-https:
+      
+      rule: HostRegexp(`iba.ddev.site`)
+      
+      service: "iba-web-80-https"
+      
+      tls: true
+      
+      entrypoints:
+        - http-443
+    
+    
+    iba-web-8025-https:
+      
+      rule: HostRegexp(`iba.ddev.site`)
+      
+      service: "iba-web-8025-https"
+      
+      tls: true
+      
+      entrypoints:
+        - http-8026
+    
+    
+
+  services:
+    
+    iba-web-80-http:
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-web:80
+    
+    iba-web-8025-http:
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-web:8025
+    
+    iba-web-80-https:
+    
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-web:80
+    
+    iba-web-8025-https:
+    
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-web:8025
+    
+
+
+tls:
+  certificates:
+    - certFile: /mnt/ddev-global-cache/traefik/certs/iba.crt
+      keyFile: /mnt/ddev-global-cache/traefik/certs/iba.key
+
