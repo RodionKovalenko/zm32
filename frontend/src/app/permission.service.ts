@@ -14,7 +14,7 @@ class PermissionsService {
 
         if (state.url === '/app-login') {
             if (isLoggedIn) {
-                this.router.navigate(['/app-artikelliste']); // Redirect logged-in user away from login page
+                this.router.navigate(['/app-bestellliste']); // Redirect logged-in user away from login page
                 return false;
             } else {
                 return true;
