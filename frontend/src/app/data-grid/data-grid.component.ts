@@ -4,14 +4,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatDialog} from "@angular/material/dialog";
 import {MaterialEditComponentComponent} from "./material-edit-component/material-edit-component.component";
+import {MaterialData} from "../models/Material";
 
-export interface UserData {
-    id: number;
-    name: string;
-    quantity: number;
-    description: string;
-    manufacturer?: string;
-}
 
 @Component({
     selector: 'app-data-grid',
@@ -24,7 +18,7 @@ export interface UserData {
 
 export class DataGridComponent implements OnInit {
     displayedColumns: string[] = ['id', 'name', 'quantity', 'description', 'manufacturer', 'edit', 'remove'];
-    dataSource = new MatTableDataSource<UserData>([
+    dataSource = new MatTableDataSource<MaterialData>([
         {id: 1, name: 'John Doe', quantity: 30, description: 'New York', manufacturer: 'Apple'},
         {id: 2, name: 'Jane Smith', quantity: 25, description: 'London', manufacturer: 'Samsung'},
         {id: 3, name: 'Sam Williams', quantity: 35, description: 'Sydney', manufacturer: 'Google'},
@@ -68,7 +62,7 @@ export class DataGridComponent implements OnInit {
             return;
         }
 
-        this.dataSource.data = data.sort((a: UserData, b: UserData) => {
+        this.dataSource.data = data.sort((a: MaterialData, b: MaterialData) => {
             const isAsc = sort.direction === 'asc';
             let key: string = sort.active.toString();
 
@@ -76,7 +70,7 @@ export class DataGridComponent implements OnInit {
         });
     }
 
-    editRecord(record: UserData) {
+    editRecord(record: MaterialData) {
         const dialogRef = this.dialog.open(MaterialEditComponentComponent, {
             width: '550px',
             data: record,
@@ -108,7 +102,7 @@ export class DataGridComponent implements OnInit {
             }
         });
     }
-    removeRecord(record: UserData) {
+    removeRecord(record: MaterialData) {
         const index = this.dataSource.data.findIndex(user => user.id === record.id);
 
         this.dataSource.data = this.dataSource.data.filter((value, key) => {

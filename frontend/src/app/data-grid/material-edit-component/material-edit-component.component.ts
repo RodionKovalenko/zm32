@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {UserData} from "../data-grid.component";
+import {MaterialData} from "../../models/Material";
 
 @Component({
     selector: 'app-material-edit-component',
@@ -11,7 +11,7 @@ import {UserData} from "../data-grid.component";
 export class MaterialEditComponentComponent {
     constructor(
         public dialogRef: MatDialogRef<MaterialEditComponentComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UserData
+        @Inject(MAT_DIALOG_DATA) public data: MaterialData
     ) {
     }
 

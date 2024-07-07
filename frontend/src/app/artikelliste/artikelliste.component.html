@@ -3,8 +3,7 @@
 <div>
     <label class="margin-left-50"> Abteilung:</label>
     <select class="custom-select" [(ngModel)]="selectedValue">
-        <option value="">Wählen Sie eine Abteilung aus</option>
-        <option *ngFor="let item of items" [value]="item">{{item}}</option>
+        <option *ngFor="let item of departmentRecords" [value]="item">{{item.name}}</option>
     </select>
 </div>
 

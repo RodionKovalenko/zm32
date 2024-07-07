@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Material\Lieferant;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -23,26 +22,26 @@ class Mitarbeiter
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private $nachame;
 
-    #[Groups(['Mitarbeiter_Lieferant', 'Lieferant'])]
+    #[Groups(['Mitarbeiter_MitarbeiterToDepartment', 'MitarbeiterToDepartment'])]
     #[ORM\OneToMany(
         mappedBy: 'mitarbeiter',
-        targetEntity: Lieferant::class,
+        targetEntity: MitarbeiterToDepartment::class,
         cascade: ['merge', 'persist', 'remove']
     )]
-    private Collection $lieferante;
+    private Collection $mitarbeiterToDepartments;
 
-    #[Groups(['Mitarbeiter_Department', 'Department'])]
+    #[Groups(['Mitarbeiter_Bestellung', 'Bestellung'])]
     #[ORM\OneToMany(
-        mappedBy: 'department',
-        targetEntity: Department::class,
+        mappedBy: 'mitarbeiter',
+        targetEntity: Bestellung::class,
         cascade: ['merge', 'persist', 'remove']
     )]
-    private Collection $departments;
+    private Collection $bestellungen;
 
     public function construct()
     {
-        $this->lieferante = new ArrayCollection();
-        $this->departments = new ArrayCollection();
+        $this->mitarbeiterToDepartments = new ArrayCollection();
+        $this->bestellungen = new ArrayCollection();
     }
 
     /**
@@ -58,26 +57,6 @@ class Mitarbeiter
     public function setId($id): void
     {
         $this->id = $id;
-    }
-
-    public function getLieferante(): Collection
-    {
-        return $this->lieferante;
-    }
-
-    public function setLieferante(Collection $lieferante): void
-    {
-        $this->lieferante = $lieferante;
-    }
-
-    public function getDepartments(): Collection
-    {
-        return $this->departments;
-    }
-
-    public function setDepartments(Collection $departments): void
-    {
-        $this->departments = $departments;
     }
 
     /**
@@ -108,5 +87,27 @@ class Mitarbeiter
     public function setNachame($nachame): void
     {
         $this->nachame = $nachame;
+    }
+
+    public function getMitarbeiterToDepartments(): Collection
+    {
+        return $this->mitarbeiterToDepartments;
+    }
+
+    public function setMitarbeiterToDepartments(Collection $mitarbeiterToDepartments): Mitarbeiter
+    {
+        $this->mitarbeiterToDepartments = $mitarbeiterToDepartments;
+        return $this;
+    }
+
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function setBestellungen(Collection $bestellungen): Mitarbeiter
+    {
+        $this->bestellungen = $bestellungen;
+        return $this;
     }
 }

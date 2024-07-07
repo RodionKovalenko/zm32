@@ -21,17 +21,27 @@ class Department
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $typ;
 
-    #[Groups(['Department_Mitarbeiter', 'Mitarbeiter'])]
+    #[Groups(['Department_MitarbeiterToDepartment', 'MitarbeiterToDepartment'])]
     #[ORM\OneToMany(
-        mappedBy: 'mitarbeiter',
-        targetEntity: Mitarbeiter::class,
+        mappedBy: 'department',
+        targetEntity: MitarbeiterToDepartment::class,
         cascade: ['merge', 'persist', 'remove']
     )]
-    private Collection $mitarbeiters;
+    private Collection $mitarbeiterToDepartments;
+
+    #[Groups(['Department_Bestellung', 'Bestellung'])]
+    #[ORM\OneToMany(
+        mappedBy: 'department',
+        targetEntity: Bestellung::class,
+        cascade: ['merge', 'persist', 'remove']
+    )]
+    private Collection $bestellungen;
+
 
     public function construct()
     {
-        $this->mitarbeiters = new ArrayCollection();
+        $this->bestellungen = new ArrayCollection();
+        $this->mitarbeiterToDepartments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,13 +84,25 @@ class Department
         $this->typ = $typ;
     }
 
-    public function getMitarbeiters(): Collection
+    public function getBestellungen(): Collection
     {
-        return $this->mitarbeiters;
+        return $this->bestellungen;
     }
 
-    public function setMitarbeiters(Collection $mitarbeiters): void
+    public function setBestellungen(Collection $bestellungen): Department
     {
-        $this->mitarbeiters = $mitarbeiters;
+        $this->bestellungen = $bestellungen;
+        return $this;
+    }
+
+    public function getMitarbeiterToDepartments(): Collection
+    {
+        return $this->mitarbeiterToDepartments;
+    }
+
+    public function setMitarbeiterToDepartments(Collection $mitarbeiterToDepartments): Department
+    {
+        $this->mitarbeiterToDepartments = $mitarbeiterToDepartments;
+        return $this;
     }
 }

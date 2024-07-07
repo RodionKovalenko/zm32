@@ -4,11 +4,10 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use JMS\Serializer\SerializerInterface;
-use PHPUnit\TextUI\XmlConfiguration\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/api/login')]
+#[Route(path: '/login')]
 class LoginController extends BaseController
 {
     public function __construct(SerializerInterface $serializer, private readonly UserRepository $userRepository)
@@ -16,14 +15,7 @@ class LoginController extends BaseController
         parent::__construct($serializer);
     }
 
-    #[Route(path: '/homepage', name: 'app_api_homepage', methods: ['GET'])]
-    public function login_check(Request $request)
-    {
-        $data = ['success' => true, 'message' => 'Login successful!'];
-        return $this->getJsonResponse($data);
-    }
-
-    #[Route(path: '/{mitarbeiterId}', name: 'app_api_login', methods: ['GET'])]
+    #[Route(path: '/{mitarbeiterId}', name: 'app_login', methods: ['GET'])]
     public function loginMitarbeiter($mitarbeiterId, Request $request)
     {
         $data = ['success' => false, 'message' => 'Mitarbeiter Login ist fehlgeschlagen!'];

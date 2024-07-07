@@ -6,9 +6,16 @@ import {HttpClient} from "@angular/common/http";
 })
 export class HttpService {
   private baseUrl = 'https://iba.ddev.site' ;
-  loginURL = `${this.baseUrl}/api/login`;
-  constructor(private httpClient: HttpClient) { }
+  loginURL = `${this.baseUrl}/login`;
 
+  constructor(private httpClient: HttpClient) {}
+
+  get_httpclient() {
+    return this.httpClient;
+  }
+  get_baseUrl() {
+    return this.baseUrl;
+  }
   loginMitarbeiter(mitarbeiterId: Number) {
     return this.httpClient.get(this.loginURL + '/' + mitarbeiterId);
   }

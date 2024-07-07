@@ -2,6 +2,7 @@
 
 namespace App\Entity\Material;
 
+use App\Entity\Bestellung;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -16,17 +17,29 @@ class Artikel
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $name;
+
     #[Groups(['Artikel_LieferantToArtikel', 'LieferantToArtikel'])]
     #[ORM\OneToMany(
-        mappedBy: 'lieferant',
+        mappedBy: 'artikel',
         targetEntity: LieferantToArtikel::class,
         cascade: ['persist', 'merge', 'remove']
     )]
     private Collection $lieferantToArtikels;
 
+    #[Groups(['Artikel_Bestellung', 'Bestellung'])]
+    #[ORM\OneToMany(
+        mappedBy: 'artikel',
+        targetEntity: Bestellung::class,
+        cascade: ['merge', 'persist', 'remove']
+    )]
+    private Collection $bestellungen;
+
     public function __construct()
     {
         $this->lieferantToArtikels = new ArrayCollection();
+        $this->bestellungen = new ArrayCollection();
     }
 
     public function getLieferantToArtikels(): Collection
@@ -56,5 +69,33 @@ class Artikel
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     * @return Artikel
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function setBestellungen(Collection $bestellungen): Artikel
+    {
+        $this->bestellungen = $bestellungen;
+        return $this;
     }
 }

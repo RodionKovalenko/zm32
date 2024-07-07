@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Material\Lieferant;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,13 +14,13 @@ class MitarbeiterToDepartment
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    #[Groups(['MitarbeiterToDepartment_Artikel', 'Mitarbeiter'])]
-    #[ORM\ManyToOne(targetEntity: Mitarbeiter::class, inversedBy: 'lieferantToArtikels')]
+    #[Groups(['MitarbeiterToDepartment_Mitarbeiter', 'Mitarbeiter'])]
+    #[ORM\ManyToOne(targetEntity: Mitarbeiter::class, inversedBy: 'mitarbeiterToDepartments')]
     #[ORM\JoinColumn(name: 'mitarbeiter_id', referencedColumnName: 'id', nullable: false)]
     private Mitarbeiter $mitarbeiter;
 
     #[Groups(['MitarbeiterToDepartment_Department', 'Department'])]
-    #[ORM\ManyToOne(targetEntity: Department::class)]
+    #[ORM\ManyToOne(targetEntity: Department::class, inversedBy: 'mitarbeiterToDepartments')]
     #[ORM\JoinColumn(name: 'department_id', referencedColumnName: 'id', nullable: false)]
     private Department $department;
 

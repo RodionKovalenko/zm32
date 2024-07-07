@@ -2,6 +2,7 @@
 
 namespace App\Entity\Material;
 
+use App\Entity\Bestellung;
 use App\Entity\Stammdaten\LieferantStammdaten;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,9 +32,18 @@ class Lieferant
     )]
     private Collection $liferantStammdaten;
 
+    #[Groups(['Lieferant_Bestellung', 'Bestellung'])]
+    #[ORM\OneToMany(
+        mappedBy: 'lieferant',
+        targetEntity: Bestellung::class,
+        cascade: ['merge', 'persist', 'remove']
+    )]
+    private Collection $bestellungen;
+
     public function construct()
     {
         $this->liferantStammdaten = new ArrayCollection();
+        $this->bestellungen = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,5 +84,16 @@ class Lieferant
     public function setLiferantStammdaten(Collection $liferantStammdaten): void
     {
         $this->liferantStammdaten = $liferantStammdaten;
+    }
+
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function setBestellungen(Collection $bestellungen): Lieferant
+    {
+        $this->bestellungen = $bestellungen;
+        return $this;
     }
 }
