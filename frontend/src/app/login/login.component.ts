@@ -1,19 +1,20 @@
-import {Component} from '@angular/core';
-import {HttpService} from "../services/http.service";
+import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {filter} from "rxjs";
-import {ibaApp} from "../../enviroments/environment";
-import {routes} from "../app.routes";
+import {AuthService} from "../auth.service";
+import {MatDialog} from "@angular/material/dialog";
+import {LoginErrorComponent} from "./login-error/login-error.component";
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     title = 'IBA';
+    mitarbeiterId: String = '';
 
-    constructor(private httpService: HttpService, private router: Router) {
+    constructor(private router: Router, private authService: AuthService) {
     }
 
     ngOnInit() {
@@ -26,18 +27,12 @@ export class LoginComponent {
     }
 
     onLoginClick() {
-        let mitarbeiterRequest = this.httpService.loginMitarbeiter(1);
-
-        mitarbeiterRequest.subscribe((response: any) => {
-            if (ibaApp && response && response.data) {
-                ibaApp.user = response.data[0];
-                this.router.config = routes;
-                this.router.navigateByUrl('/', {skipLocationChange: false}).then(() => {
-                    //this.router.navigate(['/app-artikelliste']);
-                    // this.router.navigate(['/app-bestelliste']);
-                     this.router.navigate(['/app-navigation-menu']);
-                });
+        this.authService.login(Number(this.mitarbeiterId)).subscribe(
+            loggedIn => {
+                if (loggedIn) {
+                    this.router.navigate(['/app-bestellliste']);
+                }
             }
-        });
+        );
     }
 }

@@ -4,13 +4,19 @@ import {ArtikellisteComponent} from "./artikelliste/artikelliste.component";
 import {NgModule} from "@angular/core";
 import {LoginComponent} from "./login/login.component";
 import {BestelllisteComponent} from "./bestellliste/bestellliste.component";
+import {AuthGuard} from "./permission.service";
+import {LogoutComponent} from "./logout/logout.component";
 export const routes: Routes = [
-    { path: '', redirectTo: '/app-login', pathMatch: 'full' }, // Corrected path
-    { path: 'app-root', component: AppComponent },
-    { path: 'app-artikelliste', component: ArtikellisteComponent },
-    { path: 'app-bestelliste', component: BestelllisteComponent },
-    { path: '**', component: LoginComponent }
+    { path: '', component: AppComponent, canActivate: [AuthGuard], pathMatch: 'full' },
+    { path: 'app-login', component: LoginComponent, canActivate: [AuthGuard] },
+    { path: 'app-bestellliste', component: BestelllisteComponent, canActivate: [AuthGuard] },
+    { path: 'app-artikelliste', component: ArtikellisteComponent, canActivate: [AuthGuard] },
+    { path: 'app-logout', component: LogoutComponent, canActivate: [AuthGuard] },
+    // Add more routes as needed
+    { path: '**', redirectTo: '/' } // Handle any other routes with a redirect
 ];
+
+
 
 
 @NgModule({

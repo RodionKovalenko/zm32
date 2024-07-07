@@ -3,6 +3,7 @@ import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
 import {routes} from "./app.routes";
 import {LoginComponent} from "./login/login.component";
 import {NgIf} from "@angular/common";
+import {AuthService} from "./auth.service";
 
 @Component({
     selector: 'app-root',
@@ -15,7 +16,7 @@ export class AppComponent{
     isLoginVisible = false;
     isArtikellisteVisible = false;
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private authService: AuthService) {
         this.router.config = routes;
         this.router.navigate(['/app-login']);
 
@@ -25,5 +26,9 @@ export class AppComponent{
                 this.isArtikellisteVisible = this.router.url === '/app-artikelliste';
             }
         });
+    }
+
+    isLoggedIn(): boolean {
+        return this.authService.isLoggedIn();
     }
 }

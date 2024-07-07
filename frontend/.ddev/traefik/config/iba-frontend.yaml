@@ -1,0 +1,86 @@
+#ddev-generated
+
+http:
+  routers:
+    
+    
+    iba-frontend-web-80-http:
+      
+      rule: HostRegexp(`iba-frontend.ddev.site`)
+      
+      service: "iba-frontend-web-80-http"
+      tls: false
+      entrypoints:
+        - http-8183
+    
+    
+    iba-frontend-web-8025-http:
+      
+      rule: HostRegexp(`iba-frontend.ddev.site`)
+      
+      service: "iba-frontend-web-8025-http"
+      tls: false
+      entrypoints:
+        - http-8025
+    
+    
+    
+    
+    
+    
+    iba-frontend-web-80-https:
+      
+      rule: HostRegexp(`iba-frontend.ddev.site`)
+      
+      service: "iba-frontend-web-80-https"
+      
+      tls: true
+      
+      entrypoints:
+        - http-443
+    
+    
+    iba-frontend-web-8025-https:
+      
+      rule: HostRegexp(`iba-frontend.ddev.site`)
+      
+      service: "iba-frontend-web-8025-https"
+      
+      tls: true
+      
+      entrypoints:
+        - http-8026
+    
+    
+
+  services:
+    
+    iba-frontend-web-80-http:
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-frontend-web:80
+    
+    iba-frontend-web-8025-http:
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-frontend-web:8025
+    
+    iba-frontend-web-80-https:
+    
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-frontend-web:80
+    
+    iba-frontend-web-8025-https:
+    
+      loadbalancer:
+        servers:
+          - url: http://ddev-iba-frontend-web:8025
+    
+
+
+tls:
+  certificates:
+    - certFile: /mnt/ddev-global-cache/traefik/certs/iba-frontend.crt
+      keyFile: /mnt/ddev-global-cache/traefik/certs/iba-frontend.key
+

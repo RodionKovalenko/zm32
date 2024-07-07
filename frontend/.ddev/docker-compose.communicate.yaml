@@ -1,4 +1,4 @@
 services:
   web:
     external_links:
-      - "ddev-router:iba.ddev.site"
+      - "ddev-router:iba-backend.ddev.site"

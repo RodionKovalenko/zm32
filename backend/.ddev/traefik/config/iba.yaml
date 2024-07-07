@@ -11,7 +11,7 @@ http:
       service: "iba-web-80-http"
       tls: false
       entrypoints:
-        - http-8183
+        - http-8081
     
     
     iba-web-8025-http:

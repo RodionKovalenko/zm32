@@ -1,4 +1,6 @@
-<app-login *ngIf="isLoginVisible"></app-login>
-<router-outlet></router-outlet>
+<app-login *ngIf="!isLoggedIn()"></app-login>
+
+<app-navigation-menu *ngIf="isLoggedIn()"></app-navigation-menu>
+<!--<router-outlet></router-outlet>-->
 
 
