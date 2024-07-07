@@ -50,3 +50,8 @@ ddev exec php bin/console doctrine:database:drop --force
 ddev exec php bin/console doctrine:database:create
 ddev exec php bin/console doctrine:migrations:diff
 ddev exec php bin/console doctrine:migrations:migrate
+
+
+angular:
+nvm install 18.19.0
+nvm use 18.19.0
