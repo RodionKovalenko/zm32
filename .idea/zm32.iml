@@ -2,9 +2,11 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/backend/iba/src" isTestSource="false" packagePrefix="App" />
-      <sourceFolder url="file://$MODULE_DIR$/backend/iba/var/Migrations" isTestSource="false" packagePrefix="DoctrineMigrations" />
-      <sourceFolder url="file://$MODULE_DIR$/backend/iba/var/cache/prod" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/tests" isTestSource="true" packagePrefix="App\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/copilot/chatSessions" />
     </content>
     <orderEntry type="inheritedJdk" />
