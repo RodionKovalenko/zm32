@@ -1,0 +1,27 @@
+<p>navigation-menu works!</p>
+
+<mat-toolbar color="primary">
+    <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>My Application</span>
+</mat-toolbar>
+
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side">
+        <mat-nav-list>
+            <a mat-list-item routerLink="/" routerLinkActive="active">Home</a>
+            <a mat-list-item routerLink="/app-artikelliste" routerLinkActive="active">Artikelliste</a>
+            <a mat-list-item routerLink="/app-bestellliste" routerLinkActive="active">Bestellungen</a>
+            <a mat-list-item routerLink="/app-login" routerLinkActive="active">Login</a>
+            <!-- Add more menu items as needed -->
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div class="content">
+            <!-- Your main content here -->
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

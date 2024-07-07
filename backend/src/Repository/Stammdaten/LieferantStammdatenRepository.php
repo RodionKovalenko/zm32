@@ -3,10 +3,10 @@
 namespace App\Repository\Stammdaten;
 
 use App\Entity\Stammdaten\LieferantStammdaten;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\DefaultRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class LieferantStammdatenRepository extends ServiceEntityRepository
+class LieferantStammdatenRepository extends DefaultRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -3,10 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Department;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class DepartmentRepository extends ServiceEntityRepository
+class DepartmentRepository extends DefaultRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

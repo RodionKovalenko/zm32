@@ -38,7 +38,7 @@ class Mitarbeiter
     )]
     private Collection $bestellungen;
 
-    public function construct()
+    public function __construct()
     {
         $this->mitarbeiterToDepartments = new ArrayCollection();
         $this->bestellungen = new ArrayCollection();

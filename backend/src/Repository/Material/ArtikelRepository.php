@@ -3,10 +3,10 @@
 namespace App\Repository\Material;
 
 use App\Entity\Material\Artikel;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\DefaultRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class ArtikelRepository extends ServiceEntityRepository
+class ArtikelRepository extends DefaultRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

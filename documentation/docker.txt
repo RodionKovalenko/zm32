@@ -43,3 +43,10 @@ ddev restart
 //
 docker compose run node npm i && docker compose up
 docker compose run node npm i && docker compose run node npm i && docker-compose -f docker-compose.yml up --build
+
+
+
+ddev exec php bin/console doctrine:database:drop --force
+ddev exec php bin/console doctrine:database:create
+ddev exec php bin/console doctrine:migrations:diff
+ddev exec php bin/console doctrine:migrations:migrate

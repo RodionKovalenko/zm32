@@ -33,7 +33,9 @@ export class LoginComponent {
                 ibaApp.user = response.data[0];
                 this.router.config = routes;
                 this.router.navigateByUrl('/', {skipLocationChange: false}).then(() => {
-                    this.router.navigate(['/app-artikelliste']);
+                    //this.router.navigate(['/app-artikelliste']);
+                    // this.router.navigate(['/app-bestelliste']);
+                     this.router.navigate(['/app-navigation-menu']);
                 });
             }
         });

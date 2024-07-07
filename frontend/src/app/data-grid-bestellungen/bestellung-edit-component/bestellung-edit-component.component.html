@@ -7,13 +7,13 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Anzahl</mat-label>
-        <input matInput [(ngModel)]="data.quantity">
+        <mat-label>Beschreibung</mat-label>
+        <input matInput [(ngModel)]="data.description">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Beschrebiung</mat-label>
-        <input matInput [(ngModel)]="data.description">
+        <mat-label>Anzahl</mat-label>
+        <input matInput [(ngModel)]="data.quantity">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -22,6 +22,6 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Cancel</button>
-    <button mat-button (click)="save()">Save</button>
+    <button mat-button (click)="onNoClick()">Abbrechen</button>
+    <button mat-button (click)="save()">Speichern</button>
 </div>

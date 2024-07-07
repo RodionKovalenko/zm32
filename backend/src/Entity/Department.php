@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+use App\Entity\Material\Artikel;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -37,11 +38,20 @@ class Department
     )]
     private Collection $bestellungen;
 
+    #[Groups(['Department_Artikel', 'Artikel'])]
+    #[ORM\OneToMany(
+        mappedBy: 'department',
+        targetEntity: Artikel::class,
+        cascade: ['merge', 'persist', 'remove']
+    )]
+    private Collection $artikels;
 
-    public function construct()
+
+    public function __construct()
     {
         $this->bestellungen = new ArrayCollection();
         $this->mitarbeiterToDepartments = new ArrayCollection();
+        $this->artikels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -49,9 +59,10 @@ class Department
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(?int $id): Department
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
@@ -63,10 +74,12 @@ class Department
 
     /**
      * @param mixed $name
+     * @return Department
      */
-    public function setName($name): void
+    public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -78,10 +91,23 @@ class Department
 
     /**
      * @param mixed $typ
+     * @return Department
      */
-    public function setTyp($typ): void
+    public function setTyp($typ)
     {
         $this->typ = $typ;
+        return $this;
+    }
+
+    public function getMitarbeiterToDepartments(): Collection
+    {
+        return $this->mitarbeiterToDepartments;
+    }
+
+    public function setMitarbeiterToDepartments(Collection $mitarbeiterToDepartments): Department
+    {
+        $this->mitarbeiterToDepartments = $mitarbeiterToDepartments;
+        return $this;
     }
 
     public function getBestellungen(): Collection
@@ -95,14 +121,14 @@ class Department
         return $this;
     }
 
-    public function getMitarbeiterToDepartments(): Collection
+    public function getArtikels(): Collection
     {
-        return $this->mitarbeiterToDepartments;
+        return $this->artikels;
     }
 
-    public function setMitarbeiterToDepartments(Collection $mitarbeiterToDepartments): Department
+    public function setArtikels(Collection $artikels): Department
     {
-        $this->mitarbeiterToDepartments = $mitarbeiterToDepartments;
+        $this->artikels = $artikels;
         return $this;
     }
 }

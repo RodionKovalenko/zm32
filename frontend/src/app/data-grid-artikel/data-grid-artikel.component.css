@@ -18,3 +18,7 @@
 .mat-paginator-range-label {
     margin-left: 16px; /* Optional: add some space between items per page and range label */
 }
+
+.spacer {
+    flex: 1 1 auto;
+}

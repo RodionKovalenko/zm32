@@ -32,6 +32,14 @@ class Lieferant
     )]
     private Collection $liferantStammdaten;
 
+    #[Groups(['Lieferant_LieferantToArtikel', 'LieferantToArtikel'])]
+    #[ORM\OneToMany(
+        mappedBy: 'lieferant',
+        targetEntity: LieferantToArtikel::class,
+        cascade: ['merge', 'persist', 'remove']
+    )]
+    private Collection $lieferantArtikels;
+
     #[Groups(['Lieferant_Bestellung', 'Bestellung'])]
     #[ORM\OneToMany(
         mappedBy: 'lieferant',
@@ -40,10 +48,11 @@ class Lieferant
     )]
     private Collection $bestellungen;
 
-    public function construct()
+    public function __construct()
     {
         $this->liferantStammdaten = new ArrayCollection();
         $this->bestellungen = new ArrayCollection();
+        $this->lieferantArtikels = new ArrayCollection();
     }
 
     public function getId(): ?int

@@ -19,11 +19,18 @@ import {AppComponent} from "./app.component";
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {LoginComponent} from "./login/login.component";
 import {ArtikellisteComponent} from "./artikelliste/artikelliste.component";
-import {DataGridComponent} from "./data-grid/data-grid.component";
-import {MaterialEditComponentComponent} from "./data-grid/material-edit-component/material-edit-component.component";
 import {MatIconModule} from "@angular/material/icon";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RegistrateUserComponent} from "./registrate-user/registrate-user.component";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {DataGridArtikelComponent} from "./data-grid-artikel/data-grid-artikel.component";
+import {MaterialEditComponentComponent} from "./data-grid-artikel/material-edit-component/material-edit-component.component";
+import {DataGridBestellungenComponent} from "./data-grid-bestellungen/data-grid-bestellungen.component";
+import {BestellungEditComponentComponent} from "./data-grid-bestellungen/bestellung-edit-component/bestellung-edit-component.component";
+import {BestelllisteComponent} from "./bestellliste/bestellliste.component";
+import {FlexModule} from "@angular/flex-layout";
 
 @NgModule({
     declarations: [
@@ -31,8 +38,11 @@ import {RegistrateUserComponent} from "./registrate-user/registrate-user.compone
         LoginComponent,
         ArtikellisteComponent,
         RegistrateUserComponent,
-        DataGridComponent,
-        MaterialEditComponentComponent
+        DataGridArtikelComponent,
+        DataGridBestellungenComponent,
+        MaterialEditComponentComponent,
+        BestellungEditComponentComponent,
+        BestelllisteComponent
     ],
     imports: [
         BrowserModule,
@@ -52,6 +62,13 @@ import {RegistrateUserComponent} from "./registrate-user/registrate-user.compone
         FormsModule,
         RouterOutlet,
         BrowserAnimationsModule,
+        MatToolbar,
+        MatSidenavContent,
+        MatSidenavContainer,
+        MatNavList,
+        MatListItem,
+        MatSidenav,
+        FlexModule
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),
@@ -63,6 +80,8 @@ import {RegistrateUserComponent} from "./registrate-user/registrate-user.compone
         }
     ],
     bootstrap: [AppComponent],
+    exports: [
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {

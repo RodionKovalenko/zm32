@@ -1,11 +1,3 @@
-#doctrine_migrations:
-#    migrations_paths:
-#        'DoctrineMigrations': '%kernel.project_dir%/var/Migrations'
-
 doctrine_migrations:
-    dir_name: '%kernel.project_dir%/var/Migrations'
-    namespace: DoctrineMigrations
-    table_name: migration_versions
-    column_name: version
-    column_length: 191
-    executed_at_column_name: executed_at
+    migrations_paths:
+        'DoctrineMigrations': '%kernel.project_dir%/var/Migrations'

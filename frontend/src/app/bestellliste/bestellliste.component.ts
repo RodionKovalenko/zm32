@@ -1,15 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpService} from "../services/http.service";
 import {DepartmentData} from "../models/Department";
-
 @Component({
-  selector: 'app-artikelliste',
-  templateUrl: './artikelliste.component.html',
-  styleUrl: './artikelliste.component.css'
+    selector: 'app-bestellliste',
+    templateUrl: './bestellliste.component.html',
+    styleUrl: './bestellliste.component.css'
 })
-export class ArtikellisteComponent implements OnInit {
+
+export class BestelllisteComponent implements OnInit {
     departmentRecords: DepartmentData[] = [{id: 0, name: 'test', typ: 0}];
     selectedValue: DepartmentData = {id: 0, name: '', typ: 0};
+
     constructor(private httpService: HttpService) {
     }
 

@@ -96,3 +96,12 @@ h1 {
   border-radius: 1px;
   cursor: pointer;
 }
+
+/* styles.css or app.component.css */
+.sidenav-container {
+  height: 100%;
+}
+
+.mat-sidenav {
+  width: 250px; /* Adjust width as needed */
+}

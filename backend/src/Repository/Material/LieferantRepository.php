@@ -3,10 +3,10 @@
 namespace App\Repository\Material;
 
 use App\Entity\Material\Lieferant;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\DefaultRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class LieferantRepository extends ServiceEntityRepository
+class LieferantRepository extends DefaultRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

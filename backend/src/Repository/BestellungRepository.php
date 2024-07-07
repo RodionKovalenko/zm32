@@ -3,11 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Bestellung;
-use App\Entity\Mitarbeiter;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class BestellungRepository extends ServiceEntityRepository
+class BestellungRepository extends DefaultRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

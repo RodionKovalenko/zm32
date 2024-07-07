@@ -1,0 +1,24 @@
+.table-container {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.mat-elevation-z8 {
+    margin: 20px;
+}
+
+.mat-mdc-paginator-container {
+    justify-content: flex-start;
+}
+
+.mat-paginator-page-size {
+    margin-right: auto; /* This pushes the items per page selector to the left */
+}
+
+.mat-paginator-range-label {
+    margin-left: 16px; /* Optional: add some space between items per page and range label */
+}
+
+.spacer {
+    flex: 1 1 auto;
+}

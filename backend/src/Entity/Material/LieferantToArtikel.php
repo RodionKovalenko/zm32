@@ -15,8 +15,8 @@ class LieferantToArtikel
     private ?int $id = null;
 
     #[Groups(['LieferantToArtikel_Artikel', 'Artikel'])]
-    #[ORM\ManyToOne(targetEntity: Artikel::class, inversedBy: 'lieferantToArtikels')]
-    #[ORM\JoinColumn(name: 'mitarbeiter_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Artikel::class, inversedBy: 'lieferantArtikels')]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
     private Artikel $artikel;
 
     #[Groups(['LieferantToArtikel_Lieferant', 'Lieferant'])]
