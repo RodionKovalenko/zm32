@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {filter} from "rxjs";
 import {AuthService} from "../auth.service";
-import {MatDialog} from "@angular/material/dialog";
-import {LoginErrorComponent} from "./login-error/login-error.component";
 
 @Component({
     selector: 'app-login',

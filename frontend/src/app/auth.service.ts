@@ -5,6 +5,7 @@ import {routes} from "./app.routes";
 import {HttpService} from "./services/http.service";
 import {Router} from "@angular/router";
 import {LoginErrorComponent} from "./login/login-error/login-error.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Injectable({
     providedIn: 'root'
