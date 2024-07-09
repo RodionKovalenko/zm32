@@ -1,6 +1,9 @@
 <mat-toolbar color="custom-toolbar">
     <span class="spacer"></span>
-    <button mat-button (click)="addRecord()">Neue Bestellung hinzufügen</button>
+
+    <button mat-icon-button (click)="addRecord()">
+        <mat-icon>add</mat-icon>
+    </button>
 </mat-toolbar>
 
 <div class="mat-elevation-z8">
@@ -14,11 +17,51 @@
             </td>
         </ng-container>
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <!-- Artikel Column -->
+        <ng-container matColumnDef="artikel">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Artikel</th>
             <td mat-cell *matCellDef="let element">
-                {{element.name}}
+                {{element?.artikel?.name}}
+            </td>
+        </ng-container>
+
+        <!-- Preis Column -->
+        <ng-container matColumnDef="lieferant">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Lieferant</th>
+            <td mat-cell *matCellDef="let element">
+                {{element?.lieferant?.name}}
+            </td>
+        </ng-container>
+
+        <!-- description Column -->
+        <ng-container matColumnDef="descriptionZusatz">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Zusatzinfo</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.descriptionZusatz}}
+            </td>
+        </ng-container>
+
+        <!-- Quantity Column -->
+        <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Anzahl</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.amount}}
+            </td>
+        </ng-container>
+
+        <!-- Preis Column -->
+        <ng-container matColumnDef="preis">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Preis</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.preis}}
+            </td>
+        </ng-container>
+
+        <!-- Preis Column -->
+        <ng-container matColumnDef="mitarbeiter">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Bestellung von</th>
+            <td mat-cell *matCellDef="let element">
+                {{element?.mitarbeiter?.vorname}}  {{element?.mitarbeiter?.nachname}}
             </td>
         </ng-container>
 
@@ -29,22 +72,6 @@
                 {{element.description}}
             </td>
         </ng-container>
-
-        <!-- Quantity Column -->
-        <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Anzahl</th>
-            <td mat-cell *matCellDef="let element">
-                {{element.quantity}}
-            </td>
-        </ng-container>
-
-        <!--        &lt;!&ndash; description Column &ndash;&gt;-->
-        <!--        <ng-container matColumnDef="manufacturer">-->
-        <!--            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hersteller</th>-->
-        <!--            <td mat-cell *matCellDef="let element">-->
-        <!--                {{element.manufacturer}}-->
-        <!--            </td>-->
-        <!--        </ng-container>-->
 
         <!-- Edit Column -->
         <ng-container matColumnDef="edit">

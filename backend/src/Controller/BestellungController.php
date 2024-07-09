@@ -52,6 +52,11 @@ class BestellungController extends BaseController
     public function getSaveBestellung($id, Request $request)
     {
         $data = json_decode($request->getContent(), true);
+        $bestellungId = $data['id'] ?? null;
+
+        if (empty($id)) {
+            $id = $bestellungId;
+        }
 
         try {
             if ($id !== null) {

@@ -508,7 +508,7 @@ class GenerateArtikelDataCommand extends Command
             $mitarbeiter = new Mitarbeiter();
             $mitarbeiter->setUser($user);
             $mitarbeiter->setVorname($userArrayItem['vorname']);
-            $mitarbeiter->setNachame($userArrayItem['nachname']);
+            $mitarbeiter->setNachname($userArrayItem['nachname']);
 
             $this->mitarbeiterRepository->save($mitarbeiter);
         }

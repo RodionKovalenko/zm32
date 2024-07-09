@@ -22,7 +22,7 @@ class Mitarbeiter
     private $vorname;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    private $nachame;
+    private $nachname;
 
     #[Groups(['Mitarbeiter_User', 'User'])]
     #[ORM\OneToOne(targetEntity: User::class)]
@@ -83,17 +83,17 @@ class Mitarbeiter
 
     /**
      */
-    public function getNachame()
+    public function getNachname()
     {
-        return $this->nachame;
+        return $this->nachname;
     }
 
     /**
-     * @param mixed $nachame
+     * @param mixed $nachname
      */
-    public function setNachame($nachame): void
+    public function setNachname($nachname): void
     {
-        $this->nachame = $nachame;
+        $this->nachname = $nachname;
     }
 
     public function getMitarbeiterToDepartments(): Collection

@@ -31,6 +31,9 @@ class Bestellung
     private ?string $description = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $descriptionZusatz = null;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $preis = null;
 
     #[Groups(['Bestellung_Artikel', 'Artikel'])]
@@ -180,6 +183,17 @@ class Bestellung
     public function setPreis(?string $preis): Bestellung
     {
         $this->preis = $preis;
+        return $this;
+    }
+
+    public function getDescriptionZusatz(): ?string
+    {
+        return $this->descriptionZusatz;
+    }
+
+    public function setDescriptionZusatz(?string $descriptionZusatz): Bestellung
+    {
+        $this->descriptionZusatz = $descriptionZusatz;
         return $this;
     }
 }

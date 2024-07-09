@@ -3,8 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {DepartmentData} from "../../models/Department";
 import {HttpService} from "../../services/http.service";
 import {Artikel} from "../../models/Artikel";
-import {Bestellung} from "../../models/Bestellung";
 import {Lieferant} from "../../models/Lieferant";
+import {Bestellung} from "../../models/Bestellung";
 
 @Component({
     selector: 'app-bestellung-edit-component',
@@ -43,8 +43,18 @@ export class BestellungEditComponentComponent implements OnInit {
         mitarbeiterRequest.subscribe((response: any) => {
             this.departments = response.data;
             if (this.departments.length > 0) {
-                this.selectedDepartment = this.departments[0];
-                this.loadArtikel(this.selectedDepartment); // Load artikels for the first department
+
+                if (this.data.departmentId) {
+                    this.departments.forEach((department) => {
+                        if (department.id === this.data.departmentId) {
+                            this.selectedDepartment = department;
+                        }
+                    });
+                } else {
+                    this.selectedDepartment = this.departments[0];
+                }
+
+                this.loadArtikel(this.selectedDepartment);
             }
         });
     }
@@ -54,7 +64,15 @@ export class BestellungEditComponentComponent implements OnInit {
         mitarbeiterRequest.subscribe((response: any) => {
             this.artikels = response.data;
             if (this.artikels.length > 0) {
-                this.selectedArtikel = this.artikels[0];
+                if (this.data.artikel) {
+                    this.artikels.forEach((artikel) => {
+                        if (artikel.id === this.data?.artikel?.id) {
+                            this.selectedArtikel = artikel;
+                        }
+                    });
+                } else {
+                    this.selectedArtikel = this.artikels[0];
+                }
             }
         });
     }
@@ -99,13 +117,14 @@ export class BestellungEditComponentComponent implements OnInit {
         let url = this.httpService.get_baseUrl() + '/bestellung/save';
 
         const orderData = {
+            id: this.data?.id,
             department: this.selectedDepartment.id,
             artikel: this.selectedArtikel.id,
             mitarbeiterId: localStorage.getItem('mitarbeiterId'),
-            description: this.data.description,
-            descriptionZusatz: this.data.descriptionZusatz,
-            preis: this.data.preis,
-            amount: this.data.amount,
+            description: this.data?.description,
+            descriptionZusatz: this.data?.descriptionZusatz,
+            preis: this.data?.preis,
+            amount: this.data?.amount,
             lieferantId: this.selectedLieferant?.id
         };
         this.httpService.get_httpclient().post(url, orderData).subscribe({

@@ -15,6 +15,7 @@ class BestellungForm extends AbstractType
     {
         $builder->add('artikel')
             ->add('description', TextareaType::class)
+            ->add('descriptionZusatz', TextareaType::class)
             ->add('preis', TextType::class)
             ->add('amount', TextType::class);
     }

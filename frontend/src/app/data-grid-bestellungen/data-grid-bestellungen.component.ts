@@ -5,7 +5,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpService} from "../services/http.service";
 import {BestellungEditComponentComponent} from "./bestellung-edit-component/bestellung-edit-component.component";
-import {Artikel} from "../models/Artikel";
+import {Bestellung} from "../models/Bestellung";
 
 @Component({
   selector: 'app-data-grid-bestellungen',
@@ -16,8 +16,8 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
   @Input() departmentId: Number = 0;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  displayedColumns: string[] = ['id', 'name', 'description', 'quantity', 'edit', 'remove'];
-  dataSource = new MatTableDataSource<Artikel>([]);
+  displayedColumns: string[] = ['id', 'artikel', 'lieferant', 'descriptionZusatz', 'amount', 'preis', 'description', 'mitarbeiter', 'edit', 'remove'];
+  dataSource = new MatTableDataSource<Bestellung>([]);
 
   constructor(private httpService: HttpService, public dialog: MatDialog) {
   }
@@ -30,10 +30,10 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
 
   fetchDataByDepartmentId(departmentId: Number): void {
     let url = this.httpService.get_baseUrl() + '/bestellung/' + departmentId;
-    let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
+    let bestellungRequest = this.httpService.get_httpclient().get(url);
 
-    mitarbeiterRequest.subscribe((response: any) => {
-      this.dataSource = new MatTableDataSource<Artikel>(response.data);
+    bestellungRequest.subscribe((response: any) => {
+      this.dataSource = new MatTableDataSource<Bestellung>(response.data);
     });
   }
   ngOnInit() {
@@ -48,7 +48,7 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.dataSource.data = data.sort((a: Artikel, b: Artikel) => {
+    this.dataSource.data = data.sort((a: Bestellung, b: Bestellung) => {
       const isAsc = sort.direction === 'asc';
       let key: string = sort.active.toString();
 
@@ -56,9 +56,11 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
     });
   }
 
-  editRecord(record: Artikel) {
+  editRecord(record: Bestellung) {
+    record.departmentId = this.departmentId;
     const dialogRef = this.dialog.open(BestellungEditComponentComponent, {
       width: '550px',
+      height: '100vh',
       data: record,
       disableClose: true,
     });
@@ -71,12 +73,21 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
         this.dataSource._updateChangeSubscription(); // Refresh the table
       }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Here, you should call your service method to fetch updated data
+        this.fetchDataByDepartmentId(this.departmentId); // Example method to reload data
+      }
+    });
   }
   addRecord() {
     const dialogRef = this.dialog.open(BestellungEditComponentComponent, {
       width: '550px',
       height: '100vh',
-      data: {},
+      data: {
+        departmentId: this.departmentId
+      },
       disableClose: true,
     });
 
@@ -85,27 +96,17 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
         // Update the data source with the edited record
         result.id = this.dataSource.data.length + 1;
         this.dataSource.data.push(result);
-        this.dataSource._updateChangeSubscription(); // Refresh the table
+        this.dataSource._updateChangeSubscription();
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Here, you should call your service method to fetch updated data
-        this.fetchDataByDepartmentId(this.departmentId); // Example method to reload data
-
-        // Optionally, update the result with an ID (example)
-        result.id = this.dataSource.data.length + 1;
-
-        // Push the result to the data source
-        this.dataSource.data.push(result);
-
-        // Refresh the table
-        this.dataSource._updateChangeSubscription();
+        this.fetchDataByDepartmentId(this.departmentId);
       }
     });
   }
-  removeRecord(record: Artikel) {
+  removeRecord(record: Bestellung) {
     const index = this.dataSource.data.findIndex(user => user.id === record.id);
 
     this.dataSource.data = this.dataSource.data.filter((value, key) => {

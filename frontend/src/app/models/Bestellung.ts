@@ -1,5 +1,6 @@
 import {Artikel} from "./Artikel";
 import {Lieferant} from "./Lieferant";
+import {Mitarbeiter} from "./Mitarbeiter";
 
 export interface Bestellung {
     id: number;
@@ -8,5 +9,8 @@ export interface Bestellung {
     descriptionZusatz?: string;
     preis?: number;
     artikel?: Artikel
-    lieferant?: Lieferant
+    lieferant?: Lieferant,
+    mitarbeiter?: Mitarbeiter,
+    departmentId?: Number
+
 }
