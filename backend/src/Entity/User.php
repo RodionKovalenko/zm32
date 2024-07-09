@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Entity;
+use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: User::class)]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
     #[ORM\Id]
@@ -21,18 +22,15 @@ class User
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $mitarbeiterId;
 
-
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
+    public function setId(?int $id): User
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
@@ -44,10 +42,12 @@ class User
 
     /**
      * @param mixed $firstname
+     * @return User
      */
-    public function setFirstname($firstname): void
+    public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+        return $this;
     }
 
     /**
@@ -59,10 +59,12 @@ class User
 
     /**
      * @param mixed $lastname
+     * @return User
      */
-    public function setLastname($lastname): void
+    public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+        return $this;
     }
 
     /**
@@ -74,9 +76,12 @@ class User
 
     /**
      * @param mixed $mitarbeiterId
+     * @return User
      */
-    public function setMitarbeiterId($mitarbeiterId): void
+    public function setMitarbeiterId($mitarbeiterId)
     {
         $this->mitarbeiterId = $mitarbeiterId;
+        return $this;
     }
 }
+

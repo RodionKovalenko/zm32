@@ -4,13 +4,14 @@ namespace App\Entity\Material;
 
 use App\Entity\Bestellung;
 use App\Entity\Stammdaten\LieferantStammdaten;
+use App\Repository\Material\LieferantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: Lieferant::class)]
+#[ORM\Entity(repositoryClass: LieferantRepository::class)]
 class Lieferant
 {
     #[ORM\Id]
@@ -103,6 +104,17 @@ class Lieferant
     public function setBestellungen(Collection $bestellungen): Lieferant
     {
         $this->bestellungen = $bestellungen;
+        return $this;
+    }
+
+    public function getLieferantArtikels(): Collection
+    {
+        return $this->lieferantArtikels;
+    }
+
+    public function setLieferantArtikels(Collection $lieferantArtikels): Lieferant
+    {
+        $this->lieferantArtikels = $lieferantArtikels;
         return $this;
     }
 }

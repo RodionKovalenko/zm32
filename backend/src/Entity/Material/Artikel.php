@@ -4,13 +4,14 @@ namespace App\Entity\Material;
 
 use App\Entity\Bestellung;
 use App\Entity\Department;
+use App\Repository\Material\ArtikelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: Artikel::class)]
+#[ORM\Entity(repositoryClass: ArtikelRepository::class)]
 class Artikel
 {
     #[ORM\Id]
@@ -28,9 +29,11 @@ class Artikel
     private ?string $model;
 
     #[Groups(['Artikel_Department', 'Department'])]
-    #[ORM\ManyToOne(targetEntity: Department::class, inversedBy: 'artikels')]
-    #[ORM\JoinColumn(name: 'department_id', referencedColumnName: 'id', nullable: false)]
-    private Department $department;
+    #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: "artikels")]
+    #[ORM\JoinTable(name:"artikel_to_departments")]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'department_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $departments;
 
     #[Groups(['Artikel_LieferantToArtikel', 'LieferantToArtikel'])]
     #[ORM\OneToMany(
@@ -52,6 +55,7 @@ class Artikel
     {
         $this->lieferantToArtikels = new ArrayCollection();
         $this->bestellungen = new ArrayCollection();
+        $this->departments = new ArrayCollection();
     }
 
     public function getLieferantToArtikels(): Collection
@@ -133,14 +137,27 @@ class Artikel
         return $this;
     }
 
-    public function getDepartment(): Department
+    public function getDepartments(): Collection
     {
-        return $this->department;
+        return $this->departments;
     }
 
-    public function setDepartment(Department $department): Artikel
+    public function addDepartment(Department $department): self
     {
-        $this->department = $department;
+        if (!$this->departments->contains($department)) {
+            $this->departments[] = $department;
+            $department->addArtikel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepartment(Department $department): self
+    {
+        if ($this->departments->removeElement($department)) {
+            $department->removeArtikel($this);
+        }
+
         return $this;
     }
 }

@@ -12,4 +12,18 @@ class ArtikelRepository extends DefaultRepository
     {
         parent::__construct($registry, Artikel::class);
     }
+
+    public function getByDepartmentId($departmentId): array
+    {
+        if (!is_array($departmentId)) {
+            $departmentId = [$departmentId];
+        }
+
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.departments', 'd')
+            ->where('d IN (:departmentId)')
+            ->setParameter('departmentId', $departmentId)
+            ->getQuery()
+            ->getResult();
+    }
 }

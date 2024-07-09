@@ -3,11 +3,12 @@
 namespace App\Entity\Stammdaten;
 
 use App\Entity\Material\Lieferant;
+use App\Repository\Stammdaten\LieferantStammdatenRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: LieferantStammdaten::class)]
+#[ORM\Entity(repositoryClass: LieferantStammdatenRepository::class)]
 class LieferantStammdaten
 {
     #[ORM\Id]

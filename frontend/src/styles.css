@@ -1,10 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "@angular/material/prebuilt-themes/azure-blue.css";
+@import "@angular/material/prebuilt-themes/pink-bluegrey.css";
 
 * {
   margin: 0;
   padding: 0;
+}
+
+.custom-toolbar {
+  background-color: #1a3088; /* Custom background color */
+  color: white; /* Custom text color */
+}
+
+mat-toolbar.custom-toolbar {
+  background-color: #4caf50 !important; /* Custom background color */
+  color: white !important; /* Custom text color */
 }
 
 body {
@@ -41,7 +51,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   height: calc(2.25rem + 2px);
   font-size: 1rem;
   line-height: 1.5;
-  color: #495057;
+  color: #65a0c0;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
@@ -54,7 +64,70 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   margin: 10px 0 10px 50px;
 }
 
+.custom-select-no-margin {
+  /* Optionally, you can adjust other padding properties as needed */
+  margin: 10px 0 10px 0px;
+
+  display: block;
+  width: 80%;
+  height: calc(2.25rem + 2px);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+
 /* Style the options */
 .custom-select option {
   padding: 0.375rem 0.75rem;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+}
+
+.column-layout {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.margin-bottom {
+  margin-bottom: 5px;
+}
+
+.custom-select-no-margin {
+  width: 400px; /* Set a fixed width or use a percentage for relative width */
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width */
+}
+
+.align-button {
+  margin-top: 30px !important;
+}
+
+
+.mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds dialog height */
+  flex: 1; /* Allow content to expand to fill available space */
+}
+
+.dialog-actions {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 16px; /* Adjust padding as needed */
+  z-index: 1000; /* Ensure actions bar stays above content */
+}
+
+.dialog-actions > button {
+  position: sticky;
+  margin-left: 8px; /* Adjust spacing between buttons */
 }

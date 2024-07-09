@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Artikelliste bearbeiten</h1>
+<h1 mat-dialog-title>Artikel bearbeiten</h1>
 <div mat-dialog-content fxLayout="column" fxLayoutGap="16px" fxFlexFill>
 
     <mat-form-field appearance="fill">
@@ -11,10 +11,12 @@
         <input matInput [(ngModel)]="data.description">
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Hersteller</mat-label>
-        <input matInput [(ngModel)]="data.manufacturer">
-    </mat-form-field>
+    <div>
+        <label> Hersteller auswählen (optional):</label>
+        <select class="custom-select-no-margin" [(ngModel)]="selectedLieferant" (ngModelChange)="onLieferantChange($event)">
+            <option *ngFor="let item of lieferants" [ngValue]="item">{{ item.name }}</option>
+        </select>
+    </div>
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Abbrechen</button>

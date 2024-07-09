@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\MitarbeiterToDepartmentRepository;
 use Doctrine\DBAL\Types\Types;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: MitarbeiterToDepartment::class)]
+#[ORM\Entity(repositoryClass: MitarbeiterToDepartmentRepository::class)]
 class MitarbeiterToDepartment
 {
     #[ORM\Id]

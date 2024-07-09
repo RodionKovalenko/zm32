@@ -3,9 +3,9 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatDialog} from "@angular/material/dialog";
-import {MaterialData} from "../models/Material";
 import {HttpService} from "../services/http.service";
 import {MaterialEditComponentComponent} from "./material-edit-component/material-edit-component.component";
+import {Artikel} from "../models/Artikel";
 
 @Component({
   selector: 'app-data-grid-artikel',
@@ -21,7 +21,7 @@ export class DataGridArtikelComponent implements OnInit, OnChanges {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['id', 'name', 'description', 'quantity', 'edit', 'remove'];
-  dataSource = new MatTableDataSource<MaterialData>([]);
+  dataSource = new MatTableDataSource<Artikel>([]);
 
   constructor(private httpService: HttpService, public dialog: MatDialog) {
   }
@@ -37,7 +37,7 @@ export class DataGridArtikelComponent implements OnInit, OnChanges {
     let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
 
     mitarbeiterRequest.subscribe((response: any) => {
-      this.dataSource = new MatTableDataSource<MaterialData>(response.data);
+      this.dataSource = new MatTableDataSource<Artikel>(response.data);
     });
   }
   ngOnInit() {
@@ -52,7 +52,7 @@ export class DataGridArtikelComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.dataSource.data = data.sort((a: MaterialData, b: MaterialData) => {
+    this.dataSource.data = data.sort((a: Artikel, b: Artikel) => {
       const isAsc = sort.direction === 'asc';
       let key: string = sort.active.toString();
 
@@ -60,7 +60,7 @@ export class DataGridArtikelComponent implements OnInit, OnChanges {
     });
   }
 
-  editRecord(record: MaterialData) {
+  editRecord(record: Artikel) {
     const dialogRef = this.dialog.open(MaterialEditComponentComponent, {
       width: '550px',
       data: record,
@@ -92,7 +92,7 @@ export class DataGridArtikelComponent implements OnInit, OnChanges {
       }
     });
   }
-  removeRecord(record: MaterialData) {
+  removeRecord(record: Artikel) {
     const index = this.dataSource.data.findIndex(user => user.id === record.id);
 
     this.dataSource.data = this.dataSource.data.filter((value, key) => {

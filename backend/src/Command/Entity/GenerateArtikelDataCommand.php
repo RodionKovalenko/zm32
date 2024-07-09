@@ -5,8 +5,12 @@ namespace App\Command\Entity;
 use App\Entity\Department;
 use App\Entity\DepartmentTyp;
 use App\Entity\Material\Artikel;
+use App\Entity\Mitarbeiter;
+use App\Entity\User;
 use App\Repository\DepartmentRepository;
 use App\Repository\Material\ArtikelRepository;
+use App\Repository\MitarbeiterRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\Console\Command\Command;
@@ -19,8 +23,12 @@ class GenerateArtikelDataCommand extends Command
     protected static $defaultName = 'zm:generate-default-artikels';
     protected static $defaultDescription = 'Erstellt die default Artikel.';
 
-    public function __construct(private readonly ArtikelRepository $artikelRepository, private readonly DepartmentRepository $departmentRepository)
-    {
+    public function __construct(
+        private readonly ArtikelRepository $artikelRepository,
+        private readonly DepartmentRepository $departmentRepository,
+        private readonly UserRepository $userRepository,
+        private readonly MitarbeiterRepository $mitarbeiterRepository
+    ) {
         parent::__construct();
     }
 
@@ -41,6 +49,12 @@ class GenerateArtikelDataCommand extends Command
         if ($forceRewrite) {
             $existingArtikel = $this->artikelRepository->findAll();
             $this->artikelRepository->removeAll($existingArtikel);
+
+            $existingMitarbeiter = $this->mitarbeiterRepository->findAll();
+            $this->mitarbeiterRepository->removeAll($existingMitarbeiter);
+
+            $existingUser = $this->userRepository->findAll();
+            $this->userRepository->removeAll($existingUser);
         }
 
         try {
@@ -48,6 +62,7 @@ class GenerateArtikelDataCommand extends Command
             $this->generateArtikelForEdelmetall();
             $this->generateArtikelForKunstoff();
             $this->generateArtikelForCadCam();
+            $this->createMitarbeiter();
         } catch (\Exception $e) {
             throw new \Exception('Es ist ein Fehler aufgetreten: ' . $e->getMessage());
         }
@@ -114,7 +129,6 @@ class GenerateArtikelDataCommand extends Command
             'Trennscheibe f. Sägemod.',
             'Ultraschall Polierpastenreiniger (flüssig) Siladent'
         ];
-
 
         $this->saveArtikelListe(DepartmentTyp::ARBEITSVORBEREITUNG, $artikelNamen);
     }
@@ -379,11 +393,124 @@ class GenerateArtikelDataCommand extends Command
             }
 
             $artikel->setName($artikelName)
-                ->setDepartment($department);
+                ->addDepartment($department);
 
             $artikels[] = $artikel;
         }
 
         $this->artikelRepository->saveAll($artikels);
+    }
+
+    private function createMitarbeiter()
+    {
+        $users = [
+            [
+                'mitarbeiterId' => 1,
+                'vorname' => 'Sandra',
+                'nachname' => 'Mic'
+            ],
+            [
+                'mitarbeiterId' => 10,
+                'vorname' => 'Daniela',
+                'nachname' => 'Rös'
+            ],
+            [
+                'mitarbeiterId' => 100,
+                'vorname' => 'Kyra',
+                'nachname' => 'Mic'
+            ],
+            [
+                'mitarbeiterId' => 13,
+                'vorname' => 'Susanne',
+                'nachname' => 'Ste'
+            ],
+            [
+                'mitarbeiterId' => 2,
+                'vorname' => 'Tanja',
+                'nachname' => 'Mei'
+            ],
+            [
+                'mitarbeiterId' => 20,
+                'vorname' => 'Hanna Lea',
+                'nachname' => 'Bie'
+            ],
+            [
+                'mitarbeiterId' => 28,
+                'vorname' => 'Alev',
+                'nachname' => 'Dur'
+            ],
+            [
+                'mitarbeiterId' => 32,
+                'vorname' => 'Markus',
+                'nachname' => 'Kun'
+            ],
+            [
+                'mitarbeiterId' => 45,
+                'vorname' => 'Stefan',
+                'nachname' => 'Mic'
+            ],
+            [
+                'mitarbeiterId' => 5,
+                'vorname' => 'Andre',
+                'nachname' => 'Sei'
+            ],
+            [
+                'mitarbeiterId' => 55,
+                'vorname' => 'Monika',
+                'nachname' => 'Lüt'
+            ],
+            [
+                'mitarbeiterId' => 66,
+                'vorname' => 'Jonny',
+                'nachname' => 'Tre'
+            ],
+            [
+                'mitarbeiterId' => 72,
+                'vorname' => 'Stephanie',
+                'nachname' => 'Hof'
+            ],
+            [
+                'mitarbeiterId' => 75,
+                'vorname' => 'Nabi',
+                'nachname' => 'Hai'
+            ],
+            [
+                'mitarbeiterId' => 79,
+                'vorname' => 'Roman',
+                'nachname' => 'Wei'
+            ],
+            [
+                'mitarbeiterId' => 88,
+                'vorname' => 'Ulrike',
+                'nachname' => 'Dav'
+            ],
+            [
+                'mitarbeiterId' => 90,
+                'vorname' => 'Sarah',
+                'nachname' => 'Cap'
+            ],
+
+        ];
+
+        foreach ($users as $userArrayItem) {
+            $user = $this->userRepository->findOneBy(['mitarbeiterId' => (int)$userArrayItem['mitarbeiterId']]);
+
+            if ($user === null) {
+                $user = new User();
+            }
+
+            $user->setMitarbeiterId((int)$userArrayItem['mitarbeiterId'])
+                ->setFirstname($userArrayItem['vorname'])
+                ->setLastname($userArrayItem['nachname']);
+
+            $this->userRepository->save($user);
+
+            $mitarbeiter = new Mitarbeiter();
+            $mitarbeiter->setUser($user);
+            $mitarbeiter->setVorname($userArrayItem['vorname']);
+            $mitarbeiter->setNachame($userArrayItem['nachname']);
+
+            $this->mitarbeiterRepository->save($mitarbeiter);
+        }
     }
 }

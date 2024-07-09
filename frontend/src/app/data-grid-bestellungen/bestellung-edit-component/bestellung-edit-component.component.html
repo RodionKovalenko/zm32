@@ -1,9 +1,55 @@
-<h1 mat-dialog-title>Artikelliste bearbeiten</h1>
-<div mat-dialog-content fxLayout="column" fxLayoutGap="16px" fxFlexFill>
+<h1 mat-dialog-title>Bestellung hinzufügen</h1>
+
+<div mat-dialog-content class="mat-dialog-content" fxLayout="column" fxLayoutGap="16px" fxFlexFill>
+
+    <div class="flex-container">
+        <div class="column-layout">
+            <label class="margin-bottom">Abteilung auswählen:</label>
+            <select class="custom-select-no-margin" [(ngModel)]="selectedDepartment" (ngModelChange)="onDepartmentChange($event)">
+                <option *ngFor="let item of departments" [ngValue]="item">{{ item.name }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="flex-container">
+        <div class="column-layout">
+            <label class="margin-bottom">Lieferant auswählen (optional):</label>
+            <select class="custom-select-no-margin" [(ngModel)]="selectedLieferant" (ngModelChange)="onLieferantChange($event)">
+                <option *ngFor="let item of lieferants" [ngValue]="item">{{ item.name }}</option>
+            </select>
+        </div>
+
+        <button mat-icon-button class="align-button" (click)="addArtikel()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+    <div class="flex-container">
+        <div class="column-layout">
+            <label class="margin-bottom">Artikel auswählen:</label>
+            <select class="custom-select-no-margin" [(ngModel)]="selectedArtikel" (ngModelChange)="onArtikelChange($event)">
+                <option *ngFor="let item of artikels" [ngValue]="item">{{ item.name }}</option>
+            </select>
+        </div>
+
+        <button mat-icon-button class="align-button" (click)="addArtikel()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
 
     <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="data.name">
+        <mat-label>Zusatzinfo</mat-label>
+        <input matInput [(ngModel)]="data.descriptionZusatz">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Anzahl</mat-label>
+        <input matInput [(ngModel)]="data.amount">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Preis</mat-label>
+        <input matInput [(ngModel)]="data.preis">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -11,17 +57,11 @@
         <input matInput [(ngModel)]="data.description">
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Anzahl</mat-label>
-        <input matInput [(ngModel)]="data.quantity">
-    </mat-form-field>
+    <div mat-dialog-actions class="dialog-actions">
+        <button mat-button (click)="onNoClick()">Abbrechen</button>
+        <button mat-button (click)="save()">Speichern</button>
+    </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Hersteller</mat-label>
-        <input matInput [(ngModel)]="data.manufacturer">
-    </mat-form-field>
 </div>
-<div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-button (click)="save()">Speichern</button>
-</div>
+
+

@@ -4,15 +4,19 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/login')]
 class LoginController extends BaseController
 {
-    public function __construct(SerializerInterface $serializer, private readonly UserRepository $userRepository)
-    {
-        parent::__construct($serializer);
+    public function __construct(
+        SerializerInterface $serializer,
+        private readonly UserRepository $userRepository,
+        private readonly FormFactoryInterface $formFactory
+    ) {
+        parent::__construct($serializer, $this->formFactory);
     }
 
     #[Route(path: '/{mitarbeiterId}', name: 'app_login', methods: ['GET'])]
@@ -20,7 +24,7 @@ class LoginController extends BaseController
     {
         $data = ['success' => false, 'message' => 'Mitarbeiter Login ist fehlgeschlagen!'];
 
-        $user = $this->userRepository->find($mitarbeiterId);
+        $user = $this->userRepository->findOneBy(['mitarbeiterId' => $mitarbeiterId]);
         if ($user !== null) {
             $data = [
                 'success' => true,

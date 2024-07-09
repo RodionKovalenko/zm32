@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Entity;
+
 use App\Entity\Material\Artikel;
+use App\Repository\DepartmentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: Department::class)]
+#[ORM\Entity(repositoryClass: DepartmentRepository::class)]
 class Department
 {
     #[ORM\Id]
@@ -30,22 +32,13 @@ class Department
     )]
     private Collection $mitarbeiterToDepartments;
 
-    #[Groups(['Department_Bestellung', 'Bestellung'])]
-    #[ORM\OneToMany(
-        mappedBy: 'department',
-        targetEntity: Bestellung::class,
-        cascade: ['merge', 'persist', 'remove']
-    )]
-    private Collection $bestellungen;
-
     #[Groups(['Department_Artikel', 'Artikel'])]
-    #[ORM\OneToMany(
-        mappedBy: 'department',
-        targetEntity: Artikel::class,
-        cascade: ['merge', 'persist', 'remove']
-    )]
+    #[ORM\ManyToMany(targetEntity: Artikel::class, mappedBy: "departments")]
     private Collection $artikels;
 
+    #[Groups(['Department_Bestellung', 'Bestellung'])]
+    #[ORM\ManyToMany(targetEntity: Bestellung::class, mappedBy: "departments")]
+    private Collection $bestellungen;
 
     public function __construct()
     {
@@ -110,25 +103,51 @@ class Department
         return $this;
     }
 
-    public function getBestellungen(): Collection
-    {
-        return $this->bestellungen;
-    }
-
-    public function setBestellungen(Collection $bestellungen): Department
-    {
-        $this->bestellungen = $bestellungen;
-        return $this;
-    }
-
     public function getArtikels(): Collection
     {
         return $this->artikels;
     }
 
-    public function setArtikels(Collection $artikels): Department
+    public function addArtikel(Artikel $artikel): self
     {
-        $this->artikels = $artikels;
+        if (!$this->artikels->contains($artikel)) {
+            $this->artikels[] = $artikel;
+            $artikel->addDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArtikel(Artikel $artikel): self
+    {
+        if ($this->artikels->removeElement($artikel)) {
+            $artikel->removeDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function addBestellung(Bestellung $bestellung): self
+    {
+        if (!$this->bestellungen->contains($bestellung)) {
+            $this->bestellungen[] = $bestellung;
+            $bestellung->addDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBestellung(Bestellung $bestellung): self
+    {
+        if ($this->bestellungen->removeElement($bestellung)) {
+            $bestellung->removeDepartment($this);
+        }
+
         return $this;
     }
 }

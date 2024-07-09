@@ -12,4 +12,14 @@ class MitarbeiterRepository extends DefaultRepository
         parent::__construct($registry, Mitarbeiter::class);
     }
 
+    public function getMitarbeiterByUserMitarbeiterId(int $mitarbeiterId): ?Mitarbeiter
+    {
+        return $this->createQueryBuilder('m')
+            ->innerJoin('m.user', 'u')
+            ->where('u.mitarbeiterId = :mitarbeiterId')
+            ->setParameter('mitarbeiterId', $mitarbeiterId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

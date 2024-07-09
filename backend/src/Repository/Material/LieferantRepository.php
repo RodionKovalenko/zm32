@@ -12,4 +12,14 @@ class LieferantRepository extends DefaultRepository
     {
         parent::__construct($registry, Lieferant::class);
     }
+
+    public function getByArtikel(int $artikelId)
+    {
+        $q = $this->createQueryBuilder('l')
+            ->join('l.lieferantArtikels', 'la')
+            ->where('la.artikel = :artikelId')
+            ->setParameter('artikelId', $artikelId);
+
+        return $q->getQuery()->getResult();
+    }
 }

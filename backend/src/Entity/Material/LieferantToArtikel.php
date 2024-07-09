@@ -2,11 +2,12 @@
 
 namespace App\Entity\Material;
 
+use App\Repository\Material\LieferantToArtikelRepository;
 use Doctrine\DBAL\Types\Types;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: LieferantToArtikel::class)]
+#[ORM\Entity(repositoryClass: LieferantToArtikelRepository::class)]
 class LieferantToArtikel
 {
     #[ORM\Id]
