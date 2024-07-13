@@ -35,4 +35,4 @@ EXPOSE 4200
 
 # Start the application and bind to all network interfaces
 #CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200"]
-CMD ["npm", "start"]
+CMD ["npm", "run", "build"]

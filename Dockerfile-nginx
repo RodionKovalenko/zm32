@@ -6,6 +6,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN rm /etc/nginx/conf.d/default.conf
 
+COPY php-fpm.conf /usr/local/etc/php-fpm.conf
+
 # Optional: Copy any static assets if needed
 # COPY /path/to/static/assets /usr/share/nginx/html/assets
 

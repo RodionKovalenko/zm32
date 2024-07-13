@@ -9,6 +9,8 @@ services:
       - ./backend:/var/www/symfony
     environment:
       DATABASE_URL: mysql://zm_32:zm_32@database:3306/zm_32
+      APP_ENV: prod
+      APP_DEBUG: 0
     networks:
       - symfony-angular-network
     depends_on:
@@ -30,39 +32,32 @@ services:
       - "4433:443"  # For HTTPS
     volumes:
       - ./backend:/var/www/symfony
-      - ./backend/public:/var/www/symfony/public
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./backend/ssl/server-backend.crt:/etc/nginx/ssl/server-backend.crt
-      - ./backend/ssl/server-backend.key:/etc/nginx/ssl/server-backend.key
-      - ./frontend/ssl/server-frontend.crt:/etc/nginx/ssl/server-frontend.crt
-      - ./frontend/ssl/server-frontend.key:/etc/nginx/ssl/server-frontend.key
-      - ./backend/ssl:/etc/ssl/certs
-      - ./backend/ssl/server.crt:/etc/ssl/certs/server.crt
-      - ./backend/ssl/server.key:/etc/ssl/private/server.key
+      - ./backend/ssl:/etc/nginx/ssl  # Use a single mount for SSL
+      - ./frontend/dist/browser:/var/www/angular/dist  # Angular build output
     networks:
       - symfony-angular-network
     depends_on:
       - symfony
 
-  angular:
+  nginx-angular:
     build:
       context: ./frontend
-      dockerfile: Dockerfile-prod
-    volumes:
-      - ./frontend:/app
+      dockerfile: Dockerfile-nginx-angular
     ports:
-      - "4200:4200"  # Ensure you map the correct port
+      - "4200:80"  # For Angular app
     networks:
       - symfony-angular-network
-    extra_hosts:
-      - "iba:127.0.0.1"  # Map custom hostname to localhost
-     
+
   php-fpm:
-    image: php:8.0-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile-php-fpm
     volumes:
       - ./backend:/var/www/symfony
+      - ./var/log:/var/log
     networks:
-      - app-network
+      - symfony-angular-network
 
   database:
     image: mysql:8.0
@@ -85,7 +80,7 @@ services:
 
 networks:
   symfony-angular-network:
-    driver: bridge
+    driver: host
 
 volumes:
   db_data:

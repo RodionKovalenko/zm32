@@ -88,3 +88,11 @@ kill -9 18 19 30 60
 
 // rebuild only ngindx service
 docker-compose -f docker-compose-prod.yml up --build nginx
+
+
+ docker-compose exec php-fpm sh
+ cd /usr/local/etc/php-fpm.d/
+ vi www.conf
+
+ access.log = /var/log/php-fpm.access.log
+ slowlog = /var/log/php-fpm.slow.log
