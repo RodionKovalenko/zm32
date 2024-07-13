@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Switch to root user
+# Switch to root user for installation
 USER root
 
 # Install system dependencies and PHP extensions
@@ -38,11 +38,11 @@ COPY . .
 # Set permissions for the application files
 RUN chown -R www-data:www-data /var/www/symfony
 
-# Create Composer cache directory and set permissions as root
+# Create Composer cache directory and set permissions
 RUN mkdir -p /var/www/.composer/cache && \
     chown -R www-data:www-data /var/www/.composer
 
-# Copy entrypoint script and set permissions as root
+# Copy entrypoint script and set permissions
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
@@ -55,4 +55,3 @@ USER www-data
 # Expose port 9000 and start PHP-FPM server
 EXPOSE 9000
 CMD ["php-fpm"]
-
