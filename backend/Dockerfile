@@ -47,7 +47,7 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Install Composer dependencies
-RUN composer install --no-interaction --prefer-dist --no-scripts
+RUN composer install --no-interaction --prefer-dist --no-scripts --optimize-autoloader --no-dev
 
 # Switch back to the non-root user
 USER www-data

@@ -45,9 +45,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile-nginx-angular
     ports:
-      - "4200:80"  # For Angular app
+      - "8001:80"  # For Angular app
+      - "4200:443"  # For Angular app
     volumes:
       - angular_dist:/var/www/angular/dist
+      - ./frontend/ssl:/etc/nginx/ssl  # Use a single mount for SSL
     networks:
       - symfony-angular-network
 

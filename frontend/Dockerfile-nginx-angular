@@ -31,6 +31,10 @@ COPY --from=builder /app/dist/browser /usr/share/nginx/html
 # Copy Nginx configuration
 COPY nginx-angular.conf /etc/nginx/nginx.conf
 
+# Copy SSL certificates (ensure these exist in your project)
+COPY ./ssl/server.crt /etc/nginx/ssl/server.crt
+COPY ./ssl/server.key /etc/nginx/ssl/server.key
+
 # Expose ports
 EXPOSE 80
 EXPOSE 443
