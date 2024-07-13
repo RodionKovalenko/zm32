@@ -1,10 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {DepartmentData} from "../../models/Department";
 import {HttpService} from "../../services/http.service";
 import {Artikel} from "../../models/Artikel";
 import {Lieferant} from "../../models/Lieferant";
 import {Bestellung} from "../../models/Bestellung";
+import {MaterialEditComponentComponent} from "../../data-grid-artikel/material-edit-component/material-edit-component.component";
+import {LoginErrorComponent} from "../../login/login-error/login-error.component";
+import {LieferantEditComponentComponent} from "../../data-grid-artikel/lieferant-edit-component/lieferant-edit-component.component";
 
 @Component({
     selector: 'app-bestellung-edit-component',
@@ -14,7 +17,8 @@ import {Bestellung} from "../../models/Bestellung";
 export class BestellungEditComponentComponent implements OnInit {
     constructor(private httpService: HttpService,
                 public dialogRef: MatDialogRef<BestellungEditComponentComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: Bestellung) {
+                @Inject(MAT_DIALOG_DATA) public data: Bestellung,
+                public dialog: MatDialog) {
     }
 
     artikels: Artikel[] = [{
@@ -30,8 +34,16 @@ export class BestellungEditComponentComponent implements OnInit {
     departments: DepartmentData[] = [{id: 0, name: 'test', typ: 0}];
     selectedDepartment: DepartmentData = {id: 0, name: '', typ: 0};
 
-    lieferants: Lieferant[] = [{id: 0, name: 'test'}];
-    selectedLieferant: Lieferant = {id: 0, name: 'test'};
+    selectedLieferant: Lieferant = {
+        formTitle: "", id: 0, name: 'test',
+        lieferantStammdaten: {
+            plz: '',
+            ort: '',
+            adresse: ''
+        }
+    };
+
+    lieferants: Lieferant[] = [this.selectedLieferant];
 
     ngOnInit(): void {
         this.loadDepartments();
@@ -110,7 +122,33 @@ export class BestellungEditComponentComponent implements OnInit {
     }
 
     addArtikel() {
+        const dialogRef = this.dialog.open(MaterialEditComponentComponent, {
+            width: '550px',
+            data: {
+                formTitle: 'Artikel hinzufügen'
+            },
+            disableClose: true,
+        });
 
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+            }
+        });
+    }
+
+    addLieferant() {
+        const dialogRef = this.dialog.open(LieferantEditComponentComponent, {
+            width: '550px',
+            data: {
+                formTitle: 'Neuen Lieferant hinzufügen'
+            },
+            disableClose: true,
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+            }
+        });
     }
 
     save(): void {
@@ -128,11 +166,28 @@ export class BestellungEditComponentComponent implements OnInit {
             lieferantId: this.selectedLieferant?.id
         };
         this.httpService.get_httpclient().post(url, orderData).subscribe({
-            next: (response) => {
-                this.dialogRef.close(response);
+            next: (response: any) => {
+                if (response && response.success && Boolean(response?.success)) {
+                    this.dialogRef.close(response);
+                } else {
+                    this.dialog.open(LoginErrorComponent, {
+                        width: '450px',
+                        height: '150px',
+                        data: {
+                            title: response?.message
+                        }
+                    });
+                }
             },
             error: (err) => {
-                console.error('Error creating order:', err);
+                console.log(err);
+                this.dialog.open(LoginErrorComponent, {
+                    width: '450px',
+                    height: '150px',
+                    data: {
+                        title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
+                    }
+                });
             }
         });
     }

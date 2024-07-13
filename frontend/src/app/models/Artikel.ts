@@ -6,4 +6,5 @@ export interface Artikel {
     quantity: number;
     description: string;
     lieferantToArtikels?: LieferantToArtikel[];
+    formTitle?: string;
 }

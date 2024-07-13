@@ -117,4 +117,21 @@ class Lieferant
         $this->lieferantArtikels = $lieferantArtikels;
         return $this;
     }
+
+    public function addStammdaten(LieferantStammdaten $stammdaten): self
+    {
+        if (!$this->liferantStammdaten->contains($stammdaten)) {
+            $this->liferantStammdaten[] = $stammdaten;
+            $stammdaten->setLieferant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStammdaten(LieferantStammdaten $stammdaten): self
+    {
+        $this->liferantStammdaten->removeElement($stammdaten);
+
+        return $this;
+    }
 }

@@ -55,3 +55,36 @@ ddev exec php bin/console doctrine:migrations:migrate
 angular:
 nvm install 18.19.0
 nvm use 18.19.0
+
+
+// Production mode
+docker-compose -f docker-compose-prod.yml up --build
+
+// execute command in shell
+docker exec -it zm32-symfony-1 sh
+docker exec -it zm32-angular-1 sh
+
+// troubleshouting
+
+docker-compose ps
+docker-compose logs symfony
+
+// Restart only symfony without rebuilding
+docker-compose -f docker-compose-prod.yml restart symfony
+
+
+// kill angular ng serve
+ps aux | grep ng
+
+Example:
+ ps aux | grep ng
+node          18  0.0  0.0   2576   896 ?        S    10:51   0:00 sh -c ng serve --host 0.0.0.0 --port 4200
+node          19 10.5  3.0 34514408 481540 ?     Sl   10:51   0:29 ng serve --host 0.0.0.0 --port 4200
+node          30  0.3  0.1 724452 24436 ?        Sl   10:52   0:00 /app/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.21.3 --ping
+node          60  0.0  0.0   3324  1512 pts/0    S+   10:56   0:00 grep ng
+
+kill -9 18 19 30 60
+
+
+// rebuild only ngindx service
+docker-compose -f docker-compose-prod.yml up --build nginx

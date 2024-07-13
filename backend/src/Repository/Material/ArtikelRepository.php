@@ -2,6 +2,8 @@
 
 namespace App\Repository\Material;
 
+use App\Entity\Department;
+use App\Entity\DepartmentTyp;
 use App\Entity\Material\Artikel;
 use App\Repository\DefaultRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,17 +15,26 @@ class ArtikelRepository extends DefaultRepository
         parent::__construct($registry, Artikel::class);
     }
 
-    public function getByDepartmentId($departmentId): array
+    public function getByDepartmentId(array $departments): array
     {
-        if (!is_array($departmentId)) {
-            $departmentId = [$departmentId];
+        $allDepartments = false;
+        /** @var Department $department */
+        foreach ($departments as $department) {
+            if ($department->getTyp() === DepartmentTyp::ALLE->value) {
+                $allDepartments = true;
+                break;
+            }
         }
 
-        return $this->createQueryBuilder('a')
-            ->leftJoin('a.departments', 'd')
-            ->where('d IN (:departmentId)')
-            ->setParameter('departmentId', $departmentId)
-            ->getQuery()
+        $q = $this->createQueryBuilder('a')
+            ->leftJoin('a.departments', 'd');
+
+        if (!$allDepartments) {
+            $q->where('d IN (:departmentId)')
+                ->setParameter('departmentId', $departments);
+        }
+
+        return $q->getQuery()
             ->getResult();
     }
 }

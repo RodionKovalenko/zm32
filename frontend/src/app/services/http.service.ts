@@ -5,7 +5,8 @@ import {HttpClient} from "@angular/common/http";
   providedIn: 'root'
 })
 export class HttpService {
-  private baseUrl = 'https://iba-backend.ddev.site' ;
+ // private baseUrl = 'https://iba-backend.ddev.site' ;
+  private baseUrl = 'https://localhost:8000' ;
   loginURL = `${this.baseUrl}/login`;
 
   constructor(private httpClient: HttpClient) {}

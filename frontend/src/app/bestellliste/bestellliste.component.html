@@ -1,10 +1,3 @@
 <h1>Bestellliste</h1>
 
-<div>
-    <label class="margin-left-50"> Abteilung:</label>
-    <select class="custom-select" [(ngModel)]="selectedValue" (ngModelChange)="onDepartmentChange($event)">
-        <option *ngFor="let item of departmentRecords" [ngValue]="item">{{item.name}}</option>
-    </select>
-</div>
-
-<app-data-grid-bestellungen [departmentId]="selectedValue.id"></app-data-grid-bestellungen>
+<app-data-grid-bestellungen></app-data-grid-bestellungen>

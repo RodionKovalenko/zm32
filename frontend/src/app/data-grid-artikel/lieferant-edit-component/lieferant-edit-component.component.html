@@ -7,22 +7,19 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Beschreibung</mat-label>
-        <input matInput [(ngModel)]="data.description">
+        <mat-label>PLZ</mat-label>
+        <input matInput [(ngModel)]="data.lieferantStammdaten.plz">
     </mat-form-field>
 
-    <div class="flex-container">
-        <div class="column-layout">
-            <label class="margin-bottom">Lieferant auswählen (optional):</label>
-            <select class="custom-select-no-margin" [(ngModel)]="selectedLieferant" (ngModelChange)="onLieferantChange($event)">
-                <option *ngFor="let item of lieferants" [ngValue]="item">{{ item.name }}</option>
-            </select>
-        </div>
+    <mat-form-field appearance="fill">
+        <mat-label>Ort</mat-label>
+        <input matInput [(ngModel)]="data.lieferantStammdaten.ort">
+    </mat-form-field>
 
-        <button mat-icon-button class="align-button color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
+    <mat-form-field appearance="fill">
+        <mat-label>Ort</mat-label>
+        <input matInput [(ngModel)]="data.lieferantStammdaten.adresse">
+    </mat-form-field>
 </div>
 
 <mat-toolbar color="custom-toolbar" class="fixed-toolbar">

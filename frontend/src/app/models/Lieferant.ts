@@ -1,5 +1,13 @@
 export interface Lieferant {
     id: Number;
     name: string;
-    typ?: Number;
+    formTitle?: string;
+    lieferantStammdaten: {
+        id?: Number;
+        typ?: Number;
+        plz?: string;
+        ort?: string;
+        adresse?: string;
+    }
+
 }

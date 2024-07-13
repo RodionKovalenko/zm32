@@ -30,7 +30,8 @@ class BestellungController extends BaseController
     #[Route(path: '/{departmentId}', name: 'app_bestellung_get_bestellung', methods: ['GET'])]
     public function getBestellung(int $departmentId, Request $request)
     {
-        $bestellungen = $this->bestellungRepository->getByDepartment($departmentId);
+        $departments = $this->departmentRepository->findBy(['id' => $departmentId]);
+        $bestellungen = $this->bestellungRepository->getByDepartment($departments);
 
         $response = [
             'success' => true,
@@ -49,7 +50,7 @@ class BestellungController extends BaseController
     }
 
     #[Route(path: '/save/{id}', name: 'app_bestellung_save_bestellung', defaults: ['id' => null], methods: ['POST'])]
-    public function getSaveBestellung($id, Request $request)
+    public function saveBestellung($id, Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $bestellungId = $data['id'] ?? null;
@@ -85,7 +86,7 @@ class BestellungController extends BaseController
                 return $this->getJsonResponse(['success' => true, 'data' => [$bestellung]]);
             }
 
-            return $this->getJsonResponse(['data' => (string)$form->getErrors()]);
+            return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors()]);
         } catch (\Exception $e) {
             $response = [
                 'success' => false,
@@ -96,4 +97,21 @@ class BestellungController extends BaseController
         }
     }
 
+    #[Route(path: '/delete/{id}', name: 'app_bestellung_delete_bestellung', methods: ['POST'])]
+    public function deleteBestellung($id, Request $request)
+    {
+        $bestellung = $this->bestellungRepository->find($id);
+
+        if ($bestellung === null) {
+            return $this->getJsonResponse(['success' => false, 'message' => 'Bestellung wurde nicht gefunden']);
+        }
+
+        try {
+            $this->bestellungRepository->delete($bestellung);
+        } catch (\Exception $e) {
+            return $this->getJsonResponse(['success' => false, 'message' => $e->getMessage()]);
+        }
+
+        return $this->getJsonResponse(['success' => true]);
+    }
 }

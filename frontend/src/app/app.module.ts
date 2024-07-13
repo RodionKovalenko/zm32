@@ -34,6 +34,8 @@ import {FlexModule} from "@angular/flex-layout";
 import {NavigationMenuComponent} from "./navigation-menu/navigation-menu.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {LoginErrorComponent} from "./login/login-error/login-error.component";
+import {MatTooltip} from "@angular/material/tooltip";
+import {LieferantEditComponentComponent} from "./data-grid-artikel/lieferant-edit-component/lieferant-edit-component.component";
 
 @NgModule({
     declarations: [
@@ -46,6 +48,7 @@ import {LoginErrorComponent} from "./login/login-error/login-error.component";
         DataGridArtikelComponent,
         DataGridBestellungenComponent,
         MaterialEditComponentComponent,
+        LieferantEditComponentComponent,
         BestellungEditComponentComponent,
         BestelllisteComponent,
         NavigationMenuComponent
@@ -74,7 +77,8 @@ import {LoginErrorComponent} from "./login/login-error/login-error.component";
         MatNavList,
         MatListItem,
         MatSidenav,
-        FlexModule
+        FlexModule,
+        MatTooltip
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),

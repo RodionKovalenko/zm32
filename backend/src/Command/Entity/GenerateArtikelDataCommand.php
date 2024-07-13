@@ -55,6 +55,29 @@ class GenerateArtikelDataCommand extends Command
 
             $existingUser = $this->userRepository->findAll();
             $this->userRepository->removeAll($existingUser);
+
+            $existingDepartment = $this->departmentRepository->findAll();
+            $this->departmentRepository->removeAll($existingDepartment);
+        }
+
+        $deparmentAlls = $this->departmentRepository->findOneBy(['typ' => DepartmentTyp::ALLE->value]);
+
+        if ($deparmentAlls === null) {
+            $deparmentAlls = new Department();
+            $deparmentAlls->setName('Alle')
+                ->setTyp(DepartmentTyp::ALLE->value);
+
+            $this->departmentRepository->save($deparmentAlls);
+        }
+
+        $departmentAllgemein = $this->departmentRepository->findOneBy(['typ' => DepartmentTyp::ALLGEMEIN->value]);
+
+        if ($departmentAllgemein === null) {
+            $departmentAllgemein = new Department();
+            $departmentAllgemein->setName('Allgemein')
+                ->setTyp(DepartmentTyp::ALLGEMEIN->value);
+
+            $this->departmentRepository->save($departmentAllgemein);
         }
 
         try {

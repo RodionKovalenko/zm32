@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Bestellung;
+use App\Entity\DepartmentTyp;
 use Doctrine\Persistence\ManagerRegistry;
 
 class BestellungRepository extends DefaultRepository
@@ -12,17 +13,26 @@ class BestellungRepository extends DefaultRepository
         parent::__construct($registry, Bestellung::class);
     }
 
-    public function getByDepartment($deparmentId)
+    public function getByDepartment(array $deparments)
     {
-        if (!is_array($deparmentId)) {
-            $deparmentId = [$deparmentId];
+        $isAllDepartment = false;
+
+        foreach ($deparments as $department) {
+            if ($department->getTyp() === DepartmentTyp::ALLE->value) {
+                $isAllDepartment = true;
+                break;
+            }
         }
 
-        return $this->createQueryBuilder('b')
-            ->leftJoin('b.departments', 'd')
-            ->where('d.id IN (:departmentId)')
-            ->setParameter('departmentId', $deparmentId)
-            ->getQuery()
+        $q = $this->createQueryBuilder('b')
+            ->leftJoin('b.departments', 'd');
+
+        if (!$isAllDepartment) {
+            $q->where('d.id IN (:departmentId)')
+                ->setParameter('departmentId', $deparments);
+        }
+
+        return $q->getQuery()
             ->getResult();
     }
 }

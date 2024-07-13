@@ -7,26 +7,6 @@ import {DepartmentData} from "../models/Department";
     styleUrl: './bestellliste.component.css'
 })
 
-export class BestelllisteComponent implements OnInit {
-    departmentRecords: DepartmentData[] = [{id: 0, name: 'test', typ: 0}];
-    selectedValue: DepartmentData = {id: 0, name: '', typ: 0};
+export class BestelllisteComponent  {
 
-    constructor(private httpService: HttpService) {
-    }
-
-    loadDepartments() {
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/department/get_departments');
-        mitarbeiterRequest.subscribe((response: any) => {
-            this.departmentRecords = response.data;
-            this.selectedValue = this.departmentRecords[0];
-        });
-    }
-
-    ngOnInit(): void {
-        this.loadDepartments();
-    }
-
-    onDepartmentChange(newValue: DepartmentData): void {
-        this.selectedValue = newValue;
-    }
 }

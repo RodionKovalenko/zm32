@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Bestellung hinzufügen</h1>
 
-<div mat-dialog-content class="mat-dialog-content" fxLayout="column" fxLayoutGap="16px" fxFlexFill>
+<div mat-dialog-content class="mat-dialog-content" fxLayout="column">
 
     <div class="flex-container">
         <div class="column-layout">
@@ -19,7 +19,7 @@
             </select>
         </div>
 
-        <button mat-icon-button class="align-button" (click)="addArtikel()">
+        <button mat-icon-button class="align-button color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">
             <mat-icon>add</mat-icon>
         </button>
     </div>
@@ -32,13 +32,13 @@
             </select>
         </div>
 
-        <button mat-icon-button class="align-button" (click)="addArtikel()">
+        <button mat-icon-button class="align-button color-confirm" matTooltip="Neuen Artikel hinzufügen"(click)="addArtikel()">
             <mat-icon>add</mat-icon>
         </button>
     </div>
 
     <mat-form-field appearance="fill">
-        <mat-label>Zusatzinfo</mat-label>
+        <mat-label>Zusatzinfo zum Artikel</mat-label>
         <input matInput [(ngModel)]="data.descriptionZusatz">
     </mat-form-field>
 
@@ -53,15 +53,18 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-        <mat-label>Beschreibung</mat-label>
+        <mat-label>Notizen</mat-label>
         <input matInput [(ngModel)]="data.description">
     </mat-form-field>
-
-    <div mat-dialog-actions class="dialog-actions">
-        <button mat-button (click)="onNoClick()">Abbrechen</button>
-        <button mat-button (click)="save()">Speichern</button>
-    </div>
-
 </div>
 
+<mat-toolbar color="custom-toolbar" class="fixed-toolbar">
+    <span class="spacer"></span>
+    <button mat-icon-button class="align-button color-cancel" matTooltip="Abbrechen" (click)="onNoClick()">
+        <mat-icon>cancel</mat-icon>
+    </button>
+    <button mat-icon-button class="align-button color-confirm" matTooltip="Speichern" (click)="save()">
+        <mat-icon>save</mat-icon>
+    </button>
+</mat-toolbar>
 
