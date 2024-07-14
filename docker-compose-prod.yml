@@ -90,7 +90,7 @@ services:
 
 networks:
   symfony-angular-network:
-    driver: host
+    driver: bridge
 
 volumes:
   db_data:
