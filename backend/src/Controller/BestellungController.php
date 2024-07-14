@@ -8,6 +8,7 @@ use App\Entity\Mitarbeiter;
 use App\Forms\BestellungForm;
 use App\Repository\BestellungRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\Material\LieferantRepository;
 use App\Repository\MitarbeiterRepository;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -22,7 +23,8 @@ class BestellungController extends BaseController
         private readonly BestellungRepository $bestellungRepository,
         private readonly FormFactoryInterface $formFactory,
         private readonly DepartmentRepository $departmentRepository,
-        private readonly MitarbeiterRepository $mitarbeiterRepository
+        private readonly MitarbeiterRepository $mitarbeiterRepository,
+        private readonly LieferantRepository $lieferantRepository
     ) {
         parent::__construct($serializer, $this->formFactory);
     }
@@ -45,6 +47,7 @@ class BestellungController extends BaseController
                 'Bestellung_Artikel',
                 'Bestellung_Mitarbeiter',
                 'Artikel_Department',
+                'Bestellung_Lieferant'
             ]
         );
     }
@@ -73,6 +76,9 @@ class BestellungController extends BaseController
 
             $department = $this->departmentRepository->findOneBy(['id' => $data['department']]);
             $bestellung->addDepartment($department);
+
+            $lieferant = $this->lieferantRepository->findOneBy(['id' => $data['lieferantId']]);
+            $bestellung->setLieferant($lieferant);
 
             /** @var Mitarbeiter $mitarbeiter */
             $mitarbeiter = $this->mitarbeiterRepository->getMitarbeiterByUserMitarbeiterId($data['mitarbeiterId']);

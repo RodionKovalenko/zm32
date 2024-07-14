@@ -31,7 +31,7 @@ class Lieferant
         targetEntity: LieferantStammdaten::class,
         cascade: ['merge', 'persist', 'remove']
     )]
-    private Collection $liferantStammdaten;
+    private Collection $lieferantStammdaten;
 
     #[Groups(['Lieferant_LieferantToArtikel', 'LieferantToArtikel'])]
     #[ORM\OneToMany(
@@ -51,7 +51,7 @@ class Lieferant
 
     public function __construct()
     {
-        $this->liferantStammdaten = new ArrayCollection();
+        $this->lieferantStammdaten = new ArrayCollection();
         $this->bestellungen = new ArrayCollection();
         $this->lieferantArtikels = new ArrayCollection();
     }
@@ -86,16 +86,6 @@ class Lieferant
         $this->typ = $typ;
     }
 
-    public function getLiferantStammdaten(): Collection
-    {
-        return $this->liferantStammdaten;
-    }
-
-    public function setLiferantStammdaten(Collection $liferantStammdaten): void
-    {
-        $this->liferantStammdaten = $liferantStammdaten;
-    }
-
     public function getBestellungen(): Collection
     {
         return $this->bestellungen;
@@ -118,20 +108,23 @@ class Lieferant
         return $this;
     }
 
-    public function addStammdaten(LieferantStammdaten $stammdaten): self
+    public function getLieferantStammdaten(): Collection
     {
-        if (!$this->liferantStammdaten->contains($stammdaten)) {
-            $this->liferantStammdaten[] = $stammdaten;
-            $stammdaten->setLieferant($this);
-        }
+        return $this->lieferantStammdaten;
+    }
 
+    public function addLieferantStammdaten(LieferantStammdaten $lieferantStammdaten): self
+    {
+        if (!$this->lieferantStammdaten->contains($lieferantStammdaten)) {
+            $this->lieferantStammdaten[] = $lieferantStammdaten;
+            $lieferantStammdaten->setLieferant($this); // Set the reverse reference
+        }
         return $this;
     }
 
-    public function removeStammdaten(LieferantStammdaten $stammdaten): self
+    public function removeLieferantStammdaten(LieferantStammdaten $lieferantStammdaten): self
     {
-        $this->liferantStammdaten->removeElement($stammdaten);
-
+        $this->lieferantStammdaten->removeElement($lieferantStammdaten);
         return $this;
     }
 }

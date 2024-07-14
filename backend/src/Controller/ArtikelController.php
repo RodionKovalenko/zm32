@@ -2,12 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Bestellung;
-use App\Entity\BestellungStatus;
 use App\Entity\Material\Artikel;
-use App\Entity\Mitarbeiter;
 use App\Forms\ArtikelForm;
-use App\Forms\BestellungForm;
 use App\Repository\DepartmentRepository;
 use App\Repository\Material\ArtikelRepository;
 use JMS\Serializer\SerializerInterface;
@@ -74,5 +70,12 @@ class ArtikelController extends BaseController
 
             return $this->getJsonResponse($response);
         }
+    }
+
+    #[Route(path: '/delete/{id}', name: 'app_artikel_delete_artikel', defaults: ['id' => null], methods: ['POST'])]
+    public function deleteArtikel($id, Request $request)
+    {
+        $lieferant = $this->artikelRepository->find($id);
+        $this->artikelRepository->remove($lieferant);
     }
 }

@@ -91,15 +91,18 @@ export class BestellungEditComponentComponent implements OnInit {
 
     loadLieferants() {
         let url = this.httpService.get_baseUrl() + '/lieferant';
-        if (this.selectedArtikel && this.selectedArtikel.id !== 0) {
-            url += '/' + this.selectedArtikel.id;
-        }
         let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
         mitarbeiterRequest.subscribe((response: any) => {
             this.lieferants = response.data;
 
-            if (this.lieferants.length > 0) {
+            if (this.lieferants.length > 0 && this.selectedLieferant.id === 0) {
                 this.selectedLieferant = this.lieferants[0];
+            } else if (this.selectedLieferant.id !== 0) {
+                // Check if the selectedLieferant exists in the loaded list
+                const existingLieferant = this.lieferants.find(l => l.id === this.selectedLieferant.id);
+                if (existingLieferant) {
+                    this.selectedLieferant = existingLieferant; // Set to the existing one
+                }
             }
         });
     }
@@ -132,6 +135,7 @@ export class BestellungEditComponentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.loadArtikel(this.selectedDepartment);
             }
         });
     }
@@ -147,6 +151,8 @@ export class BestellungEditComponentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.loadLieferants();
+                this.selectedLieferant = result['data'][0];
             }
         });
     }

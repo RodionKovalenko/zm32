@@ -7,9 +7,9 @@ services:
       context: .
       dockerfile: Dockerfile-dev
     ports:
-      - 4201:4201
+      - "4201:443"
     volumes:
       - "./:/var/www/html"
+      - "./ssl:/certs"  # Mount the certificates
     working_dir: /var/www/html
-    command: ng serve --host 0.0.0.0 --poll=2000 --port 4201
-
+    command: ng serve --host 0.0.0.0 --poll=2000 --port 443 --ssl true --ssl-key /certs/server.key --ssl-cert /certs/server.crt

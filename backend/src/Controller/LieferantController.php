@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Material\Lieferant;
 use App\Forms\LieferantForm;
 use App\Repository\Material\LieferantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,12 @@ class LieferantController extends BaseController
                 $lieferant = new Lieferant();
             }
 
+            if (isset($data['lieferantStammdaten']) && !is_array($data['lieferantStammdaten'][0])) {
+                $data['lieferantStammdaten'] = [$data['lieferantStammdaten']];
+            }
+
             $form = $this->createForm(LieferantForm::class, $lieferant);
+
             $form->submit($data, false);
 
             if ($form->isValid()) {
@@ -60,7 +66,7 @@ class LieferantController extends BaseController
                 return $this->getJsonResponse(['success' => true, 'data' => [$lieferant]]);
             }
 
-            return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors()]);
+            return $this->getJsonResponse(['success' => false, 'message' => (string) $form->getErrors(true)]);
         } catch (\Exception $e) {
             $response = [
                 'success' => false,
@@ -69,5 +75,12 @@ class LieferantController extends BaseController
 
             return $this->getJsonResponse($response);
         }
+    }
+
+    #[Route(path: '/delete/{id}', name: 'app_lieferant_delete_lieferant', defaults: ['id' => null], methods: ['POST'])]
+    public function deleteLieferant($id, Request $request)
+    {
+        $lieferant = $this->lieferantRepository->find($id);
+        $this->lieferantRepository->remove($lieferant);
     }
 }

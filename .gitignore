@@ -1,3 +1,4 @@
 
 /.env.local
 /my_sqldata/
+/cron.log

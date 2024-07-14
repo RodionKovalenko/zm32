@@ -12,7 +12,7 @@ import {LieferantEditComponentComponent} from "../lieferant-edit-component/liefe
 
     styleUrl: './material-edit-component.component.css',
 })
-export class MaterialEditComponentComponent implements  OnInit{
+export class MaterialEditComponentComponent implements OnInit {
     selectedLieferant: Lieferant = {
         formTitle: "", id: 0, name: 'test',
         lieferantStammdaten: {
@@ -55,6 +55,7 @@ export class MaterialEditComponentComponent implements  OnInit{
     onNoClick(): void {
         this.dialogRef.close();
     }
+
     save(): void {
         let url = this.httpService.get_baseUrl() + '/artikel/save';
 
@@ -103,6 +104,7 @@ export class MaterialEditComponentComponent implements  OnInit{
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.loadLieferants();
             }
         });
     }

@@ -51,4 +51,42 @@ export class LieferantEditComponentComponent {
             }
         });
     }
+
+    get plz() {
+        return this.data.lieferantStammdaten?.plz || '';
+    }
+
+    set plz(value: string) {
+        if (!this.data.lieferantStammdaten) {
+            this.data.lieferantStammdaten = {};
+        }
+        if (this.data.lieferantStammdaten) {
+            this.data.lieferantStammdaten.plz = value;
+        }
+    }
+
+    get ort() {
+        return this.data.lieferantStammdaten?.ort || '';
+    }
+    set ort(value: string) {
+        if (!this.data.lieferantStammdaten) {
+            this.data.lieferantStammdaten = {};
+        }
+
+        if (this.data.lieferantStammdaten) {
+            this.data.lieferantStammdaten.ort = value;
+        }
+    }
+
+    get adresse() {
+        return this.data.lieferantStammdaten?.adresse || '';
+    }
+    set adresse(value: string) {
+        if (!this.data.lieferantStammdaten) {
+            this.data.lieferantStammdaten = {};
+        }
+        if (this.data.lieferantStammdaten) {
+            this.data.lieferantStammdaten.adresse = value;
+        }
+    }
 }

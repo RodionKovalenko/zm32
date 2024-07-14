@@ -21,11 +21,11 @@ class LieferantStammdaten
         targetEntity: Lieferant::class,
         cascade: ['persist', 'merge', 'remove']
     )]
-    #[ORM\JoinColumn(name: 'oeffnungszeiten_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'lieferant', referencedColumnName: 'id', nullable: false)]
     private Lieferant $lieferant;
 
     #[ORM\Column(type: Types::STRING, length: 150, nullable: true)]
-    private ?string $name = null;
+    private ?string $adresse = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $startdatum = null;
@@ -59,14 +59,14 @@ class LieferantStammdaten
         $this->lieferant = $lieferant;
     }
 
-    public function getName(): ?string
+    public function getAdresse(): ?string
     {
-        return $this->name;
+        return $this->adresse;
     }
 
-    public function setName(?string $name): void
+    public function setAdresse(?string $adresse): void
     {
-        $this->name = $name;
+        $this->adresse = $adresse;
     }
 
     public function getStartdatum(): ?\DateTimeInterface
