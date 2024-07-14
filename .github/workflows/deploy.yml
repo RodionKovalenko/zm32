@@ -15,11 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy to Server
+      - name: Deploy to My Local Server
         run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "git pull && docker-compose -f docker-compose-prod.yml up -d --build"
+          scp -o StrictHostKeyChecking=no ./deploy.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/app
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "chmod +x deploy.sh && ./deploy.sh"
