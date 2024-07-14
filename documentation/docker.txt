@@ -66,7 +66,7 @@ docker exec -it zm32-angular-1 sh
 
 // troubleshouting
 
-docker-compose ps
+secure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
 docker-compose logs symfony
 
 // Restart only symfony without rebuilding
@@ -96,3 +96,13 @@ docker-compose -f docker-compose-prod.yml up --build nginx
 
  access.log = /var/log/php-fpm.access.log
  slowlog = /var/log/php-fpm.slow.log
+
+
+// show all containers running
+docker-compose -f docker-compose-dev.yml ps
+
+
+// check mysql user connection
+
+docker exec -it zm32-database-1 sh
+mysql -u zm_32 -p

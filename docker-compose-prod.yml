@@ -8,9 +8,15 @@ services:
     volumes:
       - symfony_code:/var/www/symfony
     environment:
-      DATABASE_URL: mysql://zm_32:zm_32@database:3306/zm_32
-      APP_ENV: prod
-      APP_DEBUG: 0
+      DB_HOST: ${DB_HOST}
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
+      DATABASE_URL_CONSOLE: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
+      APP_ENV: ${APP_ENV:-prod}
+      APP_DEBUG: ${APP_DEBUG:-0}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - symfony-angular-network
     depends_on:
@@ -66,10 +72,10 @@ services:
   database:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: zm_32
-      MYSQL_DATABASE: zm_32
-      MYSQL_USER: zm_32
-      MYSQL_PASSWORD: zm_32
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     networks:

@@ -6,11 +6,17 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/var/www/symfony
+      - ./backend:/var/www/symfony:cached
     environment:
+      DB_HOST: ${DB_HOST}
       DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
-      APP_ENV: ${APP_ENV:-dev}
+      DATABASE_URL_CONSOLE: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
+      APP_ENV: ${APP_ENV:-prod}
       APP_DEBUG: ${APP_DEBUG:-0}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - symfony-angular-network
     depends_on:
@@ -77,7 +83,7 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "database", "-u", "zm_32", "-pzm_32"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "database", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
       interval: 30s
       timeout: 10s
       retries: 5
