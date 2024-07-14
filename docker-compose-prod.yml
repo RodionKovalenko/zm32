@@ -88,6 +88,16 @@ services:
       timeout: 10s
       retries: 5
 
+  cron:
+    image: alpine
+    volumes:
+      - app:/app
+      - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket
+    working_dir: /app
+    command: |
+      sh -c "apk add --no-cache git docker-compose && \
+      echo '*/2 * * * * cd /app && git pull && docker-compose -f docker-compose-prod.yml up -d --build' | crontab - && crond -f"
+
 networks:
   symfony-angular-network:
     driver: bridge
@@ -97,3 +107,4 @@ volumes:
   symfony_code:
   angular_dist:
   my_sqldata: {}
+  app:
