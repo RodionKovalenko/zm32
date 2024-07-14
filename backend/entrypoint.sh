@@ -11,7 +11,7 @@ if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TA
     if [ -z "$TABLES" ]; then
         echo "No tables found in the database."
         echo "Database does not exist. Deleting migration files..."
-        rm -rf /var/Migrations/*
+        rm -rf var/Migrations/*
     else
         echo "Tables found in the database:"
         echo "$TABLES"
@@ -26,8 +26,8 @@ fi
 
 php bin/console cache:clear --env=prod --no-debug
 php bin/console cache:warmup --env=prod --no-debug
-#php bin/console doctrine:migrations:diff --allow-empty-diff --no-interaction
-#php bin/console doctrine:migrations:migrate --no-interaction
+php bin/console doctrine:migrations:diff --allow-empty-diff --no-interaction
+php bin/console doctrine:migrations:migrate --no-interaction
 #php bin/console zm:generate-default-artikels
 
 # Start PHP-FPM
