@@ -78,6 +78,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - my_sqldata:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the init script
     networks:
       - symfony-angular-network
     ports:
@@ -89,14 +90,18 @@ services:
       retries: 5
 
   cron:
-    image: alpine
+    build:
+      context: .
+      dockerfile: Dockerfile-cron
     volumes:
-      - app:/app
-      - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket
-    working_dir: /app
-    command: |
-      sh -c "apk add --no-cache git docker-compose && \
-      echo '*/2 * * * * cd /app && git pull && docker-compose -f docker-compose-prod.yml up -d --build' | crontab - && crond -f"
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: >
+      sh -c "
+        apk add --no-cache git curl bash && \
+        echo '*/5 * * * * cd /app && echo \$(date) >> cron.log; git pull >> cron.log 2>&1; docker-compose -f docker-compose-prod.yml up -d --build >> cron.log 2>&1' | crontab - && \
+        crond -f
+      "
 
 networks:
   symfony-angular-network:
@@ -107,4 +112,3 @@ volumes:
   symfony_code:
   angular_dist:
   my_sqldata: {}
-  app:

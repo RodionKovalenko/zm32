@@ -107,3 +107,8 @@ docker-compose -f docker-compose-dev.yml ps
 
 docker exec -it zm32-database-1 sh
 mysql -u zm_32 -p
+
+ echo "DB_HOST: $DB_HOST"
+ echo "MYSQL_USER: $MYSQL_USER"
+ echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
+ echo "MYSQL_DATABASE: $MYSQL_DATABASE"

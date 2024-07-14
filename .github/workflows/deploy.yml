@@ -1,8 +1,4 @@
-name: Hourly Deploy
-
 on:
-  schedule:
-    - cron: '0 * * * *'  # Runs every hour at minute 0
   push:
     branches:
       - main

@@ -4,7 +4,8 @@
 # Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # Start Docker Compose
-docker-compose -f docker-compose-dev.yml --env-file .env.local up --build -d
+cd ..
+docker-compose -f docker-compose-prod.yml --env-file .env.local up --build -d
 
 # Wait a few seconds
 Start-Sleep -Seconds 10
