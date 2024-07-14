@@ -77,7 +77,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - db_data:/var/lib/mysql
+      - /.db_data:/var/lib/mysql
     networks:
       - symfony-angular-network
     ports:
