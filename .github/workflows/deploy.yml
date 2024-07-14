@@ -46,6 +46,13 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd ~/app
+            echo "Bringing down existing containers..."
+            echo "Bringing down existing containers..."
+            echo "Bringing down existing containers..."
+            echo "Bringing down existing containers..."
+            echo "Bringing down existing containers..."
+            echo "Bringing down existing containers..."
+            echo "Bringing down existing containers..."
             docker-compose -f docker-compose-prod.yml down
             docker-compose -f docker-compose-prod.yml up --build -d
 
