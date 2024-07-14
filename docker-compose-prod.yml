@@ -89,20 +89,6 @@ services:
       timeout: 10s
       retries: 5
 
-  cron:
-    build:
-      context: .
-      dockerfile: Dockerfile-cron
-    volumes:
-      - .:/app
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: >
-      sh -c "
-        apk add --no-cache git curl bash && \
-        echo '*/5 * * * * cd /app && echo \$(date) >> cron.log; git pull >> cron.log 2>&1; docker-compose -f docker-compose-prod.yml up -d --build >> cron.log 2>&1' | crontab - && \
-        crond -f
-      "
-
 networks:
   symfony-angular-network:
     driver: bridge
