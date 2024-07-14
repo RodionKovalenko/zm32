@@ -5,11 +5,11 @@ services:
     container_name: angularcontainer
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     ports:
-      - 4200:4200
+      - 4201:4201
     volumes:
       - "./:/var/www/html"
     working_dir: /var/www/html
-    command: ng serve --host 0.0.0.0 --poll=2000
+    command: ng serve --host 0.0.0.0 --poll=2000 --port 4201
 

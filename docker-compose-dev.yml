@@ -6,11 +6,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - symfony_code:/var/www/symfony
+      - ./backend:/var/www/symfony
     environment:
-      DATABASE_URL: mysql://zm_32:zm_32@database:3306/zm_32
-      APP_ENV: prod
-      APP_DEBUG: 0
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
+      APP_ENV: ${APP_ENV:-dev}
+      APP_DEBUG: ${APP_DEBUG:-0}
     networks:
       - symfony-angular-network
     depends_on:
@@ -28,13 +28,13 @@ services:
       context: ./
       dockerfile: Dockerfile-nginx
     ports:
-      - "8000:80"  # For HTTP
-      - "4433:443"  # For HTTPS
+      - "8000:80"
+      - "4433:443"
     volumes:
-      - symfony_code:/var/www/symfony
+      - ./backend:/var/www/symfony:cached
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./backend/ssl:/etc/nginx/ssl  # Use a single mount for SSL
-      - angular_dist:/var/www/angular/dist  # Angular build output
+      - ./backend/ssl:/etc/nginx/ssl
+      - angular_dist:/var/www/angular/dist
     networks:
       - symfony-angular-network
     depends_on:
@@ -45,11 +45,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile-nginx-angular
     ports:
-      - "8001:80"  # For Angular app
-      - "4200:443"  # For Angular app
+      - "8001:80"
+      - "4200:443"
     volumes:
       - angular_dist:/var/www/angular/dist
-      - ./frontend/ssl:/etc/nginx/ssl  # Use a single mount for SSL
+      - ./frontend/ssl:/etc/nginx/ssl
     networks:
       - symfony-angular-network
 
@@ -58,7 +58,7 @@ services:
       context: .
       dockerfile: Dockerfile-php-fpm
     volumes:
-      - symfony_code:/var/www/symfony
+      - ./backend:/var/www/symfony:cached
       - ./var/log:/var/log
     networks:
       - symfony-angular-network
@@ -66,16 +66,16 @@ services:
   database:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: zm_32
-      MYSQL_DATABASE: zm_32
-      MYSQL_USER: zm_32
-      MYSQL_PASSWORD: zm_32
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - symfony-angular-network
     ports:
-      - "3306:3306"  # Ensure this line exists
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "database", "-u", "zm_32", "-pzm_32"]
       interval: 30s
@@ -84,9 +84,8 @@ services:
 
 networks:
   symfony-angular-network:
-    driver: host
+    driver: bridge
 
 volumes:
   db_data:
-  symfony_code:
   angular_dist:

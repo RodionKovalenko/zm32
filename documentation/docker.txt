@@ -31,7 +31,7 @@ mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local-frontend loc
 
 FRONTEND:
 // start frontend in dev mode
-docker-compose -f docker-compose.yml up --build
+docker-compose -f docker-compose-dev.yml up --build
 
 // build frontend
 // ddev exec npm run build
