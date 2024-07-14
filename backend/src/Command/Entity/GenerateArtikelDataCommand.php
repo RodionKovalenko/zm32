@@ -528,7 +528,17 @@ class GenerateArtikelDataCommand extends Command
 
             $this->userRepository->save($user);
 
-            $mitarbeiter = new Mitarbeiter();
+            $mitarbeiter = $this->mitarbeiterRepository->createQueryBuilder('m')
+                ->leftJoin('m.user', 'u')
+                ->where('u.mitarbeiterId = :mitarbeiterId')
+                ->setParameter('mitarbeiterId', $userArrayItem['mitarbeiterId'])
+                ->getQuery()
+                ->getOneOrNullResult();
+
+            if ($mitarbeiter === null) {
+                $mitarbeiter = new Mitarbeiter();
+            }
+
             $mitarbeiter->setUser($user);
             $mitarbeiter->setVorname($userArrayItem['vorname']);
             $mitarbeiter->setNachname($userArrayItem['nachname']);

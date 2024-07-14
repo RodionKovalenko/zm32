@@ -22,6 +22,8 @@ parameters:
     path_templates: "%kernel.project_dir%/templates"
     stats_mail_recipients: '%env(STATS_MAIL_RECIPIENTS)%'
     env(STATS_MAIL_RECIPIENTS): null
+    database_url: '%env(resolve:DATABASE_URL)%'
+    database_url_console: '%env(resolve:DATABASE_URL_CONSOLE)%'
 
 services:
     # default configuration for services in *this* file

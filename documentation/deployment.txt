@@ -1,0 +1,40 @@
+Explanation
+Checkout Code: Checks out your repository code.
+Copy Files via SSH: Uses the scp-action to copy your repository files to the server.
+Deploy via SSH: Uses the ssh-action to SSH into the server, navigate to the application directory, and run Docker Compose commands to rebuild and redeploy the services.
+Setting Up Secrets
+
+Server Host:
+Store your server's IP address or hostname in GitHub Secrets (SERVER_HOST).
+
+Server User:
+Store the username for SSH login in GitHub Secrets (SERVER_USER).
+//to find the username for windows in terminal
+net user
+
+or
+echo %USERNAME%
+
+//for linux in terminal:
+whoami
+
+
+SSH Key:
+Store your SSH private key in GitHub Secrets (SSH_PRIVATE_KEY).
+// for window run in terminal:
+ssh-keygen -t rsa -b 4096 -C "rodion.kovalenko@npo-applications.de"
+
+
+Server Setup
+Docker Compose File:
+
+Ensure your docker-compose.yml is set up on the server.
+Application Directory:
+
+Ensure the target directory (~/app in the example) exists on your server and is writable by the user you are SSHing in as.
+
+
+
+
+
+

@@ -1,0 +1,2 @@
+git config user.email "rodion_kovalenko@yahoo.dem"
+git config user.name "Rodion Kovalenko"

@@ -31,6 +31,7 @@ mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local-frontend loc
 
 FRONTEND:
 // start frontend in dev mode
+cd frontend
 docker-compose -f docker-compose-dev.yml up --build
 
 // build frontend
@@ -58,7 +59,7 @@ nvm use 18.19.0
 
 
 // Production mode
-docker-compose -f docker-compose-prod.yml up --build
+docker-compose -f docker-compose-prod.yml --env-file .env.local up --build
 
 // execute command in shell
 docker exec -it zm32-symfony-1 sh
