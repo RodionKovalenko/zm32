@@ -1,7 +1,10 @@
 on:
   push:
-    branches:
-      - main
+    paths-ignore:
+      - deploy.yml
+  pull_request:
+    paths-ignore:
+      - deploy.yml
 
 jobs:
   deploy:
