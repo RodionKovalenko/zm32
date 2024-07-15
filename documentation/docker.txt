@@ -25,8 +25,10 @@ openssl req -new -key server.key -out server.csr
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 
 
-mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local-backend localhost 127.0.0.1 ::1
-mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local-frontend localhost 127.0.0.1 ::1
+mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 127.0.0.1 ::1
+mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 127.0.0.1 ::1
+
+mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba localhost 127.0.0.1 ::1
 
 
 FRONTEND:
@@ -106,9 +108,16 @@ docker-compose -f docker-compose-dev.yml ps
 // check mysql user connection
 
 docker exec -it zm32-database-1 sh
+docker exec -it zm32-symfony-1 sh
 mysql -u zm_32 -p
 
  echo "DB_HOST: $DB_HOST"
  echo "MYSQL_USER: $MYSQL_USER"
  echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
  echo "MYSQL_DATABASE: $MYSQL_DATABASE"
+
+
+
+ test cors for get
+ curl -I -X GET -k https://iba.local.de:4433/login/66
+ curl -I -X OPTIONS -k https://iba.local.de:4433/login/66

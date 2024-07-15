@@ -8,4 +8,4 @@ docker-compose -f docker-compose-prod.yml --env-file .env.local up --build -d
 sleep 10
 
 # Open the URL in the default browser
-xdg-open https://localhost:4200 || open https://localhost:4200
+xdg-open https://iba.local.de:4200 || open https://iba.local.de:4200

@@ -37,7 +37,7 @@ COPY ./ssl/server.key /etc/nginx/ssl/server.key
 
 # Expose ports
 EXPOSE 80
-EXPOSE 443
+#EXPOSE 443
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
