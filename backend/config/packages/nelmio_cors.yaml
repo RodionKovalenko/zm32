@@ -1,11 +1,10 @@
 nelmio_cors:
   defaults:
-    allow_origin: ['https://iba.local.de:4200']  # Change this to match your Angular frontend URL
-    allow_credentials: false
-    allow_headers: ['content-type', 'authorization']
-    allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'DELETE']  # Correct the OPTIONS method here
-    expose_headers: []
+    origin_regex: true
+    allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
+    allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+    allow_headers: ['Content-Type', 'Authorization', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Origin', 'X-Requested-With']
+    expose_headers: ['Link']
     max_age: 3600
   paths:
-    '^/':  # This allows CORS for all routes; adjust as needed
-      allow_origin: ['https://iba.local.de:4200']  # Ensure this matches your frontend URL
+    '^/': null
