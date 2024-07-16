@@ -16,5 +16,5 @@ RUN rm /etc/nginx/conf.d/default.conf
 # COPY /path/to/static/assets /usr/share/nginx/html/assets
 
 # Expose HTTP and HTTPS ports (optional, since defined in docker-compose)
-#EXPOSE 80
-#EXPOSE 443
+EXPOSE 80
+EXPOSE 443
