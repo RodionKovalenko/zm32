@@ -133,6 +133,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   max-height: calc(100vh - 128px) !important; /* Adjust max height minus toolbar and padding */
   padding: 16px !important; /* Add padding for spacing */
   margin: 0 0 50px 0 !important; /* Reset margin to ensure content doesn't overlap */
+
+  /* Ensure all input elements take up full width */
+  mat-form-field {
+    width: 100% !important; /* Full width for form fields */
+  }
+
+  mat-form-field .mat-form-field-infix {
+    width: 100% !important; /* Full width for inner form field content */
+  }
+
+  /* Additional styling for input fields directly if needed */
+  input {
+    width: 100% !important; /* Full width for input fields */
+  }
 }
 
 .fixed-toolbar {
@@ -159,4 +173,72 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .align-button {
   margin-left: 8px; /* Adjust spacing between buttons */
+}
+
+.multiselect-dropdown .dropdown-btn .selected-item-container .selected-item {
+    border: 1px solid #337ab7 !important;
+    margin-right: 4px !important;
+    background: #337ab7 !important;
+    padding: 0 5px !important;
+    color: #fff !important;
+    border-radius: 2px !important;
+    float: left !important;
+    max-width: 100% !important; /* Changed from 100px to 100% */
+}
+
+/* Ensure dropdown behaves well in a flex container */
+.dropdown-container {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.ng-multiselect-dropdown {
+  flex: 1 !important; /* Allow dropdown to take available space */
+}
+
+/* manufacturer-form.component.css */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  padding: 5px;
+  font-size: 16px;
+}
+
+button {
+  margin-top: 10px;
+}
+
+.full-width-form-field {
+  width: 100%;
+}
+
+.full-width-form-field .mat-form-field-infix {
+  width: 100%;
+}
+
+.standort-item {
+  color: black;
+  border: 1px solid #122091; /* Light border for separation */
+  border-radius: 4px; /* Rounded corners */
+  padding: 16px; /* Space inside each standort item */
+  margin-bottom: 16px; /* Space between items */
+  background-color: #6f6f72; /* Light background color */
+}
+
+.standort-header {
+  margin-bottom: 12px; /* Space below the header */
+  font-weight: bold; /* Bold text for the index */
+}
+
+.standort-index {
+  display: inline-block;
+  margin-right: 8px; /* Space between index and form fields */
 }

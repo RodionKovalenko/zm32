@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Bestellung;
 use App\Entity\BestellungStatus;
 use App\Entity\Mitarbeiter;
-use App\Forms\BestellungForm;
+use App\Forms\BestellungFormType;
 use App\Repository\BestellungRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\Material\LieferantRepository;
@@ -84,7 +84,7 @@ class BestellungController extends BaseController
             $mitarbeiter = $this->mitarbeiterRepository->getMitarbeiterByUserMitarbeiterId($data['mitarbeiterId']);
             $bestellung->setMitarbeiter($mitarbeiter);
 
-            $form = $this->createForm(BestellungForm::class, $bestellung);
+            $form = $this->createForm(BestellungFormType::class, $bestellung);
             $form->submit($data, false);
 
             if ($form->isValid()) {

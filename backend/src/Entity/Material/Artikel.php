@@ -10,7 +10,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use App\Validator\Constraints as AppAssert;
 
+#[DoctrineAssert\UniqueEntity(fields: ['name'], errorPath: 'name', message: 'Lieferant mit dem gleichen Namen existiert bereits.')]
 #[ORM\Entity(repositoryClass: ArtikelRepository::class)]
 class Artikel
 {
@@ -19,8 +22,9 @@ class Artikel
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    private ?string $name;
+    #[ORM\Column(type: Types::STRING, unique: true)]
+    #[AppAssert\UniqueFieldValue(message: 'Artikel mit dem gleichen Namen %s existiert bereits.', field: 'name', entity: Artikel::class)]
+    private string $name;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $description;
@@ -43,6 +47,14 @@ class Artikel
     )]
     private Collection $lieferantToArtikels;
 
+    #[Groups(['Artikel_HerstellerToArtikel', 'HerstellerToArtikel'])]
+    #[ORM\OneToMany(
+        mappedBy: 'artikel',
+        targetEntity: HerstellerToArtikel::class,
+        cascade: ['merge', 'persist', 'remove']
+    )]
+    private Collection $herstellerArtikels;
+
     #[Groups(['Artikel_Bestellung', 'Bestellung'])]
     #[ORM\OneToMany(
         mappedBy: 'artikel',
@@ -56,6 +68,7 @@ class Artikel
         $this->lieferantToArtikels = new ArrayCollection();
         $this->bestellungen = new ArrayCollection();
         $this->departments = new ArrayCollection();
+        $this->herstellerArtikels = new ArrayCollection();
     }
 
     public function getLieferantToArtikels(): Collection
@@ -159,5 +172,20 @@ class Artikel
         }
 
         return $this;
+    }
+
+    public function getHerstellerArtikels(): Collection
+    {
+        return $this->herstellerArtikels;
+    }
+    public function addHerstellerArtikels(HerstellerToArtikel $herstellerArtikels): void
+    {
+        if (!$this->herstellerArtikels->contains($herstellerArtikels)) {
+            $this->herstellerArtikels[] = $herstellerArtikels;
+        }
+    }
+    public function removeHerstellerArtikels(HerstellerToArtikel $herstellerArtikels): void
+    {
+        $this->herstellerArtikels->removeElement($herstellerArtikels);
     }
 }

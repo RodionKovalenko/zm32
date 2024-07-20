@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Material\Lieferant;
-use App\Forms\LieferantForm;
+use App\Forms\LieferantFormType;
 use App\Repository\Material\LieferantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializerInterface;
@@ -33,7 +33,7 @@ class LieferantController extends BaseController
             'data' => $lieferants
         ];
 
-        return $this->getJsonResponse($response);
+        return $this->getJsonResponse($response, ['Default', 'Lieferant', 'Lieferant_LieferantStammdaten']);
     }
 
     #[Route(path: '/save/{id}', name: 'app_lieferant_save_lieferant', defaults: ['id' => null], methods: ['POST'])]
@@ -57,16 +57,23 @@ class LieferantController extends BaseController
                 $data['lieferantStammdaten'] = [$data['lieferantStammdaten']];
             }
 
-            $form = $this->createForm(LieferantForm::class, $lieferant);
+            $form = $this->createForm(LieferantFormType::class, $lieferant);
 
             $form->submit($data, false);
 
             if ($form->isValid()) {
                 $this->lieferantRepository->save($lieferant);
-                return $this->getJsonResponse(['success' => true, 'data' => [$lieferant]]);
+
+                return $this->getJsonResponse(
+                    [
+                        'success' => true,
+                        'data' => [$lieferant],
+                        ['Default', 'Lieferant', 'Lieferant_LieferantStammdaten']
+                    ]
+                );
             }
 
-            return $this->getJsonResponse(['success' => false, 'message' => (string) $form->getErrors(true)]);
+            return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors(true)]);
         } catch (\Exception $e) {
             $response = [
                 'success' => false,

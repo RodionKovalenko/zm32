@@ -11,18 +11,74 @@
         <input matInput [(ngModel)]="data.description">
     </mat-form-field>
 
-    <div class="flex-container">
-        <div class="column-layout">
-            <label class="margin-bottom">Lieferant auswählen (optional):</label>
-            <select class="custom-select-no-margin" [(ngModel)]="selectedLieferant" (ngModelChange)="onLieferantChange($event)">
-                <option *ngFor="let item of lieferants" [ngValue]="item">{{ item.name }}</option>
-            </select>
+    <form [formGroup]="dropDownForm">
+        <!-- Abteilung -->
+        <div class="flex-container">
+            <ng-multiselect-dropdown class="custom-select-no-margin"
+                                     [placeholder]="'Abteilung auswählen'"
+                                     [settings]="dropdownSettings"
+                                     [data]="departments"
+                                     formControlName="departments">
+                <ng-template let-item="item">
+                    <div class="custom-item">
+                        {{ item.name }}
+                    </div>
+                </ng-template>
+
+            </ng-multiselect-dropdown>
         </div>
 
-        <button mat-icon-button class="align-button color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
+        <!--            Lieferant-->
+        <div class="flex-container">
+            <ng-multiselect-dropdown class="custom-select-no-margin"
+                                     [placeholder]="'Lieferant auswählen (Optional)'"
+                                     [settings]="dropdownSettings"
+                                     [data]="lieferants"
+                                     formControlName="lieferants">
+                <ng-template let-item="item">
+                    <div class="custom-item">
+                        {{ item.name }}
+                    </div>
+                </ng-template>
+            </ng-multiselect-dropdown>
+
+            <button *ngIf="isOnlyOneLieferantSelected()"
+                    mat-icon-button class="color-confirm"
+                    matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">
+                <mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+
+        <!--            Hersteller-->
+        <div class="flex-container">
+            <ng-multiselect-dropdown class="custom-select-no-margin"
+                                     [placeholder]="'Hersteller auswählen (Optional)'"
+                                     [settings]="dropdownSettings"
+                                     [data]="herstellers"
+                                     formControlName="herstellers">
+                <ng-template let-item="item">
+                    <div class="custom-item">
+                        {{ item.name }}
+                    </div>
+                </ng-template>
+            </ng-multiselect-dropdown>
+
+            <button *ngIf="isOnlyOneHerstellerSelected()"
+                    mat-icon-button class="color-confirm"
+                    matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">
+                <mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </form>
+
 </div>
 
 <mat-toolbar color="custom-toolbar" class="fixed-toolbar">

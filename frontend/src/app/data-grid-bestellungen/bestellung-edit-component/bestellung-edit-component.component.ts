@@ -36,11 +36,13 @@ export class BestellungEditComponentComponent implements OnInit {
 
     selectedLieferant: Lieferant = {
         formTitle: "", id: 0, name: 'test',
-        lieferantStammdaten: {
-            plz: '',
-            ort: '',
-            adresse: ''
-        }
+        lieferantStammdaten: [
+            {
+                plz: '',
+                ort: '',
+                adresse: ''
+            }
+        ]
     };
 
     lieferants: Lieferant[] = [this.selectedLieferant];
@@ -76,9 +78,11 @@ export class BestellungEditComponentComponent implements OnInit {
         mitarbeiterRequest.subscribe((response: any) => {
             this.artikels = response.data;
             if (this.artikels.length > 0) {
-                if (this.data.artikel) {
+                if (this.data.artikel || this.selectedArtikel.id !== 0) {
                     this.artikels.forEach((artikel) => {
                         if (artikel.id === this.data?.artikel?.id) {
+                            this.selectedArtikel = artikel;
+                        } else if (this.selectedArtikel.id !== 0 && artikel.id === this.selectedArtikel.id) {
                             this.selectedArtikel = artikel;
                         }
                     });
@@ -127,6 +131,7 @@ export class BestellungEditComponentComponent implements OnInit {
     addArtikel() {
         const dialogRef = this.dialog.open(MaterialEditComponentComponent, {
             width: '550px',
+            height: '100vh',
             data: {
                 formTitle: 'Artikel hinzufügen'
             },
@@ -135,6 +140,7 @@ export class BestellungEditComponentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.selectedArtikel = result['data'][0];
                 this.loadArtikel(this.selectedDepartment);
             }
         });
@@ -143,6 +149,7 @@ export class BestellungEditComponentComponent implements OnInit {
     addLieferant() {
         const dialogRef = this.dialog.open(LieferantEditComponentComponent, {
             width: '550px',
+            height: '100vh',
             data: {
                 formTitle: 'Neuen Lieferant hinzufügen'
             },

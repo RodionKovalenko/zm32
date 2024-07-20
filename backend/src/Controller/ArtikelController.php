@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Material\Artikel;
-use App\Forms\ArtikelForm;
+use App\Forms\ArtikelFormType;
 use App\Repository\DepartmentRepository;
 use App\Repository\Material\ArtikelRepository;
 use JMS\Serializer\SerializerInterface;
@@ -53,7 +53,7 @@ class ArtikelController extends BaseController
                 $artikel = new Artikel();
             }
 
-            $form = $this->createForm(ArtikelForm::class, $artikel);
+            $form = $this->createForm(ArtikelFormType::class, $artikel);
             $form->submit($data, false);
 
             if ($form->isValid()) {
@@ -61,7 +61,7 @@ class ArtikelController extends BaseController
                 return $this->getJsonResponse(['success' => true, 'data' => [$artikel]]);
             }
 
-            return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors()]);
+            return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors(true)]);
         } catch (\Exception $e) {
             $response = [
                 'success' => false,

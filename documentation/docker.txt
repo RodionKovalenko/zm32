@@ -35,6 +35,7 @@ FRONTEND:
 // start frontend in dev mode
 cd frontend
 docker-compose -f docker-compose-dev.yml up --build
+https://localhost:4201/#/app-login
 
 // build frontend
 // ddev exec npm run build
@@ -121,3 +122,10 @@ mysql -u zm_32 -p
  test cors for get
  curl -I -X GET -k https://iba.local.de:4433/login/66
  curl -I -X OPTIONS -k https://iba.local.de:4433/login/66
+
+
+
+// show all containers running in dev for frontend
+docker-compose -f docker-compose-dev.yml ps
+docker exec -it angularcontainer sh
+npm run ng generate component data-grid-artikel/hersteller-edit-component

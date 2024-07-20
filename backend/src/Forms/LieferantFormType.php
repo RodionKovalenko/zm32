@@ -3,15 +3,14 @@
 namespace App\Forms;
 
 use App\Entity\Material\Lieferant;
-use App\Entity\Stammdaten\LieferantStammdaten;
+use App\Validator\Constraints\UniqueFieldValue;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class LieferantForm extends AbstractType
+class LieferantFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

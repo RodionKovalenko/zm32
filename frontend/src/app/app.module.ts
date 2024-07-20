@@ -1,6 +1,6 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AgGridModule} from 'ag-grid-angular';
 import {MatSortModule} from '@angular/material/sort';
@@ -36,6 +36,8 @@ import {LogoutComponent} from "./logout/logout.component";
 import {LoginErrorComponent} from "./login/login-error/login-error.component";
 import {MatTooltip} from "@angular/material/tooltip";
 import {LieferantEditComponentComponent} from "./data-grid-artikel/lieferant-edit-component/lieferant-edit-component.component";
+import {HerstellerEditComponentComponent} from "./data-grid-artikel/hersteller-edit-component/hersteller-edit-component.component";
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 
 @NgModule({
     declarations: [
@@ -51,7 +53,8 @@ import {LieferantEditComponentComponent} from "./data-grid-artikel/lieferant-edi
         LieferantEditComponentComponent,
         BestellungEditComponentComponent,
         BestelllisteComponent,
-        NavigationMenuComponent
+        NavigationMenuComponent,
+        HerstellerEditComponentComponent
     ],
     imports: [
         BrowserModule,
@@ -78,7 +81,9 @@ import {LieferantEditComponentComponent} from "./data-grid-artikel/lieferant-edi
         MatListItem,
         MatSidenav,
         FlexModule,
-        MatTooltip
+        MatTooltip,
+        ReactiveFormsModule,
+        NgMultiSelectDropDownModule.forRoot(),
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),

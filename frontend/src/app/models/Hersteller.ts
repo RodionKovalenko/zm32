@@ -1,11 +1,11 @@
-export interface Lieferant {
+export interface Hersteller {
     id: Number;
     name: string;
+    url?: string;
     formTitle?: string;
-    lieferantStammdaten: [
+    standorte: [
         {
             id?: Number;
-            typ?: Number;
             plz?: string;
             ort?: string;
             adresse?: string;

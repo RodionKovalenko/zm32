@@ -53,40 +53,55 @@ export class LieferantEditComponentComponent {
     }
 
     get plz() {
-        return this.data.lieferantStammdaten?.plz || '';
+        if (this.data.lieferantStammdaten && this.data.lieferantStammdaten[0]) {
+            return this.data.lieferantStammdaten[0].plz || '';
+        } else {
+            this.data.lieferantStammdaten = [{}];
+        }
+
+        return '';
     }
 
     set plz(value: string) {
-        if (!this.data.lieferantStammdaten) {
-            this.data.lieferantStammdaten = {};
-        }
-        if (this.data.lieferantStammdaten) {
-            this.data.lieferantStammdaten.plz = value;
+        this.initializeStammdaten();
+        if (this.data?.lieferantStammdaten[0]) {
+            this.data.lieferantStammdaten[0].plz = value;
         }
     }
 
     get ort() {
-        return this.data.lieferantStammdaten?.ort || '';
+        if (this.data.lieferantStammdaten && this.data.lieferantStammdaten[0]) {
+            return this.data?.lieferantStammdaten[0]?.ort || '';
+        } else {
+            this.data.lieferantStammdaten = [{}];
+        }
+        return '';
     }
     set ort(value: string) {
-        if (!this.data.lieferantStammdaten) {
-            this.data.lieferantStammdaten = {};
-        }
-
-        if (this.data.lieferantStammdaten) {
-            this.data.lieferantStammdaten.ort = value;
+        this.initializeStammdaten();
+        if (this.data?.lieferantStammdaten[0]) {
+            this.data.lieferantStammdaten[0].ort = value;
         }
     }
 
     get adresse() {
-        return this.data.lieferantStammdaten?.adresse || '';
+        if (this.data.lieferantStammdaten && this.data.lieferantStammdaten[0]) {
+            return this.data?.lieferantStammdaten[0]?.adresse || '';
+        } else {
+            this.data.lieferantStammdaten = [{}];
+        }
+        return '';
     }
     set adresse(value: string) {
-        if (!this.data.lieferantStammdaten) {
-            this.data.lieferantStammdaten = {};
+        this.initializeStammdaten();
+        if (this.data.lieferantStammdaten[0]) {
+            this.data.lieferantStammdaten[0].adresse = value;
         }
-        if (this.data.lieferantStammdaten) {
-            this.data.lieferantStammdaten.adresse = value;
+    }
+
+    initializeStammdaten() {
+        if (!this.data?.lieferantStammdaten[0]) {
+            this.data.lieferantStammdaten = [{}];
         }
     }
 }

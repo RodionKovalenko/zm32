@@ -10,7 +10,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use App\Validator\Constraints as AppAssert;
 
+#[DoctrineAssert\UniqueEntity(fields: ['name'], errorPath: 'name', message: 'Lieferant mit dem gleichen Namen existiert bereits.')]
 #[ORM\Entity(repositoryClass: LieferantRepository::class)]
 class Lieferant
 {
@@ -19,8 +22,9 @@ class Lieferant
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    private ?string $name = null;
+    #[ORM\Column(type: Types::STRING, unique: true)]
+    #[AppAssert\UniqueFieldValue(message: 'Lieferant mit dem gleichen Namen %s existiert bereits.', field: 'name', entity: Lieferant::class)]
+    private string $name;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $typ = null;
@@ -71,7 +75,7 @@ class Lieferant
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
