@@ -11,6 +11,12 @@ export interface Bestellung {
     artikel?: Artikel
     lieferant?: Lieferant,
     mitarbeiter?: Mitarbeiter,
-    departmentId?: Number
-
+    departmentId?: Number,
+    formTitle: '',
+    bestellungToArtikels?: any[],
+    bestellungToLieferants?: any[],
+    bestellungToHerstellers?: any[],
+    bestellungToDepartments?: any[],
+    bestellungToHerstellerStandorte?: any[],
+    bestellungToLieferantStandorte?: any []
 }

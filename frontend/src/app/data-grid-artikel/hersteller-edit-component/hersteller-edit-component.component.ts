@@ -47,6 +47,7 @@ export class HerstellerEditComponentComponent implements OnInit {
             id: [standort?.id || 0],
             adresse: [standort?.adresse || '', Validators.required],
             ort: [standort?.ort || '', Validators.required],
+            telefon: [standort?.telefon || ''],
             plz: [standort?.plz || ''],
             url: [standort?.url || '']
         });

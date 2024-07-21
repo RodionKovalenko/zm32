@@ -17,7 +17,7 @@ class LieferantRepository extends DefaultRepository
     public function getByArtikel(int $artikelId)
     {
         $q = $this->createQueryBuilder('l')
-            ->join('l.lieferantArtikels', 'la')
+            ->join('l.artikels', 'la')
             ->where('la.artikel = :artikelId')
             ->setParameter('artikelId', $artikelId)
             ->orderBy('l.name', Order::Ascending->value);

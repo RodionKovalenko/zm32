@@ -7,42 +7,19 @@ import {LoginErrorComponent} from "../../login/login-error/login-error.component
 import {LieferantEditComponentComponent} from "../lieferant-edit-component/lieferant-edit-component.component";
 import {Hersteller} from "../../models/Hersteller";
 import {HerstellerEditComponentComponent} from "../hersteller-edit-component/hersteller-edit-component.component";
-import {DepartmentData} from "../../models/Department";
-import {FormBuilder} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
+import {DepartmentData} from "../../models/Department";
 
 @Component({
     selector: 'app-material-edit-component',
     templateUrl: './material-edit-component.component.html',
-
     styleUrl: './material-edit-component.component.css',
 })
 export class MaterialEditComponentComponent implements OnInit {
-    selectedLieferant: Lieferant = {
-        formTitle: "", id: 0, name: 'test',
-        lieferantStammdaten: [
-            {
-                plz: '',
-                ort: '',
-                adresse: ''
-            }
-        ]
-    };
-
-    selectedHersteller: Hersteller = {
-        formTitle: "", id: 0, name: '',
-        standorte: [
-            {
-                plz: '',
-                ort: '',
-                adresse: ''
-            }
-        ]
-    };
-
-    lieferants: Lieferant[] = [];
-    herstellers: Hersteller[] = [];
-    departments: DepartmentData[] = [];
+    lieferants: any[] = [];
+    herstellers: any[] = [];
+    departments: any[] = [];
 
     dropdownSettings: IDropdownSettings = {};
     dropDownForm: any;
@@ -72,16 +49,60 @@ export class MaterialEditComponentComponent implements OnInit {
         };
 
         this.dropDownForm = this.fb.group({
-            departments: [],
-            lieferants: [],
-            herstellers: []
+            id: [this.data?.id || 0],
+            name: [this.data?.name || '', Validators.required],
+            description: [this.data?.description || ''],
+            departments: [this.data?.departments || [], Validators.required],
+            lieferants: [this.data?.lieferants || []],
+            herstellers: [this.data?.herstellers || []]
         });
+
+        if (this.data?.departments) {
+            this.data.departments.forEach(st => this.addDepartment(st));
+        }
+
+        // Add existing standorte to the form if available
+        if (this.data?.lieferants) {
+            this.data.lieferants.forEach(st => this.addLieferants(st));
+        }
+
+        if (this.data?.herstellers) {
+            this.data.herstellers.forEach(st => this.addHerstellers(st));
+        }
+
+        this.markAllAsTouched();
+    }
+
+
+    addLieferants(value?: any): void {
+        const valueGroup = this.fb.group({
+            lieferant: [value?.id || 0]
+        });
+        this.lieferants.push(valueGroup);
+    }
+
+    addDepartment(value?: any): void {
+        const valueGroup = this.fb.group({
+            id: [value?.id || 0],
+            name: [value?.name || '']
+        });
+        this.departments.push(valueGroup);
+    }
+
+    addHerstellers(value?: any): void {
+        const valueGroup = this.fb.group({
+            hersteller: [value?.id || 0],
+        });
+        this.herstellers.push(valueGroup);
     }
 
     loadDepartments() {
         let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/department/get_departments');
         mitarbeiterRequest.subscribe((response: any) => {
             this.departments = response.data;
+            if (this.data?.departments) {
+                this.updateDepartmentsDropdown(this.data.departments);
+            }
         });
     }
 
@@ -98,8 +119,7 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     loadHerstellers(data: any) {
-        let artikelId = this.data?.id || 0;
-        let url = this.httpService.get_baseUrl() + '/hersteller/' +  artikelId;
+        let url = this.httpService.get_baseUrl() + '/hersteller/0';
         let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
         mitarbeiterRequest.subscribe((response: any) => {
             this.herstellers = response.data;
@@ -113,8 +133,9 @@ export class MaterialEditComponentComponent implements OnInit {
         const selectedItems = this.dropDownForm.get('lieferants')?.value || [];
         return selectedItems.length === 1;
     }
+
     isOnlyOneHerstellerSelected(): boolean {
-        const selectedItems = this.dropDownForm.get('herstellers')?.value || [];
+        const selectedItems = this.dropDownForm.get('herstellerToArtikels')?.value || [];
         return selectedItems.length === 1;
     }
 
@@ -122,51 +143,77 @@ export class MaterialEditComponentComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    save(): void {
+    onSubmit(): void {
         let url = this.httpService.get_baseUrl() + '/artikel/save';
 
-        const orderData = {
-            id: this.data?.id,
-            name: this.data?.name,
-            description: this.data?.description,
-            artikelToDepartments: this.dropDownForm.get('myItems')?.value
-        };
+        if (this.dropDownForm.valid) {
+            const formValue = this.dropDownForm.value;
+            formValue.departments = formValue.departments.map((dept: any) => (dept.id));
+            formValue.lieferants = formValue.lieferants.map((lieferant: any) => (lieferant.id));
+            formValue.herstellers = formValue.herstellers.map((hersteller: any) => (hersteller.id));
 
-        this.httpService.get_httpclient().post(url, orderData).subscribe({
-            next: (response: any) => {
-                if (response && response.success && Boolean(response?.success)) {
-                    this.dialogRef.close(response);
-                } else {
+            this.httpService.get_httpclient().post(url, formValue).subscribe({
+                next: (response: any) => {
+                    if (response && response.success && Boolean(response?.success)) {
+                        this.dialogRef.close(response);
+                    } else {
+                        this.dialog.open(LoginErrorComponent, {
+                            width: '450px',
+                            height: '150px',
+                            data: {
+                                title: response?.message
+                            }
+                        });
+                    }
+                },
+                error: (err) => {
+                    console.log(err);
                     this.dialog.open(LoginErrorComponent, {
                         width: '450px',
                         height: '150px',
                         data: {
-                            title: response?.message
+                            title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
                         }
                     });
                 }
-            },
-            error: (err) => {
-                console.log(err);
-                this.dialog.open(LoginErrorComponent, {
-                    width: '450px',
-                    height: '150px',
-                    data: {
-                        title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
-                    }
-                });
+            });
+        }
+    }
+
+    private markAllAsTouched() {
+        Object.keys(this.dropDownForm.controls).forEach(field => {
+            const control = this.dropDownForm.get(field);
+            if (control) { // Ensure control is not null
+                if (control instanceof FormGroup) {
+                    this.markAllAsTouchedRecursive(control);
+                } else {
+                    control.markAsTouched({onlySelf: true});
+                }
+            }
+        });
+    }
+
+    private markAllAsTouchedRecursive(group: FormGroup) {
+        Object.keys(group.controls).forEach(controlName => {
+            const control = group.get(controlName);
+            if (control) { // Ensure control is not null
+                if (control instanceof FormGroup) {
+                    this.markAllAsTouchedRecursive(control);
+                } else {
+                    control.markAsTouched({onlySelf: true});
+                }
             }
         });
     }
 
     addLieferant(edit: boolean = false) {
-        let data = this.getDefaultLieferant();
+        let data: any = {};
         data.formTitle = 'Neuen Lieferant hinzufügen';
 
         if (edit) {
             let selectedLieferants = this.dropDownForm.get('lieferants')?.value || [];
             if (selectedLieferants.length === 1) {
-                data = this.lieferants.find(l => l.id === selectedLieferants[0].id) || this.getDefaultLieferant();
+                data = this.lieferants.find(l => l.id === selectedLieferants[0].id) || {};
             }
             data.formTitle = 'Lieferant bearbeiten';
         }
@@ -186,13 +233,13 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     addHersteller(edit: boolean = false) {
-        let data = this.getDefaultHersteller();
+        let data: any = {};
         data.formTitle = 'Neuen Hersteller hinzufügen';
 
         if (edit) {
             let selectedHerstellers = this.dropDownForm.get('herstellers')?.value || [];
             if (selectedHerstellers.length === 1) {
-                data = this.herstellers.find(l => l.id === selectedHerstellers[0].id) || this.getDefaultHersteller();
+                data = this.herstellers.find(l => l.id === selectedHerstellers[0].id) || {};
             }
             data.formTitle = 'Hersteller bearbeiten';
         }
@@ -211,30 +258,8 @@ export class MaterialEditComponentComponent implements OnInit {
         });
     }
 
-    getDefaultHersteller(): Hersteller {
-        return {
-            formTitle: "", id: 0, name: '',
-            standorte: [
-                {
-                    plz: '',
-                    ort: '',
-                    adresse: ''
-                }
-            ]
-        };
-    }
-
-    getDefaultLieferant(): Lieferant {
-        return {
-            formTitle: "", id: 0, name: '',
-            lieferantStammdaten: [
-                {
-                    plz: '',
-                    ort: '',
-                    adresse: ''
-                }
-            ]
-        };
+    updateDepartmentsDropdown(data: DepartmentData[]) {
+        this.dropDownForm.get('departments')?.setValue(data);
     }
 
     updateLieferantsDropdown(data: Lieferant[]) {

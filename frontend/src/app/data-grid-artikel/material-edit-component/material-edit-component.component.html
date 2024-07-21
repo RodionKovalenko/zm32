@@ -1,18 +1,25 @@
 <h1 mat-dialog-title>{{ data.formTitle }}</h1>
 
 <div mat-dialog-content class="mat-dialog-content" fxLayout="column" fxLayoutGap="16px">
+    <form [formGroup]="dropDownForm" (ngSubmit)="onSubmit()">
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input matInput id="name" formControlName="name">
+            </mat-form-field>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="data.name">
-    </mat-form-field>
+            <mat-error *ngIf="dropDownForm.get('name')?.invalid && dropDownForm.get('name')?.touched">
+                Artikelname ist erforderlich.
+            </mat-error>
+        </div>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Beschreibung</mat-label>
-        <input matInput [(ngModel)]="data.description">
-    </mat-form-field>
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Beschreibung</mat-label>
+                <input matInput id="description" formControlName="description">
+            </mat-form-field>
+        </div>
 
-    <form [formGroup]="dropDownForm">
         <!-- Abteilung -->
         <div class="dropdown-section">
             <label>Abteilung:</label>
@@ -29,6 +36,10 @@
                         </div>
                     </ng-template>
                 </ng-multiselect-dropdown>
+
+                <mat-error *ngIf="dropDownForm.get('departments').invalid && dropDownForm.get('departments').touched">
+                    Abteilung ist erforderlich.
+                </mat-error>
             </div>
         </div>
 
@@ -85,16 +96,17 @@
                 </button>
             </div>
         </div>
-    </form>
 
+    </form>
 </div>
+
 
 <mat-toolbar color="custom-toolbar" class="fixed-toolbar">
     <span class="spacer"></span>
     <button mat-icon-button class="align-button color-cancel" matTooltip="Abbrechen" (click)="onNoClick()">
         <mat-icon>cancel</mat-icon>
     </button>
-    <button mat-icon-button class="align-button color-confirm" matTooltip="Speichern" (click)="save()">
+    <button mat-icon-button class="align-button color-confirm" matTooltip="Speichern" (click)="onSubmit()" [disabled]="dropDownForm.invalid">
         <mat-icon>save</mat-icon>
     </button>
 </mat-toolbar>

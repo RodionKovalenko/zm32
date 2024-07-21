@@ -253,3 +253,23 @@ button {
 .edit-button {
   margin-left: 8px; /* Adjust spacing between button and dropdown */
 }
+
+.custom-dropdown .multiselect-dropdown {
+  height: 100vh; /* Full viewport height */
+  overflow-y: auto; /* Ensure it is scrollable if it exceeds the viewport height */
+}
+
+.custom-dropdown .multiselect-item {
+  overflow: hidden; /* Adjust as needed */
+}
+
+button[disabled] .mat-icon-button {
+  background-color: #070707; /* Light grey background */
+  color: #c0c6da !important; /* Dark grey text */
+  cursor: not-allowed; /* Change cursor to indicate non-interactive */
+  opacity: 0.6; /* Lower opacity to give a disabled look */
+}
+
+button[disabled] mat-icon {
+  color: #faf6f6 !important; /* Change icon color to match text */
+}

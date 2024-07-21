@@ -37,6 +37,16 @@ class Hersteller
     private Collection $standorte;
 
 
+    #[Groups(['Hersteller_Artikel', 'Artikel'])]
+    #[ORM\ManyToMany(
+        targetEntity: Artikel::class,
+        mappedBy: 'herstellers',
+        cascade: ['merge', 'persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $artikels;
+
+
     public function __construct()
     {
         $this->standorte = new ArrayCollection();
@@ -118,5 +128,37 @@ class Hersteller
             // Ensure that the Standorte's relationship to this Hersteller is also cleared
             $herstellerStandort->setHersteller(null);
         }
+    }
+
+    public function getArtikels(): Collection
+    {
+        return $this->artikels;
+    }
+
+    public function setArtikels($artikels): self
+    {
+        if (!($artikels instanceof Collection)) {
+            $artikels = new ArrayCollection($artikels);
+        }
+        $this->artikels = $artikels;
+        return $this;
+    }
+
+    public function addArtikel(Artikel $artikel): self
+    {
+        if (!$this->artikels->contains($artikel)) {
+            $this->artikels->add($artikel);
+            $artikel->addHersteller($this);
+        }
+        return $this;
+    }
+
+    public function removeArtikel(Artikel $artikel): self
+    {
+        if ($this->artikels->contains($artikel)) {
+            $this->artikels->removeElement($artikel);
+            $artikel->removeHersteller($this);
+        }
+        return $this;
     }
 }

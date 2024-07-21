@@ -103,13 +103,15 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
     }
 
     addRecord() {
+        let data: any = {};
+
+        data.formTitle = 'Bestellung hinzufügen';
+
         const dialogRef = this.dialog.open(BestellungEditComponentComponent, {
             width: '550px',
             // height: '100vh',
             maxHeight: '100vh',
-            data: {
-                departmentId: this.selectedDepartment.id
-            },
+            data,
             disableClose: true,
         });
 

@@ -33,27 +33,24 @@ class Artikel
     private ?string $model;
 
     #[Groups(['Artikel_Department', 'Department'])]
-    #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: "artikels")]
-    #[ORM\JoinTable(name:"artikel_to_departments")]
+    #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: 'artikels')]
+    #[ORM\JoinTable(name: 'artikel_to_departments')]
     #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\InverseJoinColumn(name: 'department_id', referencedColumnName: 'id', nullable: false)]
     private Collection $departments;
 
-    #[Groups(['Artikel_LieferantToArtikel', 'LieferantToArtikel'])]
-    #[ORM\OneToMany(
-        mappedBy: 'artikel',
-        targetEntity: LieferantToArtikel::class,
-        cascade: ['persist', 'merge', 'remove']
-    )]
-    private Collection $lieferantToArtikels;
+    #[Groups(['Artikel_Lieferant', 'Lieferant'])]
+    #[ORM\ManyToMany(targetEntity: Lieferant::class, inversedBy: 'artikels')]
+    #[ORM\JoinTable(name: 'artikel_to_lieferants')]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'lieferant_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $lieferants;
 
-    #[Groups(['Artikel_HerstellerToArtikel', 'HerstellerToArtikel'])]
-    #[ORM\OneToMany(
-        mappedBy: 'artikel',
-        targetEntity: HerstellerToArtikel::class,
-        cascade: ['merge', 'persist', 'remove']
-    )]
-    private Collection $herstellerArtikels;
+    #[Groups(['Artikel_Hersteller', 'Hersteller'])]
+    #[ORM\ManyToMany(targetEntity: Hersteller::class, inversedBy: 'artikels')]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $herstellers;
 
     #[Groups(['Artikel_Bestellung', 'Bestellung'])]
     #[ORM\OneToMany(
@@ -65,29 +62,10 @@ class Artikel
 
     public function __construct()
     {
-        $this->lieferantToArtikels = new ArrayCollection();
+        $this->lieferants = new ArrayCollection();
         $this->bestellungen = new ArrayCollection();
         $this->departments = new ArrayCollection();
-        $this->herstellerArtikels = new ArrayCollection();
-    }
-
-    public function getLieferantToArtikels(): Collection
-    {
-        return $this->lieferantToArtikels;
-    }
-
-    public function setLieferantToArtikels(Collection $lieferantToArtikels): void
-    {
-        $this->lieferantToArtikels = $lieferantToArtikels;
-    }
-
-    public function addLieferantToArtikel(LieferantToArtikel $lieferantToArtikel): self
-    {
-        if (!$this->lieferantToArtikels->contains($lieferantToArtikel)) {
-            $this->lieferantToArtikels->add($lieferantToArtikel);
-        }
-
-        return $this;
+        $this->herstellers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,10 +133,20 @@ class Artikel
         return $this->departments;
     }
 
+    public function setDepartments($departments): self
+    {
+        if (!($departments instanceof Collection)) {
+            $departments = new ArrayCollection($departments);
+        }
+
+        $this->departments = $departments;
+        return $this;
+    }
+
     public function addDepartment(Department $department): self
     {
         if (!$this->departments->contains($department)) {
-            $this->departments[] = $department;
+            $this->departments->add($department);
             $department->addArtikel($this);
         }
 
@@ -167,25 +155,79 @@ class Artikel
 
     public function removeDepartment(Department $department): self
     {
-        if ($this->departments->removeElement($department)) {
+        if ($this->departments->contains($department) &&
+            $this->departments->removeElement($department)) {
             $department->removeArtikel($this);
         }
 
         return $this;
     }
 
-    public function getHerstellerArtikels(): Collection
+    public function getHerstellers(): Collection
     {
-        return $this->herstellerArtikels;
+        return $this->herstellers;
     }
-    public function addHerstellerArtikels(HerstellerToArtikel $herstellerArtikels): void
+
+    public function setHerstellers($herstellers)
     {
-        if (!$this->herstellerArtikels->contains($herstellerArtikels)) {
-            $this->herstellerArtikels[] = $herstellerArtikels;
+        if (!($herstellers instanceof Collection)) {
+            $herstellers = new ArrayCollection($herstellers);
+        }
+        $this->herstellers = $herstellers;
+
+        return $this;
+    }
+
+    public function addHersteller(Hersteller $hersteller): void
+    {
+        if (!$this->herstellers->contains($hersteller)) {
+            $this->herstellers->add($hersteller);
+            $hersteller->addArtikel($this);
         }
     }
-    public function removeHerstellerArtikels(HerstellerToArtikel $herstellerArtikels): void
+
+    public function removeHersteller(Hersteller $hersteller): void
     {
-        $this->herstellerArtikels->removeElement($herstellerArtikels);
+        if ($this->herstellers->contains($hersteller)) {
+            $this->herstellers->removeElement($hersteller);
+            // Ensure that the Standorte's relationship to this Hersteller is also cleared
+            $hersteller->removeArtikel($this);
+        }
+    }
+
+    public function getLieferants(): Collection
+    {
+        return $this->lieferants;
+    }
+
+    public function setLieferants($lieferants): self
+    {
+        if (!($lieferants instanceof Collection)) {
+            $lieferants = new ArrayCollection($lieferants);
+        }
+
+        $this->lieferants = $lieferants;
+
+        return $this;
+    }
+
+    public function addLieferant(Lieferant $lieferant): self
+    {
+        if (!$this->lieferants->contains($lieferant)) {
+            $this->lieferants->add($lieferant);
+            $lieferant->addArtikel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLieferant(Lieferant $lieferant): self
+    {
+        if ($this->lieferants->contains($lieferant) &&
+            $this->lieferants->removeElement($lieferant)) {
+            $lieferant->removeArtikel($this);
+        }
+
+        return $this;
     }
 }

@@ -233,8 +233,6 @@ class GenerateArtikelDataCommand extends Command
             'Bimbssteinpulver 25kg fein',
             'Bimsteindesinfektion „Bims-Sep“ 5L',
             'Ceramage Dentin Body',
-            'Ceramage Dentin Body',
-            'Ceramage Dentin Body',
             'Ceramage Gum L (PN1959) (Zahnfleischmasse)',
             'Ceramage Up Gum Color Gum L (PN2391)',
             'Ceramage Up Incisal    Herst.Nr.2358',
@@ -524,7 +522,9 @@ class GenerateArtikelDataCommand extends Command
 
             $user->setMitarbeiterId((int)$userArrayItem['mitarbeiterId'])
                 ->setFirstname($userArrayItem['vorname'])
-                ->setLastname($userArrayItem['nachname']);
+                ->setLastname($userArrayItem['nachname'])
+                ->setCreatedAt(new \DateTime())
+                ->setUpdatedAt(new \DateTime());
 
             $this->userRepository->save($user);
 

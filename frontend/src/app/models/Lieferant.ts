@@ -10,6 +10,7 @@ export interface Lieferant {
             ort?: string;
             adresse?: string;
             telefon?: string;
+            email?: string;
             url?: string;
         }
     ]

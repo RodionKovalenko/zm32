@@ -38,20 +38,18 @@ class Lieferant
     )]
     private Collection $lieferantStammdaten;
 
-    #[Groups(['Lieferant_LieferantToArtikel', 'LieferantToArtikel'])]
-    #[ORM\OneToMany(
-        mappedBy: 'lieferant',
-        targetEntity: LieferantToArtikel::class,
-        cascade: ['merge', 'persist', 'remove'],
+    #[Groups(['Lieferant_Artikel', 'Artikel'])]
+    #[ORM\ManyToMany(
+        targetEntity: Artikel::class,
+        mappedBy: 'lieferants',
         orphanRemoval: true
     )]
-    private Collection $lieferantArtikels;
+    private Collection $artikels;
 
     #[Groups(['Lieferant_Bestellung', 'Bestellung'])]
     #[ORM\OneToMany(
         mappedBy: 'lieferant',
-        targetEntity: Bestellung::class,
-        cascade: ['merge', 'persist', 'remove']
+        targetEntity: Bestellung::class
     )]
     private Collection $bestellungen;
 
@@ -59,7 +57,7 @@ class Lieferant
     {
         $this->lieferantStammdaten = new ArrayCollection();
         $this->bestellungen = new ArrayCollection();
-        $this->lieferantArtikels = new ArrayCollection();
+        $this->artikels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,44 +101,35 @@ class Lieferant
         return $this;
     }
 
-    public function getLieferantArtikels(): Collection
+    public function getArtikels(): Collection
     {
-        return $this->lieferantArtikels;
+        return $this->artikels;
     }
 
-    public function setLieferantArtikels($lieferantArtikels): Lieferant
+    public function setArtikels($artikels): self
     {
-        if (!($lieferantArtikels instanceof Collection)) {
-            $lieferantArtikels = new ArrayCollection($lieferantArtikels);
+        if (!($artikels instanceof Collection)) {
+            $artikels = new ArrayCollection($artikels);
         }
-
-        foreach ($this->lieferantArtikels as $lieferantArtikel) {
-            if (!$lieferantArtikels->contains($lieferantArtikel)) {
-                $this->removeLieferantArtikel($lieferantArtikel);
-            }
-        }
-
-        foreach ($lieferantArtikels as $lieferantArtikel) {
-            if (!$this->lieferantArtikels->contains($lieferantArtikel)) {
-                $this->addLieferantArtikel($lieferantArtikel);
-            }
-        }
-
+        $this->artikels = $artikels;
         return $this;
     }
 
-    public function addLieferantArtikel(LieferantToArtikel $lieferantArtikel): self
+    public function addArtikel(Artikel $artikel): self
     {
-        if (!$this->lieferantArtikels->contains($lieferantArtikel)) {
-            $this->lieferantArtikels[] = $lieferantArtikel;
-            $lieferantArtikel->setLieferant($this); // Set the reverse reference
+        if (!$this->artikels->contains($artikel)) {
+            $this->artikels[] = $artikel;
+            $artikel->addLieferant($this);
         }
         return $this;
     }
 
-    public function removeLieferantArtikel(LieferantToArtikel $lieferantArtikel): self
+    public function removeArtikel(Artikel $artikel): self
     {
-        $this->lieferantArtikels->removeElement($lieferantArtikel);
+        if ($this->artikels->contains($artikel)) {
+            $this->artikels->removeElement($artikel);
+            $artikel->removeLieferant($this);
+        }
         return $this;
     }
 

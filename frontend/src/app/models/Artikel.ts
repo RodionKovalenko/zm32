@@ -1,10 +1,11 @@
-import {LieferantToArtikel} from "./LieferantToArtikel";
 
 export interface Artikel {
     id: number;
     name: string;
-    quantity: number;
-    description: string;
-    lieferantToArtikels?: LieferantToArtikel[];
+    description?: string;
     formTitle?: string;
+    quantity?: number;
+    lieferants?: any[];
+    departments?: any[];
+    herstellers?: any[];
 }

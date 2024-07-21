@@ -23,17 +23,29 @@ class ArtikelController extends BaseController
         parent::__construct($serializer, $this->formFactory);
     }
 
-    #[Route(path: '/{departmentId}', name: 'app_artikel', methods: ['GET'])]
+    #[Route(path: '/{departmentId}', name: 'app_artikel_get_artikels', defaults: ['departmentId' => null], methods: ['GET'])]
     public function getArtikels(int $departmentId, Request $request)
     {
-        $departments = $this->departmentRepository->findBy(['id' => $departmentId]);
-        $artikels = $this->artikelRepository->getByDepartmentId($departments);
+        if (!empty($departmentId)) {
+            $departments = $this->departmentRepository->findBy(['id' => $departmentId]);
+            $artikels = $this->artikelRepository->getByDepartmentId($departments);
+        } else {
+            $artikels = $this->artikelRepository->findAllOrderedBy('name');
+        }
 
         $response = [
             'success' => true,
             'data' => $artikels
         ];
-        return $this->getJsonResponse($response);
+        return $this->getJsonResponse(
+            $response,
+            [
+                'Default',
+                'Artikel_Department',
+                'Artikel_Hersteller',
+                'Artikel_Lieferant'
+            ]
+        );
     }
 
     #[Route(path: '/save/{id}', name: 'app_artikel_save_artikel', defaults: ['id' => null], methods: ['POST'])]
@@ -58,7 +70,14 @@ class ArtikelController extends BaseController
 
             if ($form->isValid()) {
                 $this->artikelRepository->save($artikel);
-                return $this->getJsonResponse(['success' => true, 'data' => [$artikel]]);
+                return $this->getJsonResponse(['success' => true, 'data' => [$artikel]],
+                                              [
+                                                  'Default',
+                                                  'Artikel_Department',
+                                                  'Artikel_Hersteller',
+                                                  'Artikel_Lieferant'
+                                              ]
+                );
             }
 
             return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors(true)]);
