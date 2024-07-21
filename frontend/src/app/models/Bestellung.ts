@@ -13,10 +13,10 @@ export interface Bestellung {
     mitarbeiter?: Mitarbeiter,
     departmentId?: Number,
     formTitle: '',
-    bestellungToArtikels?: any[],
-    bestellungToLieferants?: any[],
-    bestellungToHerstellers?: any[],
-    bestellungToDepartments?: any[],
-    bestellungToHerstellerStandorte?: any[],
-    bestellungToLieferantStandorte?: any []
+    artikels?: any[],
+    lieferants?: any[],
+    herstellers?: any[],
+    departments?: any[],
+    herstellerStandorte?: any[],
+    lieferantStandorte?: any []
 }

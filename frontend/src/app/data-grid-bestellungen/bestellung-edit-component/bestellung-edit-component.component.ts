@@ -23,7 +23,7 @@ export class BestellungEditComponentComponent implements OnInit {
     lieferants: any[] = [];
     artikels: any[] = [];
 
-    departments: DepartmentData[] = [];
+    departments: any[] = [];
     dropdownSettings: IDropdownSettings = {};
     singleSelectSettings: IDropdownSettings = {};
     bestellungForm: any;
@@ -65,120 +65,105 @@ export class BestellungEditComponentComponent implements OnInit {
             descriptionZusatz: [this.data?.descriptionZusatz || ''],
             amount: [this.data?.amount || ''],
             preis: [this.data?.preis || '', this.floatValidator],
-            bestellungToArtikels: [this.data?.bestellungToArtikels || [], Validators.required],
-            bestellungToDepartments: [this.data?.bestellungToDepartments || [], Validators.required],
-            bestellungToHerstellers: [this.data?.bestellungToHerstellers || []],
-            bestellungToHerstellerStandorte: [this.data?.bestellungToHerstellerStandorte || []],
-            bestellungToLieferants: [this.data?.bestellungToLieferants || []],
-            bestellungToLieferantStandorte: [this.data?.bestellungToLieferantStandorte || []]
+            artikels: [this.data?.artikels || [], Validators.required],
+            departments: [this.data?.departments || [], Validators.required],
+            herstellers: [this.data?.herstellers || []],
+            lieferants: [this.data?.lieferants || []],
+            herstellerStandorte: [this.data?.herstellerStandorte || []],
+            lieferantStandorte: [this.data?.lieferantStandorte || []]
         });
 
-        if (this.data?.bestellungToArtikels) {
-            this.data.bestellungToArtikels.forEach(st => this.addBestellungToArtikels(st));
+        if (this.data?.artikels) {
+            this.data.artikels.forEach(st => this.addArtikels(st));
         }
 
-        if (this.data?.bestellungToDepartments) {
-            this.data.bestellungToDepartments.forEach(st => this.addBestellungToDepartments(st));
+        if (this.data?.departments) {
+            this.data.departments.forEach(st => this.addDepartments(st));
         }
 
         // Add existing standorte to the form if available
-        if (this.data?.bestellungToLieferantStandorte) {
-            this.data.bestellungToLieferantStandorte.forEach(st => this.addBestellungToLieferantStandorte(st));
+        if (this.data?.lieferantStandorte) {
+            this.data.lieferantStandorte.forEach(st => this.addLieferantStandorte(st));
         }
 
-        if (this.data?.bestellungToHerstellerStandorte) {
-            this.data.bestellungToHerstellerStandorte.forEach(st => this.addBestellungToHerstellerStandorte(st));
+        if (this.data?.herstellerStandorte) {
+            this.data.herstellerStandorte.forEach(st => this.addHerstellerStandorte(st));
         }
 
-        if (this.data?.bestellungToLieferants) {
-            this.data.bestellungToLieferants.forEach(st => this.addBestellungToLieferants(st));
+        if (this.data?.lieferants) {
+            this.data.lieferants.forEach(st => this.addLieferants(st));
         }
-        if (this.data?.bestellungToHerstellers) {
-            this.data.bestellungToHerstellers.forEach(st => this.addBestellungToHerstellers(st));
+        if (this.data?.herstellers) {
+            this.data.herstellers.forEach(st => this.addHerstellers(st));
         }
     }
 
-    get bestellungToArtikels(): FormArray {
-        return this.bestellungForm.get('bestellungToArtikels') as FormArray;
-    }
-
-    addBestellungToArtikels(value?: any): void {
+    addArtikels(value?: any): void {
         const valueGroup = this.fb.group({
             id: [value?.id || 0],
             name: [value?.name || 0],
         });
-        this.bestellungToArtikels.push(valueGroup);
+        this.artikels.push(valueGroup);
     }
 
-    get bestellungToHerstellers(): FormArray {
-        return this.bestellungForm.get('bestellungToHerstellers') as FormArray;
-    }
-
-    addBestellungToHerstellers(value?: any): void {
+    addHerstellers(value?: any): void {
         const valueGroup = this.fb.group({
             id: [value?.id || 0],
             name: [value?.name || 0],
         });
-        this.bestellungToHerstellers.push(valueGroup);
+        this.herstellers.push(valueGroup);
     }
 
-    get bestellungToLieferants(): FormArray {
-        return this.bestellungForm.get('bestellungToLieferants') as FormArray;
-    }
-
-    addBestellungToLieferants(value?: any): void {
+    addLieferants(value?: any): void {
         const valueGroup = this.fb.group({
             id: [value?.id || 0],
             name: [value?.name || 0],
         });
-        this.bestellungToLieferants.push(valueGroup);
+        this.lieferants.push(valueGroup);
     }
 
-    get bestellungToDepartments(): FormArray {
-        return this.bestellungForm.get('bestellungToDepartments') as FormArray;
-    }
-
-    addBestellungToDepartments(value?: any): void {
+    addDepartments(value?: any): void {
         const valueGroup = this.fb.group({
             id: [value?.id || 0],
             name: [value?.name || 0],
         });
-        this.bestellungToDepartments.push(valueGroup);
+        this.departments.push(valueGroup);
     }
 
-    get bestellungToLieferantStandorte(): FormArray {
-        return this.bestellungForm.get('bestellungToLieferantStandorte') as FormArray;
+    get lieferantStandorte(): FormArray {
+        return this.bestellungForm.get('lieferantStandorte') as FormArray;
     }
 
-    addBestellungToLieferantStandorte(value?: any): void {
+    addLieferantStandorte(value?: any): void {
         const valueGroup = this.fb.group({
             id: [value?.id || 0],
             name: [value?.name || 0],
         });
-        this.bestellungToLieferantStandorte.push(valueGroup);
+        this.lieferantStandorte.push(valueGroup);
     }
 
-    get bestellungToHerstellerStandorte(): FormArray {
-        return this.bestellungForm.get('bestellungToHerstellerStandorte') as FormArray;
+    get herstellerStandorte(): FormArray {
+        return this.bestellungForm.get('herstellerStandorte') as FormArray;
     }
 
-    addBestellungToHerstellerStandorte(value?: any): void {
+    addHerstellerStandorte(value?: any): void {
         const valueGroup = this.fb.group({
             id: [value?.id || 0],
             name: [value?.name || 0],
         });
-        this.bestellungToHerstellerStandorte.push(valueGroup);
+        this.herstellerStandorte.push(valueGroup);
     }
 
     isOnlyOneLieferantSelected(): boolean {
-        return this.bestellungForm.get('bestellungToLieferants').value.length === 1;
+        return this.bestellungForm.get('lieferants').value.length === 1;
     }
+
     isOnlyOneHerstellerSelected(): boolean {
-        return this.bestellungForm.get('bestellungToHerstellers').value.length === 1;
+        return this.bestellungForm.get('herstellers').value.length === 1;
     }
 
     isOnlyOneArtikelSelected(): boolean {
-        return this.bestellungForm.get('bestellungToArtikels').value.length === 1;
+        return this.bestellungForm.get('artikels').value.length === 1;
     }
 
     loadDepartments() {
@@ -230,11 +215,13 @@ export class BestellungEditComponentComponent implements OnInit {
 
         if (edit) {
             let selectedHerstellers = this.bestellungForm.get('artikels')?.value || [];
+
             if (selectedHerstellers.length === 1) {
                 data = this.artikels.find(l => l.id === selectedHerstellers[0].id) || {};
             }
             data.formTitle = 'Artikel bearbeiten';
         }
+
         const dialogRef = this.dialog.open(MaterialEditComponentComponent, {
             width: '550px',
             height: '100vh',
@@ -244,7 +231,7 @@ export class BestellungEditComponentComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.bestellungForm.get('artikels')?.setValue(data);
+                this.updateBestellungToArtikelsDropdown(result.data);
             }
         });
     }
@@ -254,7 +241,7 @@ export class BestellungEditComponentComponent implements OnInit {
         data.formTitle = 'Neuen Hersteller hinzufügen';
 
         if (edit) {
-            let selectedHerstellers = this.bestellungForm.get('bestellungToHerstellers')?.value || [];
+            let selectedHerstellers = this.bestellungForm.get('herstellers')?.value || [];
             if (selectedHerstellers.length === 1) {
                 data = this.herstellers.find(l => l.id === selectedHerstellers[0].id) || {};
             }
@@ -280,7 +267,7 @@ export class BestellungEditComponentComponent implements OnInit {
         data.formTitle = 'Neuen Lieferant hinzufügen';
 
         if (edit) {
-            let selectedLieferants = this.bestellungForm.get('bestellungToLieferants')?.value || [];
+            let selectedLieferants = this.bestellungForm.get('lieferants')?.value || [];
             if (selectedLieferants.length === 1) {
                 data = this.lieferants.find(l => l.id === selectedLieferants[0].id) || {};
             }
@@ -363,20 +350,27 @@ export class BestellungEditComponentComponent implements OnInit {
         const value = control.value;
         const floatRegex = /^[+-]?\d+(\.\d+)?$/;
         if (value && !floatRegex.test(value)) {
-            return { invalidFloat: true };
+            return {invalidFloat: true};
         }
         return null;
     }
 
     updateBestellungToArtikelsDropdown(data: Artikel[]) {
-        this.bestellungForm.get('bestellungToArtikels')?.setValue(data);
+
+        if (Array.isArray(this.artikels)) { // Ensure it is an array
+            const index = this.artikels.findIndex(record => record.id === data[0].id);
+            if (index !== -1) {
+                // Update the record at the found index
+                this.artikels[index] = data[0];
+            }
+        }
     }
 
     updateLieferantsDropdown(data: Lieferant[]) {
-        this.bestellungForm.get('bestellungToLieferants')?.setValue(data);
+        this.bestellungForm.get('lieferants')?.setValue(data);
     }
 
     updateHerstellerDropdown(data: Hersteller[]) {
-        this.bestellungForm.get('bestellungToHerstellers')?.setValue(data);
+        this.bestellungForm.get('herstellers')?.setValue(data);
     }
 }

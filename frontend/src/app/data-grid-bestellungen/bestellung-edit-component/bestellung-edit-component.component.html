@@ -7,12 +7,12 @@
         <div class="dropdown-section">
             <label>Abteilung:</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="bestellungToDepartments"
+                <ng-multiselect-dropdown id="departments"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Abteilung auswählen'"
                                          [settings]="dropdownSettings"
                                          [data]="departments"
-                                         formControlName="bestellungToDepartments">
+                                         formControlName="departments">
                     <ng-template let-item="item">
                         <div class="custom-item">
                             {{ item.name }}
@@ -20,7 +20,7 @@
                     </ng-template>
                 </ng-multiselect-dropdown>
 
-                <mat-error *ngIf="bestellungForm.get('bestellungToDepartments').invalid && bestellungForm.get('bestellungToDepartments').touched">
+                <mat-error *ngIf="bestellungForm.get('departments').invalid && bestellungForm.get('departments').touched">
                     Abteilung ist erforderlich.
                 </mat-error>
             </div>
@@ -31,12 +31,12 @@
         <div class="dropdown-section">
             <label>Artikel:</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="bestellungToArtikels"
+                <ng-multiselect-dropdown id="artikels"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Artikel auswählen'"
                                          [settings]="singleSelectSettings"
                                          [data]="artikels"
-                                         formControlName="bestellungToArtikels">
+                                         formControlName="artikels">
                     <ng-template let-item="item">
                         <div class="custom-item">
                             {{ item.name }}
@@ -59,12 +59,12 @@
         <div class="dropdown-section">
             <label>Lieferant (Optional):</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="bestellungToLieferants"
+                <ng-multiselect-dropdown id="lieferants"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Lieferant auswählen (Optional)'"
                                          [settings]="dropdownSettings"
                                          [data]="lieferants"
-                                         formControlName="bestellungToLieferants">
+                                         formControlName="lieferants">
                     <ng-template let-item="item">
                         <div class="custom-item">
                             {{ item.name }}
@@ -86,12 +86,12 @@
         <div class="dropdown-section">
             <label>Hersteller (Optional):</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="bestellungToHerstellers"
+                <ng-multiselect-dropdown id="herstellers"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Hersteller auswählen (Optional)'"
                                          [settings]="dropdownSettings"
                                          [data]="herstellers"
-                                         formControlName="bestellungToHerstellers">
+                                         formControlName="herstellers">
                     <ng-template let-item="item">
                         <div class="custom-item">
                             {{ item.name }}

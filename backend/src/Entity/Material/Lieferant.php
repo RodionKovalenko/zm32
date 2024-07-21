@@ -41,8 +41,7 @@ class Lieferant
     #[Groups(['Lieferant_Artikel', 'Artikel'])]
     #[ORM\ManyToMany(
         targetEntity: Artikel::class,
-        mappedBy: 'lieferants',
-        orphanRemoval: true
+        mappedBy: 'lieferants'
     )]
     private Collection $artikels;
 

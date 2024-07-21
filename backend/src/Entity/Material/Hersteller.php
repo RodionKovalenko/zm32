@@ -40,9 +40,7 @@ class Hersteller
     #[Groups(['Hersteller_Artikel', 'Artikel'])]
     #[ORM\ManyToMany(
         targetEntity: Artikel::class,
-        mappedBy: 'herstellers',
-        cascade: ['merge', 'persist', 'remove'],
-        orphanRemoval: true
+        mappedBy: 'herstellers'
     )]
     private Collection $artikels;
 

@@ -35,21 +35,21 @@ class Artikel
     #[Groups(['Artikel_Department', 'Department'])]
     #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: 'artikels')]
     #[ORM\JoinTable(name: 'artikel_to_departments')]
-    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\InverseJoinColumn(name: 'department_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false, onDelete: 'restrict')]
+    #[ORM\InverseJoinColumn(name: 'department_id', referencedColumnName: 'id', nullable: false, onDelete: 'cascade')]
     private Collection $departments;
 
     #[Groups(['Artikel_Lieferant', 'Lieferant'])]
     #[ORM\ManyToMany(targetEntity: Lieferant::class, inversedBy: 'artikels')]
     #[ORM\JoinTable(name: 'artikel_to_lieferants')]
-    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\InverseJoinColumn(name: 'lieferant_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false, onDelete: 'restrict')]
+    #[ORM\InverseJoinColumn(name: 'lieferant_id', referencedColumnName: 'id', nullable: false, onDelete: 'cascade')]
     private Collection $lieferants;
 
     #[Groups(['Artikel_Hersteller', 'Hersteller'])]
     #[ORM\ManyToMany(targetEntity: Hersteller::class, inversedBy: 'artikels')]
-    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\InverseJoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false, onDelete: 'restrict')]
+    #[ORM\InverseJoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false, onDelete: 'cascade')]
     private Collection $herstellers;
 
     #[Groups(['Artikel_Bestellung', 'Bestellung'])]

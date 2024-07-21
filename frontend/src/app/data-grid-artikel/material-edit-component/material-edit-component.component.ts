@@ -73,7 +73,6 @@ export class MaterialEditComponentComponent implements OnInit {
         this.markAllAsTouched();
     }
 
-
     addLieferants(value?: any): void {
         const valueGroup = this.fb.group({
             lieferant: [value?.id || 0]
