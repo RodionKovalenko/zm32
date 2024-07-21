@@ -14,12 +14,15 @@ class LieferantFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', TextType::class)
+        $builder->add('id', null, ['mapped' => false])
+            ->add('name', TextType::class)
             ->add('lieferantStammdaten', CollectionType::class, [
                 'entry_type' => LieferantStammdatenType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'required' => false,
+                'empty_data' => []
             ]);
     }
 

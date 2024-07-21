@@ -22,11 +22,11 @@ class Artikel
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, unique: true)]
+    #[ORM\Column(type: Types::TEXT, unique: true, nullable: false)]
     #[AppAssert\UniqueFieldValue(message: 'Artikel mit dem gleichen Namen %s existiert bereits.', field: 'name', entity: Artikel::class)]
     private string $name;
 
-    #[ORM\Column(type: Types::STRING, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]

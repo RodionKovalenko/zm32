@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\DepartmentRepository;
+use Doctrine\Common\Collections\Order;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,7 @@ class DepartmentController extends BaseController
     #[Route(path: '/get_departments', name: 'app_department_get_departments', methods: ['GET'])]
     public function getDepartments(Request $request)
     {
-        $deparments = $this->departmentRepository->findAll();
+        $deparments = $this->departmentRepository->findAllOrderedBy('name', Order::Ascending->value);
 
         $response = [
             'success' => true,

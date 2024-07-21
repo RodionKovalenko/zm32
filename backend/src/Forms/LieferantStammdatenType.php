@@ -14,9 +14,12 @@ class LieferantStammdatenType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('id', null, ['required' => false])
             ->add('adresse', TextType::class)
             ->add('plz', TextType::class)
             ->add('ort', TextType::class)
+            ->add('telefon', TextType::class)
+            ->add('url', TextType::class)
             ->add('startdatum', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,

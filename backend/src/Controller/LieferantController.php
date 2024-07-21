@@ -6,6 +6,7 @@ use App\Entity\Material\Lieferant;
 use App\Forms\LieferantFormType;
 use App\Repository\Material\LieferantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Order;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class LieferantController extends BaseController
         if ($artikelId !== null) {
             $lieferants = $this->lieferantRepository->getByArtikel($artikelId);
         } else {
-            $lieferants = $this->lieferantRepository->findAll();
+            $lieferants = $this->lieferantRepository->findAllOrderedBy('name', Order::Ascending->value);
         }
 
         $response = [
@@ -47,14 +48,10 @@ class LieferantController extends BaseController
         }
 
         try {
-            if ($lieferantId !== null) {
+            if (!empty($lieferantId)) {
                 $lieferant = $this->lieferantRepository->find($lieferantId);
             } else {
                 $lieferant = new Lieferant();
-            }
-
-            if (isset($data['lieferantStammdaten']) && !is_array($data['lieferantStammdaten'][0])) {
-                $data['lieferantStammdaten'] = [$data['lieferantStammdaten']];
             }
 
             $form = $this->createForm(LieferantFormType::class, $lieferant);

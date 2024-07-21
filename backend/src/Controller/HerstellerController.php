@@ -6,6 +6,7 @@ use App\Entity\Material\Hersteller;
 use App\Forms\HerstellerFormType;
 use App\Repository\Material\HerstellerRepository;
 use App\Repository\Material\HerstellerStandortRepository;
+use Doctrine\Common\Collections\Order;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ class HerstellerController extends BaseController
     {
         try {
             if (empty($artikelId)) {
-                $hersteller = $this->herstellerRepository->findAll();
+                $hersteller = $this->herstellerRepository->findAllOrderedBy('name', Order::Ascending->value);
             } else {
                 $hersteller = $this->herstellerRepository->getByArtikelId($artikelId);
             }

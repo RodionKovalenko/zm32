@@ -4,6 +4,7 @@ namespace App\Repository\Material;
 
 use App\Entity\Material\Lieferant;
 use App\Repository\DefaultRepository;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 class LieferantRepository extends DefaultRepository
@@ -18,7 +19,8 @@ class LieferantRepository extends DefaultRepository
         $q = $this->createQueryBuilder('l')
             ->join('l.lieferantArtikels', 'la')
             ->where('la.artikel = :artikelId')
-            ->setParameter('artikelId', $artikelId);
+            ->setParameter('artikelId', $artikelId)
+            ->orderBy('l.name', Order::Ascending->value);
 
         return $q->getQuery()->getResult();
     }

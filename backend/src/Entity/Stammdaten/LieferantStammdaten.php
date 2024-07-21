@@ -19,10 +19,10 @@ class LieferantStammdaten
     #[Groups(['LieferantStammdaten_Lieferant', 'Lieferant'])]
     #[ORM\ManyToOne(
         targetEntity: Lieferant::class,
-        cascade: ['persist', 'merge', 'remove']
+        inversedBy: 'lieferantStammdaten'
     )]
     #[ORM\JoinColumn(name: 'lieferant', referencedColumnName: 'id', nullable: false)]
-    private Lieferant $lieferant;
+    private ?Lieferant $lieferant = null;
 
     #[ORM\Column(type: Types::STRING, length: 150, nullable: true)]
     private ?string $adresse = null;
@@ -39,6 +39,12 @@ class LieferantStammdaten
     #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $plz = null;
 
+    #[ORM\Column(type: Types::STRING, length: 500, nullable: true)]
+    private ?string $url = null;
+
+    #[ORM\Column(type: Types::STRING, length: 500, nullable: true)]
+    private ?string $telefon = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,7 +60,7 @@ class LieferantStammdaten
         return $this->lieferant;
     }
 
-    public function setLieferant(Lieferant $lieferant): void
+    public function setLieferant(?Lieferant $lieferant): void
     {
         $this->lieferant = $lieferant;
     }
@@ -107,5 +113,27 @@ class LieferantStammdaten
     public function setPlz(?string $plz): void
     {
         $this->plz = $plz;
+    }
+
+    public function getTelefon(): ?string
+    {
+        return $this->telefon;
+    }
+
+    public function setTelefon(?string $telefon): LieferantStammdaten
+    {
+        $this->telefon = $telefon;
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): LieferantStammdaten
+    {
+        $this->url = $url;
+        return $this;
     }
 }

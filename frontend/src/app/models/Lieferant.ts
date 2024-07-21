@@ -9,6 +9,8 @@ export interface Lieferant {
             plz?: string;
             ort?: string;
             adresse?: string;
+            telefon?: string;
+            url?: string;
         }
     ]
 }

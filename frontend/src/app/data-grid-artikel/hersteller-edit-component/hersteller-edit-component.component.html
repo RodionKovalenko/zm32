@@ -51,14 +51,25 @@
 
                 <div>
                     <mat-form-field appearance="fill">
+                        <mat-label>Telefonnummer</mat-label>
+                        <input matInput id="telefon" formControlName="telefon">
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-form-field appearance="fill">
                         <mat-label>Website/URL</mat-label>
                         <input matInput id="url" formControlName="url">
                     </mat-form-field>
                 </div>
 
-                <button mat-button type="button" (click)="removeStandort(i)">Standort löschen</button>
+                <button mat-button type="button" class="color-cancel" (click)="removeStandort(i)">Standort löschen
+                    <mat-icon>delete</mat-icon>
+                </button>
             </div>
-            <button mat-raised-button type="button" (click)="addStandort()">Standort hinzufügen</button>
+            <button mat-raised-button type="button" class="color-confirm" (click)="addStandort()">Standort hinzufügen
+                <mat-icon>add</mat-icon>
+            </button>
         </div>
     </div>
 

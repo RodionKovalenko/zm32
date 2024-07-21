@@ -242,3 +242,14 @@ button {
   display: inline-block;
   margin-right: 8px; /* Space between index and form fields */
 }
+
+.dropdown-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between the dropdown and the button */
+}
+
+.add-button,
+.edit-button {
+  margin-left: 8px; /* Adjust spacing between button and dropdown */
+}

@@ -33,7 +33,8 @@ class Lieferant
     #[ORM\OneToMany(
         mappedBy: 'lieferant',
         targetEntity: LieferantStammdaten::class,
-        cascade: ['merge', 'persist', 'remove']
+        cascade: ['merge', 'persist', 'remove'],
+        orphanRemoval: true
     )]
     private Collection $lieferantStammdaten;
 
@@ -41,7 +42,8 @@ class Lieferant
     #[ORM\OneToMany(
         mappedBy: 'lieferant',
         targetEntity: LieferantToArtikel::class,
-        cascade: ['merge', 'persist', 'remove']
+        cascade: ['merge', 'persist', 'remove'],
+        orphanRemoval: true
     )]
     private Collection $lieferantArtikels;
 
@@ -106,9 +108,63 @@ class Lieferant
         return $this->lieferantArtikels;
     }
 
-    public function setLieferantArtikels(Collection $lieferantArtikels): Lieferant
+    public function setLieferantArtikels($lieferantArtikels): Lieferant
     {
-        $this->lieferantArtikels = $lieferantArtikels;
+        if (!($lieferantArtikels instanceof Collection)) {
+            $lieferantArtikels = new ArrayCollection($lieferantArtikels);
+        }
+
+        foreach ($this->lieferantArtikels as $lieferantArtikel) {
+            if (!$lieferantArtikels->contains($lieferantArtikel)) {
+                $this->removeLieferantArtikel($lieferantArtikel);
+            }
+        }
+
+        foreach ($lieferantArtikels as $lieferantArtikel) {
+            if (!$this->lieferantArtikels->contains($lieferantArtikel)) {
+                $this->addLieferantArtikel($lieferantArtikel);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addLieferantArtikel(LieferantToArtikel $lieferantArtikel): self
+    {
+        if (!$this->lieferantArtikels->contains($lieferantArtikel)) {
+            $this->lieferantArtikels[] = $lieferantArtikel;
+            $lieferantArtikel->setLieferant($this); // Set the reverse reference
+        }
+        return $this;
+    }
+
+    public function removeLieferantArtikel(LieferantToArtikel $lieferantArtikel): self
+    {
+        $this->lieferantArtikels->removeElement($lieferantArtikel);
+        return $this;
+    }
+
+    public function setLieferantStammdaten($lieferantStammdaten)
+    {
+        // Ensure $lieferantStammdaten is a Collection
+        if (!($lieferantStammdaten instanceof Collection)) {
+            $lieferantStammdaten = new ArrayCollection($lieferantStammdaten);
+        }
+
+        // Remove old lieferantStammdaten
+        foreach ($this->lieferantStammdaten as $lieferantStamm) {
+            if (!$lieferantStammdaten->contains($lieferantStamm)) {
+                $this->removeLieferantStammdaten($lieferantStamm);
+            }
+        }
+
+        // Add new lieferantStammdaten
+        foreach ($lieferantStammdaten as $lieferantStamm) {
+            if (!$this->lieferantStammdaten->contains($lieferantStamm)) {
+                $this->addLieferantStammdaten($lieferantStamm);
+            }
+        }
+
         return $this;
     }
 
@@ -128,7 +184,12 @@ class Lieferant
 
     public function removeLieferantStammdaten(LieferantStammdaten $lieferantStammdaten): self
     {
-        $this->lieferantStammdaten->removeElement($lieferantStammdaten);
+        if ($this->lieferantStammdaten->contains($lieferantStammdaten)) {
+            $this->lieferantStammdaten->removeElement($lieferantStammdaten);
+            // Ensure that the Standorte's relationship to this Hersteller is also cleared
+            $lieferantStammdaten->setLieferant(null);
+        }
+
         return $this;
     }
 }

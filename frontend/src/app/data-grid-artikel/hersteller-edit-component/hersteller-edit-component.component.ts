@@ -3,7 +3,7 @@ import {HttpService} from "../../services/http.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
 import {Hersteller} from "../../models/Hersteller";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, Validators} from "@angular/forms";
 
 @Component({
     selector: 'app-hersteller-edit-component',

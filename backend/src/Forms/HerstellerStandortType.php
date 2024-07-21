@@ -17,6 +17,7 @@ class HerstellerStandortType extends AbstractType
             ->add('adresse', TextType::class)
             ->add('plz', TextType::class)
             ->add('ort', TextType::class)
+            ->add('telefon', TextType::class)
             ->add('url', TextType::class);
     }
 

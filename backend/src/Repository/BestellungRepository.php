@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Bestellung;
 use App\Entity\DepartmentTyp;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 class BestellungRepository extends DefaultRepository
@@ -32,7 +33,8 @@ class BestellungRepository extends DefaultRepository
                 ->setParameter('departmentId', $deparments);
         }
 
-        return $q->getQuery()
+        return $q->orderBy('d.name', Order::Ascending->value)
+            ->getQuery()
             ->getResult();
     }
 }

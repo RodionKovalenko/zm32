@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -211,10 +212,6 @@ abstract class DefaultRepository extends ServiceEntityRepository
      * Speichert die Entity.
      *
      * @param object $entity
-     *
-     * @throws ORMInvalidArgumentException
-     * @throws OptimisticLockException
-     * @throws ORMException
      */
     public function save($entity): void
     {
@@ -225,8 +222,7 @@ abstract class DefaultRepository extends ServiceEntityRepository
 
     /**
      * Cleart den Entity Manager.
-     *
-     * @throws ORMInvalidArgumentException
+
      */
     public function clearAll(): void
     {
@@ -237,10 +233,7 @@ abstract class DefaultRepository extends ServiceEntityRepository
      * Speichert ein Array von Entities.
      *
      * @param array|iterable $entities
-     *
-     * @throws ORMInvalidArgumentException
-     * @throws OptimisticLockException
-     * @throws ORMException
+
      */
     public function saveAll($entities): void
     {
@@ -259,9 +252,6 @@ abstract class DefaultRepository extends ServiceEntityRepository
      *
      * @param object $entity
      *
-     * @throws ORMInvalidArgumentException
-     * @throws OptimisticLockException
-     * @throws ORMException
      */
     public function remove($entity): void
     {
@@ -291,9 +281,6 @@ abstract class DefaultRepository extends ServiceEntityRepository
      *
      * @param array|\Traversable $entities
      *
-     * @throws ORMInvalidArgumentException
-     * @throws OptimisticLockException
-     * @throws ORMException
      */
     public function removeAll($entities): void
     {
@@ -347,7 +334,6 @@ abstract class DefaultRepository extends ServiceEntityRepository
     /**
      * Liefert eine Referenz auf die Entity mit der uebergebenen ID.
      *
-     * @throws ORMException
      *
      * @return bool|Proxy|object|null
      */
@@ -378,5 +364,13 @@ abstract class DefaultRepository extends ServiceEntityRepository
     public function lock($entity, int $lockMode, int $lockVersion = null): void
     {
         $this->getEntityManager()->lock($entity, $lockMode, $lockVersion);
+    }
+
+    public function findAllOrderedBy($field, $order = Order::Ascending->value)
+    {
+        return $this->createQueryBuilder('l')
+            ->orderBy('l.' . $field, $order)
+            ->getQuery()
+            ->getResult();
     }
 }

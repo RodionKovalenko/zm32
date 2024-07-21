@@ -30,6 +30,9 @@ class HerstellerStandort
     #[ORM\Column(type: Types::STRING, length: 500, nullable: true)]
     private ?string $url = null;
 
+    #[ORM\Column(type: Types::STRING, length: 500, nullable: true)]
+    private ?string $telefon = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +96,17 @@ class HerstellerStandort
     public function setHersteller(?Hersteller $hersteller = null): HerstellerStandort
     {
         $this->hersteller = $hersteller;
+        return $this;
+    }
+
+    public function getTelefon(): ?string
+    {
+        return $this->telefon;
+    }
+
+    public function setTelefon(?string $telefon): HerstellerStandort
+    {
+        $this->telefon = $telefon;
         return $this;
     }
 }

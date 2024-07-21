@@ -6,6 +6,7 @@ use App\Entity\Department;
 use App\Entity\DepartmentTyp;
 use App\Entity\Material\Artikel;
 use App\Repository\DefaultRepository;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ArtikelRepository extends DefaultRepository
@@ -34,7 +35,8 @@ class ArtikelRepository extends DefaultRepository
                 ->setParameter('departmentId', $departments);
         }
 
-        return $q->getQuery()
+        return $q->orderBy('a.name', Order::Ascending->value)
+            ->getQuery()
             ->getResult();
     }
 }
