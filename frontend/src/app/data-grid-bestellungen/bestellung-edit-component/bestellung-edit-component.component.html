@@ -63,7 +63,7 @@
                 <ng-multiselect-dropdown id="lieferants"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Lieferant auswählen (Optional)'"
-                                         [settings]="dropdownSettings"
+                                         [settings]="singleSelectSettings"
                                          [data]="lieferants"
                                          formControlName="lieferants">
                     <ng-template let-item="item">
@@ -90,7 +90,7 @@
                 <ng-multiselect-dropdown id="herstellers"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Hersteller auswählen (Optional)'"
-                                         [settings]="dropdownSettings"
+                                         [settings]="singleSelectSettings"
                                          [data]="herstellers"
                                          formControlName="herstellers">
                     <ng-template let-item="item">

@@ -22,6 +22,7 @@ export class MaterialEditComponentComponent implements OnInit {
     departments: any[] = [];
 
     dropdownSettings: IDropdownSettings = {};
+    dropdownDepartmentSettings: IDropdownSettings = {};
     dropDownForm: any;
 
     childDialogOpened: boolean = false;
@@ -50,9 +51,19 @@ export class MaterialEditComponentComponent implements OnInit {
             unSelectAllText: 'Alle deaktivieren'
         };
 
+        this.dropdownDepartmentSettings = {
+            idField: 'id',
+            textField: 'name',
+            allowSearchFilter: true,
+            enableCheckAll: false,
+            searchPlaceholderText: 'Suchen',
+        };
+
+
         this.dropDownForm = this.fb.group({
             id: [this.data?.id || 0],
             name: [this.data?.name || '', Validators.required],
+            url: [this.data?.url || ''],
             description: [this.data?.description || ''],
             departments: [this.data?.departments || [], Validators.required],
             lieferants: [this.data?.lieferants || []],

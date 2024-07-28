@@ -71,7 +71,6 @@ class ArtikelController extends BaseController
                 return $this->getJsonResponse(['success' => true, 'data' => [$artikel]],
                                               [
                                                   'Default',
-                                                  'Artikel',
                                                   'Artikel_Department',
                                                   'Artikel_Hersteller',
                                                   'Artikel_Lieferant'

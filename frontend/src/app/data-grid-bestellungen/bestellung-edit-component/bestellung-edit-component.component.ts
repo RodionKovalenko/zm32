@@ -98,9 +98,11 @@ export class BestellungEditComponentComponent implements OnInit {
         }
 
         if (this.data?.lieferants) {
+            this.lieferants = this.data.lieferants;
             this.data.lieferants.forEach(st => this.addLieferants(st));
         }
         if (this.data?.herstellers) {
+            this.herstellers = this.data.herstellers;
             this.data.herstellers.forEach(st => this.addHerstellers(st));
         }
 

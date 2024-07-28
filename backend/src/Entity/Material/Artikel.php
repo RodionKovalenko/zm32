@@ -28,6 +28,9 @@ class Artikel
     #[AppAssert\UniqueFieldValue(message: 'Artikel mit dem gleichen Namen %s existiert bereits.', field: 'name', entity: Artikel::class)]
     private string $name;
 
+    #[ORM\Column(type: Types::STRING, length: 500, nullable: true)]
+    private ?string $url = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description;
 
@@ -55,9 +58,17 @@ class Artikel
     #[ORM\InverseJoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false, onDelete: 'cascade')]
     private Collection $herstellers;
 
-//    #[Groups(['Artikel_Bestellung', 'Bestellung'])]
-//    #[ORM\ManyToMany(targetEntity: Bestellung::class, mappedBy: 'artikels')]
-//    private Collection $bestellungen;
+    #[Groups(['Artikel_Bestellung', 'Bestellung'])]
+    #[ORM\ManyToMany(targetEntity: Bestellung::class, mappedBy: 'artikels')]
+    private Collection $bestellungen;
+
+    #[Groups(['Artikel_ArtikelToLieferBestellnummer', 'ArtikelToLieferBestellnummer'])]
+    #[ORM\OneToMany(targetEntity: ArtikelToLieferBestellnummer::class, mappedBy: 'artikel', cascade: ['persist', 'remove'])]
+    private Collection $artikelToLieferantBestellnummers;
+
+    #[Groups(['Artikel_ArtikelToHerstRefnummer', 'ArtikelToHerstRefnummer'])]
+    #[ORM\OneToMany(targetEntity: ArtikelToHerstRefnummer::class, mappedBy: 'artikel', cascade: ['persist', 'remove'])]
+    private Collection $artikelToHerstRefnummers;
 
     public function __construct()
     {
@@ -65,6 +76,7 @@ class Artikel
         $this->bestellungen = new ArrayCollection();
         $this->departments = new ArrayCollection();
         $this->herstellers = new ArrayCollection();
+        $this->artikelToLieferantBestellnummers = new ArrayCollection();
     }
 
     #[ORM\Table(name: 'artikel_to_departments', indexes: [new ORM\Index(name: 'artikel_department_idx', columns: ['artikel_id', 'department_id'])])]
@@ -207,35 +219,118 @@ class Artikel
         return $this;
     }
 
-//    public function getBestellungen(): Collection
-//    {
-//        return $this->bestellungen;
-//    }
-//
-//    public function setBestellungen($bestellungen): self
-//    {
-//        if (!($bestellungen instanceof Collection)) {
-//            $bestellungen = new ArrayCollection($bestellungen);
-//        }
-//        $this->bestellungen = $bestellungen;
-//        return $this;
-//    }
-//
-//    public function addBestellung(Bestellung $bestellung): self
-//    {
-//        if (!$this->bestellungen->contains($bestellung)) {
-//            $this->bestellungen->add($bestellung);
-//            $bestellung->addArtikel($this);
-//        }
-//        return $this;
-//    }
-//
-//    public function removeBestellung(Bestellung $bestellung): self
-//    {
-//        if ($this->bestellungen->contains($bestellung) &&
-//            $this->bestellungen->removeElement($bestellung)) {
-//            $bestellung->removeArtikel($this);
-//        }
-//        return $this;
-//    }
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function setBestellungen($bestellungen): self
+    {
+        if (!($bestellungen instanceof Collection)) {
+            $bestellungen = new ArrayCollection($bestellungen);
+        }
+        $this->bestellungen = $bestellungen;
+        return $this;
+    }
+
+    public function addBestellung(Bestellung $bestellung): self
+    {
+        if (!$this->bestellungen->contains($bestellung)) {
+            $this->bestellungen->add($bestellung);
+            $bestellung->addArtikel($this);
+        }
+        return $this;
+    }
+
+    public function removeBestellung(Bestellung $bestellung): self
+    {
+        if ($this->bestellungen->contains($bestellung) &&
+            $this->bestellungen->removeElement($bestellung)) {
+            $bestellung->removeArtikel($this);
+        }
+        return $this;
+    }
+
+
+    public function getArtikelToLieferantBestellnummers(): Collection
+    {
+        return $this->artikelToLieferantBestellnummers;
+    }
+
+    public function setArtikelToLieferantBestellnummers($artikelToLieferantBestellnummers): self
+    {
+        if (!($artikelToLieferantBestellnummers instanceof Collection)) {
+            $artikelToLieferantBestellnummers = new ArrayCollection($artikelToLieferantBestellnummers);
+        }
+        $this->artikelToLieferantBestellnummers = $artikelToLieferantBestellnummers;
+        return $this;
+    }
+
+    public function addArtikelToLieferantBestellnummer(ArtikelToLieferBestellnummer $artikelToLieferantBestellnummer): self
+    {
+        if (!$this->artikelToLieferantBestellnummers->contains($artikelToLieferantBestellnummer)) {
+            $this->artikelToLieferantBestellnummers->add($artikelToLieferantBestellnummer);
+            $artikelToLieferantBestellnummer->setArtikel($this);
+        }
+        return $this;
+    }
+
+    public function removeArtikelToLieferantBestellnummer(ArtikelToLieferBestellnummer $artikelToLieferantBestellnummer): self
+    {
+        if ($this->artikelToLieferantBestellnummers->contains($artikelToLieferantBestellnummer)) {
+            $this->artikelToLieferantBestellnummers->removeElement($artikelToLieferantBestellnummer);
+            // set the owning side to null (unless already changed)
+            if ($artikelToLieferantBestellnummer->getArtikel() === $this) {
+                $artikelToLieferantBestellnummer->setArtikel(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getArtikelToHerstRefnummers(): Collection
+    {
+        return $this->artikelToHerstRefnummers;
+    }
+
+    public function setArtikelToHerstRefnummers($artikelToHerstRefnummers): self
+    {
+        if (!($artikelToHerstRefnummers instanceof Collection)) {
+            $artikelToHerstRefnummers = new ArrayCollection($artikelToHerstRefnummers);
+        }
+        $this->artikelToHerstRefnummers = $artikelToHerstRefnummers;
+        return $this;
+    }
+
+    public function addArtikelToHerstRefnummer(ArtikelToHerstRefnummer $artikelToHerstRefnummer): self
+    {
+        if (!$this->artikelToHerstRefnummers->contains($artikelToHerstRefnummer)) {
+            $this->artikelToHerstRefnummers->add($artikelToHerstRefnummer);
+            $artikelToHerstRefnummer->setArtikel($this);
+        }
+        return $this;
+    }
+
+    public function removeArtikelToHerstRefnummer(ArtikelToHerstRefnummer $artikelToHerstRefnummer): self
+    {
+        if ($this->artikelToHerstRefnummers->contains($artikelToHerstRefnummer)) {
+            $this->artikelToHerstRefnummers->removeElement($artikelToHerstRefnummer);
+            // set the owning side to null (unless already changed)
+            if ($artikelToHerstRefnummer->getArtikel() === $this) {
+                $artikelToHerstRefnummer->setArtikel(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): Artikel
+    {
+        $this->url = $url;
+        return $this;
+    }
+
 }

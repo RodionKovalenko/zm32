@@ -8,4 +8,5 @@ export interface Artikel {
     lieferants?: any[];
     departments?: any[];
     herstellers?: any[];
+    url?: string;
 }

@@ -20,6 +20,7 @@ class ArtikelFormType extends AbstractType
         $builder->add('name')
             ->add('description', TextareaType::class)
             ->add('model', TextareaType::class)
+            ->add('url', TextareaType::class)
              ->add('departments', EntityType::class, [
                 'class' => Department::class, // The entity class
                 'choice_label' => 'name', // Field to display in the dropdown

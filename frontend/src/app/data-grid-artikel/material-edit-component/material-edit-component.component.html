@@ -28,7 +28,7 @@
                                          class="custom-select-no-margin"
                                          [placeholder]="'Abteilung auswählen'"
                                          (onSelect)="onDepartmentSelect($event)"
-                                         [settings]="dropdownSettings"
+                                         [settings]="dropdownDepartmentSettings"
                                          [data]="departments"
                                          formControlName="departments">
                     <ng-template let-item="item">
@@ -96,6 +96,14 @@
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
+        </div>
+
+
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Website/URL</mat-label>
+                <input matInput id="url" formControlName="url">
+            </mat-form-field>
         </div>
 
     </form>

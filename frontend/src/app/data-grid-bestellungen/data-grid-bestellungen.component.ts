@@ -7,6 +7,7 @@ import { HttpService } from "../services/http.service";
 import { BestellungEditComponentComponent } from "./bestellung-edit-component/bestellung-edit-component.component";
 import { Bestellung } from "../models/Bestellung";
 import { DepartmentData } from "../models/Department";
+import {IDropdownSettings} from "ng-multiselect-dropdown";
 
 @Component({
     selector: 'app-data-grid-bestellungen',
@@ -19,8 +20,12 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
     displayedColumns: string[] = ['id', 'artikels', 'descriptionZusatz', 'lieferants', 'departments', 'herstellers', 'amount', 'preis', 'description', 'mitarbeiter', 'edit', 'remove'];
     dataSource = new MatTableDataSource<Bestellung>([]);
 
-    departmentRecords: DepartmentData[] = [{ id: 0, name: 'test', typ: 0 }];
     selectedDepartment: DepartmentData = { id: 0, name: '', typ: 0 };
+
+
+    dropdownDepartmentSettings: IDropdownSettings = {};
+    departments: any[] = [];
+    originalDepartments: any[] = [];
 
     constructor(private httpService: HttpService, public dialog: MatDialog) { }
 
@@ -28,15 +33,37 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
         this.loadDepartments();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        this.dropdownDepartmentSettings = {
+            idField: 'id',
+            textField: 'name',
+            allowSearchFilter: true,
+            enableCheckAll: false,
+            searchPlaceholderText: 'Suchen',
+        };
     }
 
     loadDepartments() {
         let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/department/get_departments');
         mitarbeiterRequest.subscribe((response: any) => {
-            this.departmentRecords = response.data;
-            this.selectedDepartment = this.departmentRecords[0];
+            this.departments = response.data;
+            this.originalDepartments = response.data;
+            this.selectedDepartment = this.departments[0];
             this.fetchDataByDepartmentId(this.selectedDepartment.id);
         });
+    }
+    onDepartmentSelect(department: any) {
+        let departments = this.departments;
+
+        let index = departments.findIndex((d: any) => d.name === 'Alle');
+        if (department.name === 'Alle') {
+
+        } else if (index !== -1) {
+            departments = departments.filter((d: any) => {
+                return d.name !== 'Alle'
+            });
+           this.departments = departments;
+        }
     }
 
     onDepartmentChange(newValue: DepartmentData): void {
