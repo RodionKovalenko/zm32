@@ -80,6 +80,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  max-height: 400px !important; /* Adjust the height as needed */
 }
 
 
@@ -247,6 +249,7 @@ button {
   display: flex;
   align-items: center;
   gap: 8px; /* Space between the dropdown and the button */
+  position: relative;
 }
 
 .add-button,

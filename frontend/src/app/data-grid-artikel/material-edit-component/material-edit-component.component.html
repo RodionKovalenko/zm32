@@ -27,6 +27,7 @@
                 <ng-multiselect-dropdown id="departments"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Abteilung auswählen'"
+                                         (onSelect)="onDepartmentSelect($event)"
                                          [settings]="dropdownSettings"
                                          [data]="departments"
                                          formControlName="departments">

@@ -7,7 +7,7 @@ import {LoginErrorComponent} from "../../login/login-error/login-error.component
 import {LieferantEditComponentComponent} from "../lieferant-edit-component/lieferant-edit-component.component";
 import {Hersteller} from "../../models/Hersteller";
 import {HerstellerEditComponentComponent} from "../hersteller-edit-component/hersteller-edit-component.component";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {DepartmentData} from "../../models/Department";
 
@@ -23,6 +23,8 @@ export class MaterialEditComponentComponent implements OnInit {
 
     dropdownSettings: IDropdownSettings = {};
     dropDownForm: any;
+
+    childDialogOpened: boolean = false;
 
     constructor(
         private httpService: HttpService,
@@ -57,6 +59,11 @@ export class MaterialEditComponentComponent implements OnInit {
             herstellers: [this.data?.herstellers || []]
         });
 
+        this.initDropdownFromData();
+        this.markAllAsTouched();
+    }
+
+    initDropdownFromData() {
         if (this.data?.departments) {
             this.data.departments.forEach(st => this.addDepartment(st));
         }
@@ -69,8 +76,6 @@ export class MaterialEditComponentComponent implements OnInit {
         if (this.data?.herstellers) {
             this.data.herstellers.forEach(st => this.addHerstellers(st));
         }
-
-        this.markAllAsTouched();
     }
 
     addLieferants(value?: any): void {
@@ -134,7 +139,7 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     isOnlyOneHerstellerSelected(): boolean {
-        const selectedItems = this.dropDownForm.get('herstellerToArtikels')?.value || [];
+        const selectedItems = this.dropDownForm.get('herstellers')?.value || [];
         return selectedItems.length === 1;
     }
 
@@ -145,7 +150,7 @@ export class MaterialEditComponentComponent implements OnInit {
     onSubmit(): void {
         let url = this.httpService.get_baseUrl() + '/artikel/save';
 
-        if (this.dropDownForm.valid) {
+        if (this.dropDownForm.valid && !this.childDialogOpened) {
             const formValue = this.dropDownForm.value;
             formValue.departments = formValue.departments.map((dept: any) => (dept.id));
             formValue.lieferants = formValue.lieferants.map((lieferant: any) => (lieferant.id));
@@ -224,7 +229,9 @@ export class MaterialEditComponentComponent implements OnInit {
             disableClose: true,
         });
 
+        this.childDialogOpened = true;
         dialogRef.afterClosed().subscribe(result => {
+            this.childDialogOpened = false;
             if (result) {
                 this.loadLieferants(result.data);
             }
@@ -250,11 +257,30 @@ export class MaterialEditComponentComponent implements OnInit {
             disableClose: true,
         });
 
+        this.childDialogOpened = true;
         dialogRef.afterClosed().subscribe(result => {
+            this.childDialogOpened = false;
             if (result) {
                 this.loadHerstellers(result.data);
             }
         });
+    }
+
+    onDepartmentSelect(department: any) {
+        let departments = this.dropDownForm.get('departments').value;
+
+        let index = departments.findIndex((d: any) => d.name === 'Alle');
+        if (department.name === 'Alle') {
+            departments = departments.filter((d: any) => {
+                return d.name === 'Alle'
+            });
+            this.updateDepartmentsDropdown(departments);
+        } else if (index !== -1) {
+            departments = departments.filter((d: any) => {
+                return d.name !== 'Alle'
+            });
+            this.updateDepartmentsDropdown(departments);
+        }
     }
 
     updateDepartmentsDropdown(data: DepartmentData[]) {

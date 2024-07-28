@@ -9,6 +9,31 @@
         </div>
     </div>
 
+<!--    &lt;!&ndash; Abteilung &ndash;&gt;-->
+<!--    <div class="dropdown-section">-->
+<!--        <label>Abteilung:</label>-->
+<!--        <div class="dropdown-wrapper">-->
+<!--            <ng-multiselect-dropdown id="departments"-->
+<!--                                     class="custom-select-no-margin"-->
+<!--                                     [placeholder]="'Abteilung auswählen'"-->
+<!--                                     [settings]="dropdownDepartmentSettings"-->
+<!--                                     (onSelect)="onDepartmentSelect($event)"-->
+<!--                                     [data]="departments"-->
+<!--                                     formControlName="departments">-->
+<!--                <ng-template let-item="item">-->
+<!--                    <div class="custom-item">-->
+<!--                        {{ item.name }}-->
+<!--                    </div>-->
+<!--                </ng-template>-->
+<!--            </ng-multiselect-dropdown>-->
+
+<!--            <mat-error *ngIf="bestellungForm.get('departments').invalid && bestellungForm.get('departments').touched">-->
+<!--                Abteilung ist erforderlich.-->
+<!--            </mat-error>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
     <mat-toolbar color="custom-toolbar">
         <span class="spacer"></span>
         <button mat-icon-button class="color-confirm" matTooltip="Neue Bestellung hinzufügen"  (click)="addRecord()">
@@ -29,18 +54,42 @@
         </ng-container>
 
         <!-- Artikel Column -->
-        <ng-container matColumnDef="artikel">
+        <ng-container matColumnDef="artikels">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Artikel</th>
             <td mat-cell *matCellDef="let element">
-                {{element?.artikel?.name}}
+                <div *ngFor="let artikel of element.artikels">
+                    {{artikel?.name}}
+                </div>
             </td>
         </ng-container>
 
-        <!-- Preis Column -->
-        <ng-container matColumnDef="lieferant">
+        <!-- Departments Column -->
+        <ng-container matColumnDef="departments">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Abteilung</th>
+            <td mat-cell *matCellDef="let element">
+                <div *ngFor="let department of element.departments">
+                    {{department?.name}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Lieferants Column -->
+        <ng-container matColumnDef="lieferants">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Lieferant</th>
             <td mat-cell *matCellDef="let element">
-                {{element?.lieferant?.name}}
+                <div *ngFor="let lieferant of element.lieferants">
+                    {{lieferant?.name}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Lieferants Column -->
+        <ng-container matColumnDef="herstellers">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hersteller</th>
+            <td mat-cell *matCellDef="let element">
+                <div *ngFor="let hersteller of element.herstellers">
+                    {{hersteller?.name}}
+                </div>
             </td>
         </ng-container>
 

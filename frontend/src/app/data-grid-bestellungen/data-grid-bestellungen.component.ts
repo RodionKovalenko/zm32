@@ -1,12 +1,12 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {MatSort, Sort} from "@angular/material/sort";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
-import {HttpService} from "../services/http.service";
-import {BestellungEditComponentComponent} from "./bestellung-edit-component/bestellung-edit-component.component";
-import {Bestellung} from "../models/Bestellung";
-import {DepartmentData} from "../models/Department";
+import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { MatSort, Sort } from "@angular/material/sort";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatDialog } from "@angular/material/dialog";
+import { HttpService } from "../services/http.service";
+import { BestellungEditComponentComponent } from "./bestellung-edit-component/bestellung-edit-component.component";
+import { Bestellung } from "../models/Bestellung";
+import { DepartmentData } from "../models/Department";
 
 @Component({
     selector: 'app-data-grid-bestellungen',
@@ -16,14 +16,13 @@ import {DepartmentData} from "../models/Department";
 export class DataGridBestellungenComponent implements OnInit, OnChanges {
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    displayedColumns: string[] = ['id', 'artikel', 'descriptionZusatz', 'lieferant', 'amount', 'preis', 'description', 'mitarbeiter', 'edit', 'remove'];
+    displayedColumns: string[] = ['id', 'artikels', 'descriptionZusatz', 'lieferants', 'departments', 'herstellers', 'amount', 'preis', 'description', 'mitarbeiter', 'edit', 'remove'];
     dataSource = new MatTableDataSource<Bestellung>([]);
 
-    departmentRecords: DepartmentData[] = [{id: 0, name: 'test', typ: 0}];
-    selectedDepartment: DepartmentData = {id: 0, name: '', typ: 0};
+    departmentRecords: DepartmentData[] = [{ id: 0, name: 'test', typ: 0 }];
+    selectedDepartment: DepartmentData = { id: 0, name: '', typ: 0 };
 
-    constructor(private httpService: HttpService, public dialog: MatDialog) {
-    }
+    constructor(private httpService: HttpService, public dialog: MatDialog) { }
 
     ngOnInit() {
         this.loadDepartments();
@@ -60,7 +59,6 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
         });
     }
 
-
     sortData(sort: Sort) {
         const data = this.dataSource.data.slice();
         if (!sort.active || sort.direction === '') {
@@ -76,11 +74,13 @@ export class DataGridBestellungenComponent implements OnInit, OnChanges {
         });
     }
 
-    editRecord(record: Bestellung) {
-        record.departmentId = this.selectedDepartment.id;
+    editRecord(record: any) {
+        record.departmentId = this.selectedDepartment.id
+        record.formTitle = 'Bestellung bearbeiten';
+
         const dialogRef = this.dialog.open(BestellungEditComponentComponent, {
             width: '550px',
-            height: '100vh',
+            maxHeight: '100vh',
             data: record,
             disableClose: true,
         });

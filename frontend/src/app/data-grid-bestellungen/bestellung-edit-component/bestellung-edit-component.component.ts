@@ -1,17 +1,15 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {DepartmentData} from "../../models/Department";
 import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
 import {Bestellung} from "../../models/Bestellung";
 import {MaterialEditComponentComponent} from "../../data-grid-artikel/material-edit-component/material-edit-component.component";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
-import {LieferantEditComponentComponent} from "../../data-grid-artikel/lieferant-edit-component/lieferant-edit-component.component";
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {Hersteller} from "../../models/Hersteller";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
-import {HerstellerEditComponentComponent} from "../../data-grid-artikel/hersteller-edit-component/hersteller-edit-component.component";
 import {Artikel} from "../../models/Artikel";
+import {DepartmentData} from "../../models/Department";
 
 @Component({
     selector: 'app-bestellung-edit-component',
@@ -22,9 +20,12 @@ export class BestellungEditComponentComponent implements OnInit {
     herstellers: any[] = [];
     lieferants: any[] = [];
     artikels: any[] = [];
-
     departments: any[] = [];
+
+    childDialogOpened: boolean = false;
+
     dropdownSettings: IDropdownSettings = {};
+    dropdownDepartmentSettings: IDropdownSettings = {};
     singleSelectSettings: IDropdownSettings = {};
     bestellungForm: any;
 
@@ -38,8 +39,6 @@ export class BestellungEditComponentComponent implements OnInit {
     ngOnInit(): void {
         this.loadDepartments();
         this.loadArtikel();
-        this.loadLieferants([]);
-        this.loadHerstellers([]);
 
         this.dropdownSettings = {
             idField: 'id',
@@ -49,6 +48,14 @@ export class BestellungEditComponentComponent implements OnInit {
             searchPlaceholderText: 'Suchen',
             selectAllText: 'Alle auswählen',
             unSelectAllText: 'Alle deaktivieren'
+        };
+
+        this.dropdownDepartmentSettings = {
+            idField: 'id',
+            textField: 'name',
+            allowSearchFilter: true,
+            enableCheckAll: false,
+            searchPlaceholderText: 'Suchen',
         };
 
         this.singleSelectSettings = {
@@ -74,7 +81,7 @@ export class BestellungEditComponentComponent implements OnInit {
         });
 
         if (this.data?.artikels) {
-            this.data.artikels.forEach(st => this.addArtikels(st));
+            this.data.artikels.forEach(st => this.addArtikel(st));
         }
 
         if (this.data?.departments) {
@@ -96,9 +103,17 @@ export class BestellungEditComponentComponent implements OnInit {
         if (this.data?.herstellers) {
             this.data.herstellers.forEach(st => this.addHerstellers(st));
         }
+
+        this.markAllAsTouched();
+
+        if (this.data.id && this.data.artikels && this.data.artikels.length > 0) {
+            this.loadArtikelFullData(this.data.artikels[0].id).then((data) => {
+                this.updateDropdowns(data);
+            });
+        }
     }
 
-    addArtikels(value?: any): void {
+    addArtikel(value?: any): void {
         const valueGroup = this.fb.group({
             id: [value?.id || 0],
             name: [value?.name || 0],
@@ -107,27 +122,33 @@ export class BestellungEditComponentComponent implements OnInit {
     }
 
     addHerstellers(value?: any): void {
-        const valueGroup = this.fb.group({
-            id: [value?.id || 0],
-            name: [value?.name || 0],
-        });
-        this.herstellers.push(valueGroup);
+        if (value.id) {
+            const valueGroup = this.fb.group({
+                id: [value?.id || 0],
+                name: [value?.name || 0],
+            });
+            this.herstellers.push(valueGroup);
+        }
     }
 
     addLieferants(value?: any): void {
-        const valueGroup = this.fb.group({
-            id: [value?.id || 0],
-            name: [value?.name || 0],
-        });
-        this.lieferants.push(valueGroup);
+        if (value.id) {
+            const valueGroup = this.fb.group({
+                id: [value?.id || 0],
+                name: [value?.name || 0],
+            });
+            this.lieferants.push(valueGroup);
+        }
     }
 
     addDepartments(value?: any): void {
-        const valueGroup = this.fb.group({
-            id: [value?.id || 0],
-            name: [value?.name || 0],
-        });
-        this.departments.push(valueGroup);
+        if (value.id) {
+            const valueGroup = this.fb.group({
+                id: [value?.id || 0],
+                name: [value?.name || 0],
+            });
+            this.departments.push(valueGroup);
+        }
     }
 
     get lieferantStandorte(): FormArray {
@@ -154,14 +175,6 @@ export class BestellungEditComponentComponent implements OnInit {
         this.herstellerStandorte.push(valueGroup);
     }
 
-    isOnlyOneLieferantSelected(): boolean {
-        return this.bestellungForm.get('lieferants').value.length === 1;
-    }
-
-    isOnlyOneHerstellerSelected(): boolean {
-        return this.bestellungForm.get('herstellers').value.length === 1;
-    }
-
     isOnlyOneArtikelSelected(): boolean {
         return this.bestellungForm.get('artikels').value.length === 1;
     }
@@ -173,18 +186,6 @@ export class BestellungEditComponentComponent implements OnInit {
         });
     }
 
-    loadHerstellers(data: any) {
-        let artikelId = this.data?.id || 0;
-        let url = this.httpService.get_baseUrl() + '/hersteller/' + artikelId;
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
-        mitarbeiterRequest.subscribe((response: any) => {
-            this.herstellers = response.data;
-            if (data && data.length > 0) {
-                this.updateHerstellerDropdown(data);
-            }
-        });
-    }
-
     loadArtikel() {
         let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/0');
         mitarbeiterRequest.subscribe((response: any) => {
@@ -192,24 +193,13 @@ export class BestellungEditComponentComponent implements OnInit {
         });
     }
 
-    loadLieferants(data: any) {
-        let url = this.httpService.get_baseUrl() + '/lieferant';
-
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
-        mitarbeiterRequest.subscribe((response: any) => {
-            this.lieferants = response.data;
-
-            if (data && data.length > 0) {
-                this.updateLieferantsDropdown(data);
-            }
-        });
-    }
-
     onNoClick(): void {
         this.dialogRef.close();
     }
 
-    addArtikel(edit: boolean = false) {
+    addArtikelRecord(edit: boolean = false) {
+        this.childDialogOpened = true;
+
         let data: any = {};
         data.formTitle = 'Neuen Artikel hinzufügen';
 
@@ -222,6 +212,14 @@ export class BestellungEditComponentComponent implements OnInit {
             data.formTitle = 'Artikel bearbeiten';
         }
 
+        if (data.id) {
+            this.loadArtikelFullData(data.id).then((data) => this.openArtikelEditDialog(data[0]));
+        } else {
+            this.openArtikelEditDialog(data);
+        }
+    }
+
+    openArtikelEditDialog(data: any) {
         const dialogRef = this.dialog.open(MaterialEditComponentComponent, {
             width: '550px',
             height: '100vh',
@@ -230,69 +228,46 @@ export class BestellungEditComponentComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            this.childDialogOpened = false;
             if (result) {
-                this.updateBestellungToArtikelsDropdown(result.data);
+                this.updateDropdowns(result.data);
             }
         });
     }
 
-    addHersteller(edit: boolean = false) {
-        let data: any = {};
-        data.formTitle = 'Neuen Hersteller hinzufügen';
-
-        if (edit) {
-            let selectedHerstellers = this.bestellungForm.get('herstellers')?.value || [];
-            if (selectedHerstellers.length === 1) {
-                data = this.herstellers.find(l => l.id === selectedHerstellers[0].id) || {};
-            }
-            data.formTitle = 'Hersteller bearbeiten';
-        }
-
-        const dialogRef = this.dialog.open(HerstellerEditComponentComponent, {
-            width: '550px',
-            height: '100vh',
-            data,
-            disableClose: true,
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.loadHerstellers(result.data);
-            }
-        });
+    updateDropdowns(data: any) {
+        this.updateBestellungToArtikelsDropdown(data);
     }
 
-    addLieferant(edit: boolean = false) {
-        let data: any = {};
-        data.formTitle = 'Neuen Lieferant hinzufügen';
+    loadArtikelFullData(id: number): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let url = this.httpService.get_baseUrl() + '/artikel/get_by_id/' + id;
 
-        if (edit) {
-            let selectedLieferants = this.bestellungForm.get('lieferants')?.value || [];
-            if (selectedLieferants.length === 1) {
-                data = this.lieferants.find(l => l.id === selectedLieferants[0].id) || {};
-            }
-            data.formTitle = 'Lieferant bearbeiten';
-        }
-
-        const dialogRef = this.dialog.open(LieferantEditComponentComponent, {
-            width: '550px',
-            height: '100vh',
-            data,
-            disableClose: true,
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.loadLieferants(result.data);
-            }
+            let artikelRequest = this.httpService.get_httpclient().get(url);
+            artikelRequest.subscribe((response: any) => {
+                if (response.success) {
+                    resolve(response.data);
+                    this.updateDropdowns(response.data);
+                    response.data[0].formTitle = 'Artikel bearbeiten';
+                } else {
+                    resolve({});
+                }
+            });
         });
     }
 
     onSubmit(): void {
         let url = this.httpService.get_baseUrl() + '/bestellung/save';
 
-        if (this.bestellungForm.valid) {
-            this.httpService.get_httpclient().post(url, this.bestellungForm.value).subscribe({
+        if (this.bestellungForm.valid && !this.childDialogOpened) {
+            const formValue = this.bestellungForm.value;
+            formValue.departments = formValue.departments.map((dept: any) => (dept.id));
+            formValue.lieferants = formValue.lieferants.map((lieferant: any) => (lieferant.id));
+            formValue.herstellers = formValue.herstellers.map((hersteller: any) => (hersteller.id));
+            formValue.artikels = formValue.artikels.map((artikel: any) => (artikel.id));
+            formValue.mitarbeiterId = localStorage.getItem('mitarbeiterId');
+
+            this.httpService.get_httpclient().post(url, formValue).subscribe({
                 next: (response: any) => {
                     if (response && response.success && Boolean(response?.success)) {
                         this.dialogRef.close(response);
@@ -355,15 +330,62 @@ export class BestellungEditComponentComponent implements OnInit {
         return null;
     }
 
-    updateBestellungToArtikelsDropdown(data: Artikel[]) {
+    onArtikelChange(event: any) {
+        this.loadArtikelFullData(event.id).then((data) => {
+            this.updateDropdowns(data);
+        });
+    }
 
+    updateBestellungToArtikelsDropdown(data: Artikel[]) {
         if (Array.isArray(this.artikels)) { // Ensure it is an array
             const index = this.artikels.findIndex(record => record.id === data[0].id);
             if (index !== -1) {
                 // Update the record at the found index
                 this.artikels[index] = data[0];
+                // Update the dropdown
+
+                this.lieferants = data[0].lieferants || [];
+                this.herstellers = data[0].herstellers || [];
+                this.departments = data[0].departments || [];
+
+                if (data[0].departments && data[0].departments.length > 0) {
+                    this.updateDeparmentsDropdown(data[0].departments);
+                } else {
+                    this.updateDeparmentsDropdown([]);
+                }
+                if (data[0].lieferants && data[0].lieferants.length > 0) {
+                    this.updateLieferantsDropdown([data[0].lieferants[0]]);
+                } else {
+                    this.updateLieferantsDropdown([]);
+                }
+                if (data[0].herstellers && data[0].herstellers.length > 0) {
+                    this.updateHerstellerDropdown([data[0].herstellers[0]]);
+                } else {
+                    this.updateHerstellerDropdown([]);
+                }
             }
         }
+    }
+
+    onDepartmentSelect(department: any) {
+        let departments = this.bestellungForm.get('departments').value;
+
+        let index = departments.findIndex((d: any) => d.name === 'Alle');
+        if (department.name === 'Alle') {
+            departments = departments.filter((d: any) => {
+                return d.name === 'Alle'
+            });
+            this.updateDeparmentsDropdown(departments);
+        } else if (index !== -1) {
+            departments = departments.filter((d: any) => {
+                return d.name !== 'Alle'
+            });
+            this.updateDeparmentsDropdown(departments);
+        }
+    }
+
+    updateDeparmentsDropdown(data: DepartmentData[]) {
+        this.bestellungForm.get('departments')?.setValue(data);
     }
 
     updateLieferantsDropdown(data: Lieferant[]) {

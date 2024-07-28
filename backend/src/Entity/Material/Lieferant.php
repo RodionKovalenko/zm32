@@ -46,9 +46,9 @@ class Lieferant
     private Collection $artikels;
 
     #[Groups(['Lieferant_Bestellung', 'Bestellung'])]
-    #[ORM\OneToMany(
-        mappedBy: 'lieferant',
-        targetEntity: Bestellung::class
+    #[ORM\ManyToMany(
+        targetEntity: Lieferant::class,
+        mappedBy: 'lieferants'
     )]
     private Collection $bestellungen;
 
@@ -89,17 +89,6 @@ class Lieferant
         $this->typ = $typ;
     }
 
-    public function getBestellungen(): Collection
-    {
-        return $this->bestellungen;
-    }
-
-    public function setBestellungen(Collection $bestellungen): Lieferant
-    {
-        $this->bestellungen = $bestellungen;
-        return $this;
-    }
-
     public function getArtikels(): Collection
     {
         return $this->artikels;
@@ -128,6 +117,38 @@ class Lieferant
         if ($this->artikels->contains($artikel)) {
             $this->artikels->removeElement($artikel);
             $artikel->removeLieferant($this);
+        }
+        return $this;
+    }
+
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function setBestellungen($bestellungen): self
+    {
+        if (!($bestellungen instanceof Collection)) {
+            $bestellungen = new ArrayCollection($bestellungen);
+        }
+        $this->bestellungen = $bestellungen;
+        return $this;
+    }
+
+    public function addBestellung(Bestellung $bestellung): self
+    {
+        if (!$this->bestellungen->contains($bestellung)) {
+            $this->bestellungen[] = $bestellung;
+            $bestellung->addLieferant($this);
+        }
+        return $this;
+    }
+
+    public function removeBestellung(Bestellung $bestellung): self
+    {
+        if ($this->bestellungen->contains($bestellung)) {
+            $this->bestellungen->removeElement($bestellung);
+            $bestellung->removeLieferant($this);
         }
         return $this;
     }

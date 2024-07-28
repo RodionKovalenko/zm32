@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 use App\Entity\Material\Artikel;
+use App\Entity\Material\Hersteller;
 use App\Entity\Material\Lieferant;
 use App\Repository\BestellungRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,31 +37,45 @@ class Bestellung
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $preis = null;
 
-    #[Groups(['Bestellung_Artikel', 'Artikel'])]
-    #[ORM\ManyToOne(targetEntity: Artikel::class, inversedBy: 'bestellungen')]
-    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
-    private Artikel $artikel;
-
-    #[Groups(['Bestellung_Mitarbeiter', 'Mitarbeiter'])]
-    #[ORM\ManyToOne(targetEntity: Mitarbeiter::class, inversedBy: 'bestellungen')]
-    #[ORM\JoinColumn(name: 'mitarbeiter_id', referencedColumnName: 'id', nullable: false)]
-    private Mitarbeiter $mitarbeiter;
-
-    #[Groups(['Artikel_Department', 'Department'])]
+    #[Groups(['Bestellung_Department', 'Department'])]
     #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: "bestellungen")]
     #[ORM\JoinTable(name:"bestellung_to_departments")]
     #[ORM\JoinColumn(name: 'bestellung_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\InverseJoinColumn(name: 'department_id', referencedColumnName: 'id', nullable: false)]
     private Collection $departments;
 
+    #[Groups(['Bestellung_Artikel', 'Artikel'])]
+    #[ORM\ManyToMany(targetEntity: Artikel::class, inversedBy: "bestellungen")]
+    #[ORM\JoinTable(name:"bestellung_to_artikels")]
+    #[ORM\JoinColumn(name: 'bestellung_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $artikels;
+
+    #[Groups(['Bestellung_Mitarbeiter', 'Mitarbeiter'])]
+    #[ORM\ManyToOne(targetEntity: Mitarbeiter::class, inversedBy: 'bestellungen')]
+    #[ORM\JoinColumn(name: 'mitarbeiter_id', referencedColumnName: 'id', nullable: false)]
+    private Mitarbeiter $mitarbeiter;
+
     #[Groups(['Bestellung_Lieferant', 'Lieferant'])]
-    #[ORM\ManyToOne(targetEntity: Lieferant::class, inversedBy: 'bestellungen')]
-    #[ORM\JoinColumn(name: 'lieferant_id', referencedColumnName: 'id', nullable: true)]
-    private Lieferant $lieferant;
+    #[ORM\ManyToMany(targetEntity: Lieferant::class, inversedBy: "bestellungen")]
+    #[ORM\JoinTable(name:"bestellung_to_lieferants")]
+    #[ORM\JoinColumn(name: 'bestellung_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'lieferant_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $lieferants;
+
+    #[Groups(['Bestellung_Hersteller', 'Hersteller'])]
+    #[ORM\ManyToMany(targetEntity: Hersteller::class, inversedBy: "bestellungen")]
+    #[ORM\JoinTable(name:"bestellung_to_herstellers")]
+    #[ORM\JoinColumn(name: 'bestellung_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $herstellers;
 
     public function __construct()
     {
         $this->departments = new ArrayCollection();
+        $this->lieferants = new ArrayCollection();
+        $this->herstellers = new ArrayCollection();
+        $this->artikels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,17 +133,6 @@ class Bestellung
         return $this;
     }
 
-    public function getArtikel(): Artikel
-    {
-        return $this->artikel;
-    }
-
-    public function setArtikel(Artikel $artikel): Bestellung
-    {
-        $this->artikel = $artikel;
-        return $this;
-    }
-
     public function getMitarbeiter(): Mitarbeiter
     {
         return $this->mitarbeiter;
@@ -140,20 +144,18 @@ class Bestellung
         return $this;
     }
 
-    public function getLieferant(): Lieferant
-    {
-        return $this->lieferant;
-    }
-
-    public function setLieferant(Lieferant $lieferant): Bestellung
-    {
-        $this->lieferant = $lieferant;
-        return $this;
-    }
-
     public function getDepartments(): Collection
     {
         return $this->departments;
+    }
+
+    public function setDepartments($departments): self
+    {
+        if (!($departments instanceof Collection)) {
+            $departments = new ArrayCollection($departments);
+        }
+        $this->departments = $departments;
+        return $this;
     }
 
     public function addDepartment(Department $department): self
@@ -170,6 +172,72 @@ class Bestellung
     {
         if ($this->departments->removeElement($department)) {
             $department->removeBestellung($this);
+        }
+
+        return $this;
+    }
+
+    public function getLieferants(): Collection
+    {
+        return $this->lieferants;
+    }
+
+    public function setLieferants($lieferants): self
+    {
+        if (!($lieferants instanceof Collection)) {
+            $lieferants = new ArrayCollection($lieferants);
+        }
+        $this->lieferants = $lieferants;
+        return $this;
+    }
+
+    public function addLieferant(Lieferant $lieferant): self
+    {
+        if (!$this->lieferants->contains($lieferant)) {
+            $this->lieferants[] = $lieferant;
+            $lieferant->addBestellung($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLieferant(Lieferant $lieferant): self
+    {
+        if ($this->lieferants->removeElement($lieferant)) {
+            $lieferant->removeBestellung($this);
+        }
+
+        return $this;
+    }
+
+    public function getHerstellers(): Collection
+    {
+        return $this->herstellers;
+    }
+
+    public function setHerstellers($herstellers): self
+    {
+        if (!($herstellers instanceof Collection)) {
+            $herstellers = new ArrayCollection($herstellers);
+        }
+        $this->herstellers = $herstellers;
+        return $this;
+    }
+
+    public function addHersteller(Hersteller $hesteller): self
+    {
+        if (!$this->herstellers->contains($hesteller)) {
+            $this->herstellers[] = $hesteller;
+            $hesteller->addBestellung($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHersteller(Hersteller $hersteller): self
+    {
+        if ($this->lieferants->removeElement($hersteller)) {
+            $hersteller->removeBestellung($this);
         }
 
         return $this;
@@ -194,6 +262,40 @@ class Bestellung
     public function setDescriptionZusatz(?string $descriptionZusatz): Bestellung
     {
         $this->descriptionZusatz = $descriptionZusatz;
+        return $this;
+    }
+
+
+    public function getArtikels(): Collection
+    {
+        return $this->artikels;
+    }
+
+    public function setArtikels($artikels): self
+    {
+        if (!($artikels instanceof Collection)) {
+            $artikels = new ArrayCollection($artikels);
+        }
+        $this->artikels = $artikels;
+        return $this;
+    }
+
+    public function addArtikel(Artikel $artikel): self
+    {
+        if (!$this->artikels->contains($artikel)) {
+            $this->artikels[] = $artikel;
+            $artikel->addBestellung($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArtikel(Artikel $artikel): self
+    {
+        if ($this->artikels->removeElement($artikel)) {
+            $artikel->removeBestellung($this);
+        }
+
         return $this;
     }
 }

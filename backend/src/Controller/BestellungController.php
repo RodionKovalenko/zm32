@@ -8,7 +8,6 @@ use App\Entity\Mitarbeiter;
 use App\Forms\BestellungFormType;
 use App\Repository\BestellungRepository;
 use App\Repository\DepartmentRepository;
-use App\Repository\Material\LieferantRepository;
 use App\Repository\MitarbeiterRepository;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -23,8 +22,7 @@ class BestellungController extends BaseController
         private readonly BestellungRepository $bestellungRepository,
         private readonly FormFactoryInterface $formFactory,
         private readonly DepartmentRepository $departmentRepository,
-        private readonly MitarbeiterRepository $mitarbeiterRepository,
-        private readonly LieferantRepository $lieferantRepository
+        private readonly MitarbeiterRepository $mitarbeiterRepository
     ) {
         parent::__construct($serializer, $this->formFactory);
     }
@@ -44,10 +42,11 @@ class BestellungController extends BaseController
             $response,
             [
                 'Default',
-                'Bestellung_Artikel',
                 'Bestellung_Mitarbeiter',
-                'Artikel_Department',
-                'Bestellung_Lieferant'
+                'Bestellung_Artikel',
+                'Bestellung_Department',
+                'Bestellung_Lieferant',
+                'Bestellung_Hersteller'
             ]
         );
     }
@@ -58,13 +57,13 @@ class BestellungController extends BaseController
         $data = json_decode($request->getContent(), true);
         $bestellungId = $data['id'] ?? null;
 
-        if (empty($id)) {
-            $id = $bestellungId;
+        if (empty($bestellungId)) {
+            $bestellungId = $id;
         }
 
         try {
-            if ($id !== null) {
-                $bestellung = $this->bestellungRepository->find($id);
+            if ($bestellungId && $bestellungId !== 0) {
+                $bestellung = $this->bestellungRepository->find($bestellungId);
             } else {
                 $bestellung = new Bestellung();
             }
@@ -73,12 +72,6 @@ class BestellungController extends BaseController
                 $bestellung->setDatum(new \DateTime());
                 $bestellung->setStatus(BestellungStatus::OFFEN->value);
             }
-
-            $department = $this->departmentRepository->findOneBy(['id' => $data['department']]);
-            $bestellung->addDepartment($department);
-
-            $lieferant = $this->lieferantRepository->findOneBy(['id' => $data['lieferantId']]);
-            $bestellung->setLieferant($lieferant);
 
             /** @var Mitarbeiter $mitarbeiter */
             $mitarbeiter = $this->mitarbeiterRepository->getMitarbeiterByUserMitarbeiterId($data['mitarbeiterId']);

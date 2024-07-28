@@ -53,10 +53,9 @@ class Artikel
     private Collection $herstellers;
 
     #[Groups(['Artikel_Bestellung', 'Bestellung'])]
-    #[ORM\OneToMany(
-        mappedBy: 'artikel',
+    #[ORM\ManyToMany(
         targetEntity: Bestellung::class,
-        cascade: ['merge', 'persist', 'remove']
+        mappedBy: 'artikels'
     )]
     private Collection $bestellungen;
 
@@ -92,17 +91,6 @@ class Artikel
     public function setName($name)
     {
         $this->name = $name;
-        return $this;
-    }
-
-    public function getBestellungen(): Collection
-    {
-        return $this->bestellungen;
-    }
-
-    public function setBestellungen(Collection $bestellungen): Artikel
-    {
-        $this->bestellungen = $bestellungen;
         return $this;
     }
 
@@ -226,6 +214,42 @@ class Artikel
         if ($this->lieferants->contains($lieferant) &&
             $this->lieferants->removeElement($lieferant)) {
             $lieferant->removeArtikel($this);
+        }
+
+        return $this;
+    }
+
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function setBestellungen($bestellungen): self
+    {
+        if (!($bestellungen instanceof Collection)) {
+            $bestellungen = new ArrayCollection($bestellungen);
+        }
+
+        $this->bestellungen = $bestellungen;
+
+        return $this;
+    }
+
+    public function addBestellung(Bestellung $bestellung): self
+    {
+        if (!$this->bestellungen->contains($bestellung)) {
+            $this->bestellungen->add($bestellung);
+            $bestellung->addArtikel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBestellung(Bestellung $bestellung): self
+    {
+        if ($this->bestellungen->contains($bestellung) &&
+            $this->bestellungen->removeElement($bestellung)) {
+            $bestellung->removeArtikel($this);
         }
 
         return $this;

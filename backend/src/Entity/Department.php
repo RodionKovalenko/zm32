@@ -108,6 +108,16 @@ class Department
         return $this->artikels;
     }
 
+    public function setArtikels($artikels): self
+    {
+        if (!($artikels instanceof Collection)) {
+            $artikels = new ArrayCollection($artikels);
+        }
+
+        $this->artikels = $artikels;
+        return $this;
+    }
+
     public function addArtikel(Artikel $artikel): self
     {
         if (!$this->artikels->contains($artikel)) {
@@ -130,6 +140,16 @@ class Department
     public function getBestellungen(): Collection
     {
         return $this->bestellungen;
+    }
+
+    public function setBestellungen($bestellungen): self
+    {
+        if (!($bestellungen instanceof Collection)) {
+            $bestellungen = new ArrayCollection($bestellungen);
+        }
+
+        $this->bestellungen = $bestellungen;
+        return $this;
     }
 
     public function addBestellung(Bestellung $bestellung): self

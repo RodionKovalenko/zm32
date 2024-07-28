@@ -42,9 +42,6 @@ class ArtikelController extends BaseController
             [
                 'Default',
                 'Artikel',
-                'Artikel_Department',
-                'Artikel_Hersteller',
-                'Artikel_Lieferant'
             ]
         );
     }
@@ -99,4 +96,25 @@ class ArtikelController extends BaseController
         $lieferant = $this->artikelRepository->find($id);
         $this->artikelRepository->remove($lieferant);
     }
+
+    #[Route(path: '/get_by_id/{id}', name: 'app_artikel_get_artikel_by_id', methods: ['GET'])]
+    public function getArtikelById(int $id, Request $request)
+    {
+        $artikel = $this->artikelRepository->find($id);
+
+        $response = [
+            'success' => true,
+            'data' => [$artikel]
+        ];
+        return $this->getJsonResponse(
+            $response,
+            [
+                'Default',
+                'Artikel_Department',
+                'Artikel_Hersteller',
+                'Artikel_Lieferant'
+            ]
+        );
+    }
+
 }

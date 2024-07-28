@@ -2,6 +2,7 @@
 
 namespace App\Entity\Material;
 
+use App\Entity\Bestellung;
 use App\Repository\Material\HerstellerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -36,6 +37,12 @@ class Hersteller
     )]
     private Collection $standorte;
 
+    #[Groups(['Hersteller_Bestellung', 'Bestellung'])]
+    #[ORM\ManyToMany(
+        targetEntity: Bestellung::class,
+        mappedBy: 'herstellers'
+    )]
+    private Collection $bestellungen;
 
     #[Groups(['Hersteller_Artikel', 'Artikel'])]
     #[ORM\ManyToMany(
@@ -48,6 +55,8 @@ class Hersteller
     public function __construct()
     {
         $this->standorte = new ArrayCollection();
+        $this->bestellungen = new ArrayCollection();
+        $this->artikels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -159,4 +168,36 @@ class Hersteller
         }
         return $this;
     }
+    public function getBestellungen(): Collection
+    {
+        return $this->bestellungen;
+    }
+
+    public function setBestellungen($bestellungen): self
+    {
+        if (!($bestellungen instanceof Collection)) {
+            $bestellungen = new ArrayCollection($bestellungen);
+        }
+        $this->bestellungen = $bestellungen;
+        return $this;
+    }
+
+    public function addBestellung(Bestellung $bestellung): self
+    {
+        if (!$this->bestellungen->contains($bestellung)) {
+            $this->bestellungen[] = $bestellung;
+            $bestellung->addHersteller($this);
+        }
+        return $this;
+    }
+
+    public function removeBestellung(Bestellung $bestellung): self
+    {
+        if ($this->bestellungen->contains($bestellung)) {
+            $this->bestellungen->removeElement($bestellung);
+            $bestellung->removeHersteller($this);
+        }
+        return $this;
+    }
+
 }

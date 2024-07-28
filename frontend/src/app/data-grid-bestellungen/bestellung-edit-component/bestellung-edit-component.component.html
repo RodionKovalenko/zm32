@@ -3,6 +3,35 @@
 <div mat-dialog-content class="mat-dialog-content" fxLayout="column" fxLayoutGap="16px">
     <form [formGroup]="bestellungForm" (ngSubmit)="onSubmit()">
 
+        <!-- Artikel -->
+        <div class="dropdown-section">
+            <label>Artikel:</label>
+            <div class="dropdown-wrapper">
+                <ng-multiselect-dropdown id="artikels"
+                                         class="custom-select-no-margin"
+                                         [placeholder]="'Artikel auswählen'"
+                                         [settings]="singleSelectSettings"
+                                         (onSelect)="onArtikelChange($event)"
+                                         [data]="artikels"
+                                         formControlName="artikels">
+                    <ng-template let-item="item">
+                        <div class="custom-item">
+                            {{ item.name }}
+                        </div>
+                    </ng-template>
+                </ng-multiselect-dropdown>
+
+                <button *ngIf="isOnlyOneArtikelSelected()"
+                        mat-icon-button class="color-confirm"
+                        matTooltip="Lieferant bearbeiten" (click)="addArtikelRecord(true)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addArtikelRecord()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+
         <!-- Abteilung -->
         <div class="dropdown-section">
             <label>Abteilung:</label>
@@ -10,7 +39,8 @@
                 <ng-multiselect-dropdown id="departments"
                                          class="custom-select-no-margin"
                                          [placeholder]="'Abteilung auswählen'"
-                                         [settings]="dropdownSettings"
+                                         [settings]="dropdownDepartmentSettings"
+                                         (onSelect)="onDepartmentSelect($event)"
                                          [data]="departments"
                                          formControlName="departments">
                     <ng-template let-item="item">
@@ -23,35 +53,6 @@
                 <mat-error *ngIf="bestellungForm.get('departments').invalid && bestellungForm.get('departments').touched">
                     Abteilung ist erforderlich.
                 </mat-error>
-            </div>
-        </div>
-
-
-        <!-- Artikel -->
-        <div class="dropdown-section">
-            <label>Artikel:</label>
-            <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="artikels"
-                                         class="custom-select-no-margin"
-                                         [placeholder]="'Artikel auswählen'"
-                                         [settings]="singleSelectSettings"
-                                         [data]="artikels"
-                                         formControlName="artikels">
-                    <ng-template let-item="item">
-                        <div class="custom-item">
-                            {{ item.name }}
-                        </div>
-                    </ng-template>
-                </ng-multiselect-dropdown>
-
-                <button *ngIf="isOnlyOneArtikelSelected()"
-                        mat-icon-button class="color-confirm"
-                        matTooltip="Lieferant bearbeiten" (click)="addArtikel(true)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addArtikel()">
-                    <mat-icon>add</mat-icon>
-                </button>
             </div>
         </div>
 
@@ -71,14 +72,14 @@
                         </div>
                     </ng-template>
                 </ng-multiselect-dropdown>
-                <button *ngIf="isOnlyOneLieferantSelected()"
-                        mat-icon-button class="color-confirm"
-                        matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">
-                    <mat-icon>add</mat-icon>
-                </button>
+<!--                <button *ngIf="isOnlyOneLieferantSelected()"-->
+<!--                        mat-icon-button class="color-confirm"-->
+<!--                        matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">-->
+<!--                    <mat-icon>edit</mat-icon>-->
+<!--                </button>-->
+<!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">-->
+<!--                    <mat-icon>add</mat-icon>-->
+<!--                </button>-->
             </div>
         </div>
 
@@ -99,14 +100,14 @@
                     </ng-template>
                 </ng-multiselect-dropdown>
 
-                <button *ngIf="isOnlyOneHerstellerSelected()"
-                        mat-icon-button class="color-confirm"
-                        matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">
-                    <mat-icon>add</mat-icon>
-                </button>
+<!--                <button *ngIf="isOnlyOneHerstellerSelected()"-->
+<!--                        mat-icon-button class="color-confirm"-->
+<!--                        matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">-->
+<!--                    <mat-icon>edit</mat-icon>-->
+<!--                </button>-->
+<!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">-->
+<!--                    <mat-icon>add</mat-icon>-->
+<!--                </button>-->
             </div>
         </div>
 
