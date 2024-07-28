@@ -45,7 +45,7 @@ class Bestellung
     private Collection $departments;
 
     #[Groups(['Bestellung_Artikel', 'Artikel'])]
-    #[ORM\ManyToMany(targetEntity: Artikel::class, inversedBy: "bestellungen")]
+    #[ORM\ManyToMany(targetEntity: Artikel::class)]
     #[ORM\JoinTable(name:"bestellung_to_artikels")]
     #[ORM\JoinColumn(name: 'bestellung_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\InverseJoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
@@ -284,7 +284,6 @@ class Bestellung
     {
         if (!$this->artikels->contains($artikel)) {
             $this->artikels[] = $artikel;
-            $artikel->addBestellung($this);
         }
 
         return $this;

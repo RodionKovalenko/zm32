@@ -15,6 +15,8 @@ use App\Validator\Constraints as AppAssert;
 
 #[DoctrineAssert\UniqueEntity(fields: ['name'], errorPath: 'name', message: 'Lieferant mit dem gleichen Namen existiert bereits.')]
 #[ORM\Entity(repositoryClass: ArtikelRepository::class)]
+#[ORM\Table(name: 'artikel')]
+#[ORM\Index(columns: ['name'], name: 'name_idx')]
 class Artikel
 {
     #[ORM\Id]
@@ -48,16 +50,14 @@ class Artikel
 
     #[Groups(['Artikel_Hersteller', 'Hersteller'])]
     #[ORM\ManyToMany(targetEntity: Hersteller::class, inversedBy: 'artikels')]
+    #[ORM\JoinTable(name: 'artikel_to_herstellers')]
     #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false, onDelete: 'restrict')]
     #[ORM\InverseJoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false, onDelete: 'cascade')]
     private Collection $herstellers;
 
-    #[Groups(['Artikel_Bestellung', 'Bestellung'])]
-    #[ORM\ManyToMany(
-        targetEntity: Bestellung::class,
-        mappedBy: 'artikels'
-    )]
-    private Collection $bestellungen;
+//    #[Groups(['Artikel_Bestellung', 'Bestellung'])]
+//    #[ORM\ManyToMany(targetEntity: Bestellung::class, mappedBy: 'artikels')]
+//    private Collection $bestellungen;
 
     public function __construct()
     {
@@ -67,6 +67,9 @@ class Artikel
         $this->herstellers = new ArrayCollection();
     }
 
+    #[ORM\Table(name: 'artikel_to_departments', indexes: [new ORM\Index(name: 'artikel_department_idx', columns: ['artikel_id', 'department_id'])])]
+    #[ORM\Table(name: 'artikel_to_lieferants', indexes: [new ORM\Index(name: 'artikel_lieferant_idx', columns: ['artikel_id', 'lieferant_id'])])]
+    #[ORM\Table(name: 'artikel_to_herstellers', indexes: [new ORM\Index(name: 'artikel_hersteller_idx', columns: ['artikel_id', 'hersteller_id'])])]
     public function getId(): ?int
     {
         return $this->id;
@@ -77,18 +80,12 @@ class Artikel
         $this->id = $id;
     }
 
-    /**
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     * @return Artikel
-     */
-    public function setName($name)
+    public function setName($name): self
     {
         $this->name = $name;
         return $this;
@@ -99,7 +96,7 @@ class Artikel
         return $this->description;
     }
 
-    public function setDescription(?string $description): Artikel
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
         return $this;
@@ -110,7 +107,7 @@ class Artikel
         return $this->model;
     }
 
-    public function setModel(?string $model): Artikel
+    public function setModel(?string $model): self
     {
         $this->model = $model;
         return $this;
@@ -126,7 +123,6 @@ class Artikel
         if (!($departments instanceof Collection)) {
             $departments = new ArrayCollection($departments);
         }
-
         $this->departments = $departments;
         return $this;
     }
@@ -137,7 +133,6 @@ class Artikel
             $this->departments->add($department);
             $department->addArtikel($this);
         }
-
         return $this;
     }
 
@@ -147,7 +142,6 @@ class Artikel
             $this->departments->removeElement($department)) {
             $department->removeArtikel($this);
         }
-
         return $this;
     }
 
@@ -156,13 +150,12 @@ class Artikel
         return $this->herstellers;
     }
 
-    public function setHerstellers($herstellers)
+    public function setHerstellers($herstellers): self
     {
         if (!($herstellers instanceof Collection)) {
             $herstellers = new ArrayCollection($herstellers);
         }
         $this->herstellers = $herstellers;
-
         return $this;
     }
 
@@ -178,7 +171,6 @@ class Artikel
     {
         if ($this->herstellers->contains($hersteller)) {
             $this->herstellers->removeElement($hersteller);
-            // Ensure that the Standorte's relationship to this Hersteller is also cleared
             $hersteller->removeArtikel($this);
         }
     }
@@ -193,9 +185,7 @@ class Artikel
         if (!($lieferants instanceof Collection)) {
             $lieferants = new ArrayCollection($lieferants);
         }
-
         $this->lieferants = $lieferants;
-
         return $this;
     }
 
@@ -205,7 +195,6 @@ class Artikel
             $this->lieferants->add($lieferant);
             $lieferant->addArtikel($this);
         }
-
         return $this;
     }
 
@@ -215,43 +204,38 @@ class Artikel
             $this->lieferants->removeElement($lieferant)) {
             $lieferant->removeArtikel($this);
         }
-
         return $this;
     }
 
-    public function getBestellungen(): Collection
-    {
-        return $this->bestellungen;
-    }
-
-    public function setBestellungen($bestellungen): self
-    {
-        if (!($bestellungen instanceof Collection)) {
-            $bestellungen = new ArrayCollection($bestellungen);
-        }
-
-        $this->bestellungen = $bestellungen;
-
-        return $this;
-    }
-
-    public function addBestellung(Bestellung $bestellung): self
-    {
-        if (!$this->bestellungen->contains($bestellung)) {
-            $this->bestellungen->add($bestellung);
-            $bestellung->addArtikel($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBestellung(Bestellung $bestellung): self
-    {
-        if ($this->bestellungen->contains($bestellung) &&
-            $this->bestellungen->removeElement($bestellung)) {
-            $bestellung->removeArtikel($this);
-        }
-
-        return $this;
-    }
+//    public function getBestellungen(): Collection
+//    {
+//        return $this->bestellungen;
+//    }
+//
+//    public function setBestellungen($bestellungen): self
+//    {
+//        if (!($bestellungen instanceof Collection)) {
+//            $bestellungen = new ArrayCollection($bestellungen);
+//        }
+//        $this->bestellungen = $bestellungen;
+//        return $this;
+//    }
+//
+//    public function addBestellung(Bestellung $bestellung): self
+//    {
+//        if (!$this->bestellungen->contains($bestellung)) {
+//            $this->bestellungen->add($bestellung);
+//            $bestellung->addArtikel($this);
+//        }
+//        return $this;
+//    }
+//
+//    public function removeBestellung(Bestellung $bestellung): self
+//    {
+//        if ($this->bestellungen->contains($bestellung) &&
+//            $this->bestellungen->removeElement($bestellung)) {
+//            $bestellung->removeArtikel($this);
+//        }
+//        return $this;
+//    }
 }
