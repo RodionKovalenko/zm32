@@ -44,6 +44,22 @@ class ArtikelFormType extends AbstractType
                 'expanded' => false, // Use dropdown (set to true for checkboxes)
                 'required' => false, // Field is optional
                 'placeholder' => 'Select departments', // Placeholder text
+            ])
+            ->add('artikelToHerstRefnummers', CollectionType::class, [
+                'entry_type' => ArtikelToHerstRefnummerType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+                'empty_data' => []
+            ])
+            ->add('artikelToLieferantBestellnummers', CollectionType::class, [
+                'entry_type' => ArtikelToLieferantBestellnummerType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+                'empty_data' => []
             ]);
     }
 

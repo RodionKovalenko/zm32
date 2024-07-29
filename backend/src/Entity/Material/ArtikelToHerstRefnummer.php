@@ -9,26 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
 class ArtikelToHerstRefnummer
 {
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Artikel::class)]
-    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false, onDelete: 'restrict')]
+    #[ORM\ManyToOne(targetEntity: Artikel::class, inversedBy: 'artikelToHerstRefnummers')]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
     private ?Artikel $artikel = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Hersteller::class)]
-    #[ORM\JoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false, onDelete: 'cascade')]
-    private Hersteller $hersteller;
+    #[ORM\JoinColumn(name: 'hersteller_id', referencedColumnName: 'id', nullable: false)]
+    private ?Hersteller $hersteller = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private string $refnummer;
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $refnummer;
 
-    public function __construct(Artikel $artikel, Hersteller $hersteller, string $refnummer)
-    {
-        $this->artikel = $artikel;
-        $this->hersteller = $hersteller;
-        $this->refnummer = $refnummer;
-    }
-
-    public function getArtikel(): Artikel
+    public function getArtikel(): ?Artikel
     {
         return $this->artikel;
     }
@@ -39,12 +32,12 @@ class ArtikelToHerstRefnummer
         return $this;
     }
 
-    public function getHersteller(): Hersteller
+    public function getHersteller(): ?Hersteller
     {
         return $this->hersteller;
     }
 
-    public function setHersteller(Hersteller $hersteller): ArtikelToHerstRefnummer
+    public function setHersteller(?Hersteller $hersteller): ArtikelToHerstRefnummer
     {
         $this->hersteller = $hersteller;
         return $this;

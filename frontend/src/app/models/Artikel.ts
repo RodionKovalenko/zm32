@@ -9,4 +9,6 @@ export interface Artikel {
     departments?: any[];
     herstellers?: any[];
     url?: string;
+    artikelToHerstRefnummers?: any[];
+    artikelToLieferantBestellnummers?: any[];
 }

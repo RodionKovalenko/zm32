@@ -7,7 +7,7 @@ import {LoginErrorComponent} from "../../login/login-error/login-error.component
 import {LieferantEditComponentComponent} from "../lieferant-edit-component/lieferant-edit-component.component";
 import {Hersteller} from "../../models/Hersteller";
 import {HerstellerEditComponentComponent} from "../hersteller-edit-component/hersteller-edit-component.component";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {DepartmentData} from "../../models/Department";
 
@@ -23,9 +23,12 @@ export class MaterialEditComponentComponent implements OnInit {
 
     dropdownSettings: IDropdownSettings = {};
     dropdownDepartmentSettings: IDropdownSettings = {};
-    dropDownForm: any;
+    singleSelectSettings: IDropdownSettings = {};
+    artikelForm: any;
 
     childDialogOpened: boolean = false;
+    dynamicTitleHerstellers: string[] = [];
+    dynamicTitleLieferants: string[] = [];
 
     constructor(
         private httpService: HttpService,
@@ -59,19 +62,101 @@ export class MaterialEditComponentComponent implements OnInit {
             searchPlaceholderText: 'Suchen',
         };
 
+        this.singleSelectSettings = {
+            singleSelection: true, // Set to true for single selection
+            idField: 'id',
+            textField: 'name',
+            itemsShowLimit: 3,
+            allowSearchFilter: true
+        };
 
-        this.dropDownForm = this.fb.group({
+        this.artikelForm = this.fb.group({
             id: [this.data?.id || 0],
             name: [this.data?.name || '', Validators.required],
             url: [this.data?.url || ''],
             description: [this.data?.description || ''],
             departments: [this.data?.departments || [], Validators.required],
             lieferants: [this.data?.lieferants || []],
-            herstellers: [this.data?.herstellers || []]
+            herstellers: [this.data?.herstellers || []],
+            artikelToHerstRefnummers: this.fb.array(
+                (this.data?.artikelToHerstRefnummers || []).map(st => this.fb.group({
+                    refnummer: [st.refnummer || '', Validators.required],
+                    hersteller: [[st.hersteller] || null],
+                    filteredHerstellers: [this.herstellers]
+                }))
+            ),
+            artikelToLieferantBestellnummers: this.fb.array(
+                (this.data?.artikelToLieferantBestellnummers || []).map(st => this.fb.group({
+                    lieferant: [[st.lieferant] || null],
+                    bestellnummer: [st.bestellnummer || ''],
+                    filteredLieferants: [this.lieferants]
+                }))
+            ),
         });
 
         this.initDropdownFromData();
         this.markAllAsTouched();
+    }
+
+    get artikelToHerstRefnummers(): FormArray {
+        return this.artikelForm.get('artikelToHerstRefnummers') as FormArray;
+    }
+
+    addArtikelToHerstRefnummers(value?: any): void {
+        let herstellerFormLength = this.artikelToHerstRefnummers.controls.length;
+
+        let valueGroup = this.fb.group({
+            refnummer: [value?.refnummer || '', Validators.required],
+            hersteller: [value?.hersteller || null],
+            filteredHerstellers: [herstellerFormLength === 0 ? this.herstellers :  this.artikelToHerstRefnummers.controls[herstellerFormLength - 1]?.get('filteredHerstellers')?.value],
+        });
+
+        valueGroup.get('hersteller')?.valueChanges.subscribe((selectedHersteller) => {
+            this.filterHerstellerOptions();
+
+            let index =  this.artikelToHerstRefnummers.length - 1;
+            if (selectedHersteller && selectedHersteller.length > 0) {
+                this.dynamicTitleHerstellers[index] = `REF-Nummer Hersteller "${selectedHersteller[0].name}"`;
+            } else {
+                this.dynamicTitleHerstellers[index] = `Hersteller REF-Nummer ${index + 1}`;
+            }
+        });
+
+        this.artikelToHerstRefnummers.push(valueGroup);
+    }
+
+    get artikelToLieferantBestellnummers(): FormArray {
+        return this.artikelForm.get('artikelToLieferantBestellnummers') as FormArray;
+    }
+
+    addArtikelToLieferantBestellnummers(value?: any): void {
+        let herstellerFormLength = this.artikelToLieferantBestellnummers.controls.length;
+
+        const valueGroup = this.fb.group({
+            lieferant: [value?.lieferant || null],
+            bestellnummer: [value?.bestellnummer || ''],
+            filteredLieferants: [herstellerFormLength === 0 ? this.lieferants :  this.artikelToLieferantBestellnummers.controls[herstellerFormLength - 1]?.get('filteredLieferants')?.value],
+        });
+
+        valueGroup.get('lieferant')?.valueChanges.subscribe((selectedLieferants) => {
+            this.filterLieferantOptions();
+
+            let index =  this.artikelToLieferantBestellnummers.length - 1;
+            if (selectedLieferants && selectedLieferants.length > 0) {
+                this.dynamicTitleLieferants[index] = `Bestellnummer Lieferant "${selectedLieferants[0].name}"`;
+            } else {
+                this.dynamicTitleLieferants[index] = `Bestellnummer ${index + 1}`;
+            }
+        });
+        this.artikelToLieferantBestellnummers.push(valueGroup);
+    }
+
+    removeHerstellerRefNummer(index: number): void {
+        this.artikelToHerstRefnummers.removeAt(index);
+    }
+
+    removeLiferantBestellnummer(index: number): void {
+        this.artikelToLieferantBestellnummers.removeAt(index);
     }
 
     initDropdownFromData() {
@@ -130,6 +215,7 @@ export class MaterialEditComponentComponent implements OnInit {
             if (data && data.length > 0) {
                 this.updateLieferantsDropdown(data);
             }
+            this.filterLieferantOptions();
         });
     }
 
@@ -138,19 +224,22 @@ export class MaterialEditComponentComponent implements OnInit {
         let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
         mitarbeiterRequest.subscribe((response: any) => {
             this.herstellers = response.data;
+
             if (data && data.length > 0) {
                 this.updateHerstellersDropdown(data);
             }
+
+            this.filterHerstellerOptions();
         });
     }
 
     isOnlyOneLieferantSelected(): boolean {
-        const selectedItems = this.dropDownForm.get('lieferants')?.value || [];
+        const selectedItems = this.artikelForm.get('lieferants')?.value || [];
         return selectedItems.length === 1;
     }
 
     isOnlyOneHerstellerSelected(): boolean {
-        const selectedItems = this.dropDownForm.get('herstellers')?.value || [];
+        const selectedItems = this.artikelForm.get('herstellers')?.value || [];
         return selectedItems.length === 1;
     }
 
@@ -161,11 +250,28 @@ export class MaterialEditComponentComponent implements OnInit {
     onSubmit(): void {
         let url = this.httpService.get_baseUrl() + '/artikel/save';
 
-        if (this.dropDownForm.valid && !this.childDialogOpened) {
-            const formValue = this.dropDownForm.value;
+        if (this.artikelForm.valid && !this.childDialogOpened) {
+            const formValue = this.artikelForm.value;
             formValue.departments = formValue.departments.map((dept: any) => (dept.id));
             formValue.lieferants = formValue.lieferants.map((lieferant: any) => (lieferant.id));
             formValue.herstellers = formValue.herstellers.map((hersteller: any) => (hersteller.id));
+
+
+            formValue.artikelToHerstRefnummers = formValue.artikelToHerstRefnummers.map((artikelToHersteller: any) => {
+                return {
+                    artikel: formValue.id || null,
+                    hersteller: artikelToHersteller.hersteller[0].id,
+                    refnummer: artikelToHersteller.refnummer,
+                }
+            });
+
+            formValue.artikelToLieferantBestellnummers = formValue.artikelToLieferantBestellnummers.map((artikelToLieferant: any) => {
+                return {
+                    artikel: formValue.id || null,
+                    lieferant: artikelToLieferant.lieferant[0].id,
+                    bestellnummer: artikelToLieferant.bestellnummer,
+                }
+            });
 
             this.httpService.get_httpclient().post(url, formValue).subscribe({
                 next: (response: any) => {
@@ -196,8 +302,8 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     private markAllAsTouched() {
-        Object.keys(this.dropDownForm.controls).forEach(field => {
-            const control = this.dropDownForm.get(field);
+        Object.keys(this.artikelForm.controls).forEach(field => {
+            const control = this.artikelForm.get(field);
             if (control) { // Ensure control is not null
                 if (control instanceof FormGroup) {
                     this.markAllAsTouchedRecursive(control);
@@ -226,7 +332,7 @@ export class MaterialEditComponentComponent implements OnInit {
         data.formTitle = 'Neuen Lieferant hinzufügen';
 
         if (edit) {
-            let selectedLieferants = this.dropDownForm.get('lieferants')?.value || [];
+            let selectedLieferants = this.artikelForm.get('lieferants')?.value || [];
             if (selectedLieferants.length === 1) {
                 data = this.lieferants.find(l => l.id === selectedLieferants[0].id) || {};
             }
@@ -254,7 +360,7 @@ export class MaterialEditComponentComponent implements OnInit {
         data.formTitle = 'Neuen Hersteller hinzufügen';
 
         if (edit) {
-            let selectedHerstellers = this.dropDownForm.get('herstellers')?.value || [];
+            let selectedHerstellers = this.artikelForm.get('herstellers')?.value || [];
             if (selectedHerstellers.length === 1) {
                 data = this.herstellers.find(l => l.id === selectedHerstellers[0].id) || {};
             }
@@ -278,7 +384,7 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     onDepartmentSelect(department: any) {
-        let departments = this.dropDownForm.get('departments').value;
+        let departments = this.artikelForm.get('departments').value;
 
         let index = departments.findIndex((d: any) => d.name === 'Alle');
         if (department.name === 'Alle') {
@@ -295,14 +401,64 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     updateDepartmentsDropdown(data: DepartmentData[]) {
-        this.dropDownForm.get('departments')?.setValue(data);
+        this.artikelForm.get('departments')?.setValue(data);
     }
 
     updateLieferantsDropdown(data: Lieferant[]) {
-        this.dropDownForm.get('lieferants')?.setValue(data);
+        this.artikelForm.get('lieferants')?.setValue(data);
     }
 
     updateHerstellersDropdown(data: Hersteller[]) {
-        this.dropDownForm.get('herstellers')?.setValue(data);
+        this.artikelForm.get('herstellers')?.setValue(data);
+    }
+
+    filterHerstellerOptions(): void {
+        const selectedHerstellers = this.artikelToHerstRefnummers.controls
+            .map((control: any) => { return control.get('hersteller').value; })
+            .filter(value => value != null);
+
+        this.artikelToHerstRefnummers.controls.forEach((control: any, index: number) => {
+            const currentHersteller = control.get('hersteller').value;
+
+            const filteredHerstellers = this.herstellers.filter(
+                (hersteller: any) => {
+                    let isHerstellerSelected = false;
+                    selectedHerstellers.forEach((selectedHersteller: any) => {
+                        if (selectedHersteller[0]?.name === hersteller.name) {
+                            isHerstellerSelected = true;
+                        }
+                    });
+
+                    return !isHerstellerSelected || hersteller === currentHersteller;
+                }
+            );
+
+            return control.get('filteredHerstellers').setValue(filteredHerstellers);
+        });
+    }
+
+    filterLieferantOptions(): void {
+        const selectedLiferants = this.artikelToLieferantBestellnummers.controls
+            .map((control: any) => { return control.get('lieferant').value; })
+            .filter(value => value != null);
+
+        this.artikelToLieferantBestellnummers.controls.forEach((control: any, index: number) => {
+            const currentLieferant = control.get('lieferant').value;
+
+            const filteredLieferants = this.lieferants.filter(
+                (lieferant: any) => {
+                    let isHerstellerSelected = false;
+                    selectedLiferants.forEach((selectedHersteller: any) => {
+                        if (selectedHersteller[0]?.name === lieferant.name) {
+                            isHerstellerSelected = true;
+                        }
+                    });
+
+                    return !isHerstellerSelected || lieferant === currentLieferant;
+                }
+            );
+
+            return control.get('filteredLieferants').setValue(filteredLieferants);
+        });
     }
 }

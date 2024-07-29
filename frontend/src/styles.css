@@ -276,3 +276,7 @@ button[disabled] .mat-icon-button {
 button[disabled] mat-icon {
   color: #faf6f6 !important; /* Change icon color to match text */
 }
+.dropdown-section {
+    display: flex;
+    flex-direction: column;
+}

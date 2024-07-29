@@ -73,7 +73,9 @@ class ArtikelController extends BaseController
                                                   'Default',
                                                   'Artikel_Department',
                                                   'Artikel_Hersteller',
-                                                  'Artikel_Lieferant'
+                                                  'Artikel_Lieferant',
+                                                  'Artikel_ArtikelToLieferBestellnummer',
+                                                  'Artikel_ArtikelToHerstRefnummer'
                                               ]
                 );
             }
@@ -111,7 +113,9 @@ class ArtikelController extends BaseController
                 'Default',
                 'Artikel_Department',
                 'Artikel_Hersteller',
-                'Artikel_Lieferant'
+                'Artikel_Lieferant',
+                'Artikel_ArtikelToLieferBestellnummer',
+                'Artikel_ArtikelToHerstRefnummer'
             ]
         );
     }

@@ -63,11 +63,11 @@ class Artikel
     private Collection $bestellungen;
 
     #[Groups(['Artikel_ArtikelToLieferBestellnummer', 'ArtikelToLieferBestellnummer'])]
-    #[ORM\OneToMany(targetEntity: ArtikelToLieferBestellnummer::class, mappedBy: 'artikel', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'artikel', targetEntity: ArtikelToLieferBestellnummer::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $artikelToLieferantBestellnummers;
 
     #[Groups(['Artikel_ArtikelToHerstRefnummer', 'ArtikelToHerstRefnummer'])]
-    #[ORM\OneToMany(targetEntity: ArtikelToHerstRefnummer::class, mappedBy: 'artikel', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'artikel', targetEntity: ArtikelToHerstRefnummer::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $artikelToHerstRefnummers;
 
     public function __construct()

@@ -9,26 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
 class ArtikelToLieferBestellnummer
 {
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Artikel::class)]
-    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false, onDelete: 'restrict')]
+    #[ORM\ManyToOne(targetEntity: Artikel::class, inversedBy: 'artikelToLieferantBestellnummers')]
+    #[ORM\JoinColumn(name: 'artikel_id', referencedColumnName: 'id', nullable: false)]
     private ?Artikel $artikel = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Lieferant::class)]
-    #[ORM\JoinColumn(name: 'lieferant_id', referencedColumnName: 'id', nullable: false, onDelete: 'cascade')]
-    private Lieferant $lieferant;
+    #[ORM\JoinColumn(name: 'lieferant_id', referencedColumnName: 'id', nullable: false)]
+    private ?Lieferant $lieferant = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
     private string $bestellnummer;
 
-    public function __construct(Artikel $artikel, Lieferant $lieferant, string $bestellnummer)
-    {
-        $this->artikel = $artikel;
-        $this->lieferant = $lieferant;
-        $this->bestellnummer = $bestellnummer;
-    }
-
-    public function getArtikel(): Artikel
+    public function getArtikel(): ?Artikel
     {
         return $this->artikel;
     }
@@ -39,12 +32,12 @@ class ArtikelToLieferBestellnummer
         return $this;
     }
 
-    public function getLieferant(): Lieferant
+    public function getLieferant(): ?Lieferant
     {
         return $this->lieferant;
     }
 
-    public function setLieferant(Lieferant $lieferant): ArtikelToLieferBestellnummer
+    public function setLieferant(?Lieferant $lieferant): ArtikelToLieferBestellnummer
     {
         $this->lieferant = $lieferant;
         return $this;
