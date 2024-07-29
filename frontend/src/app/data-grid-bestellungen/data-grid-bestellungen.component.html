@@ -8,27 +8,29 @@
     <!--            </select>-->
     <!--        </div>-->
     <!--    </div>-->
-
-    <!-- Abteilung -->
-    <div class="flex-container margin-bottom-30">
-        <div class="column-layout">
-            <label>Abteilung:</label>
-            <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="departments"
-                                         class="custom-select-no-margin"
-                                         [placeholder]="'Abteilung auswählen'"
-                                         [settings]="dropdownDepartmentSettings"
-                                         (onSelect)="onDepartmentSelect($event)"
-                                         [data]="departments">
-                    <ng-template let-item="item">
-                        <div class="custom-item">
-                            {{ item.name }}
-                        </div>
-                    </ng-template>
-                </ng-multiselect-dropdown>
+    <form [formGroup]="bestellungForm">
+        <!-- Abteilung -->
+        <div class="flex-container margin-bottom-30">
+            <div class="column-layout">
+                <label>Abteilung:</label>
+                <div class="dropdown-wrapper">
+                    <ng-multiselect-dropdown class="custom-select-no-margin"
+                                             [placeholder]="'Abteilung auswählen'"
+                                             [settings]="dropdownDepartmentSettings"
+                                             (onSelect)="onDepartmentSelect($event)"
+                                             (onDeSelect)="onDepartmentSelect($event)"
+                                             [data]="departments"
+                                             formControlName="departments">
+                        <ng-template let-item="item">
+                            <div class="custom-item">
+                                {{ item.name }}
+                            </div>
+                        </ng-template>
+                    </ng-multiselect-dropdown>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 
 
     <mat-toolbar color="custom-toolbar">

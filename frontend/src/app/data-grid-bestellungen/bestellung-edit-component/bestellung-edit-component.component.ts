@@ -39,6 +39,8 @@ export class BestellungEditComponentComponent implements OnInit {
     ngOnInit(): void {
         this.loadDepartments();
         this.loadArtikel();
+        this.loadLieferants([]);
+        this.loadHerstellers([]);
 
         this.dropdownSettings = {
             idField: 'id',
@@ -69,7 +71,6 @@ export class BestellungEditComponentComponent implements OnInit {
         this.bestellungForm = this.fb.group({
             id: [this.data?.id || 0],
             description: [this.data?.description || ''],
-            descriptionZusatz: [this.data?.descriptionZusatz || ''],
             amount: [this.data?.amount || ''],
             preis: [this.data?.preis || '', this.floatValidator],
             artikels: [this.data?.artikels || [], Validators.required],
@@ -77,7 +78,10 @@ export class BestellungEditComponentComponent implements OnInit {
             herstellers: [this.data?.herstellers || []],
             lieferants: [this.data?.lieferants || []],
             herstellerStandorte: [this.data?.herstellerStandorte || []],
-            lieferantStandorte: [this.data?.lieferantStandorte || []]
+            lieferantStandorte: [this.data?.lieferantStandorte || []],
+            bestellnummer: [{value: '', disabled: true}],
+            refnummer: [{value: '', disabled: true}],
+            descriptionZusatz: [{value: '', disabled: true}],
         });
 
         if (this.data?.artikels) {
@@ -185,6 +189,30 @@ export class BestellungEditComponentComponent implements OnInit {
         let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/department/get_departments');
         mitarbeiterRequest.subscribe((response: any) => {
             this.departments = response.data;
+        });
+    }
+
+    loadLieferants(data: any) {
+        let url = this.httpService.get_baseUrl() + '/lieferant';
+        let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
+        mitarbeiterRequest.subscribe((response: any) => {
+            this.lieferants = response.data;
+
+            if (data && data.length > 0) {
+                this.updateLieferantsDropdown(data);
+            }
+        });
+    }
+
+    loadHerstellers(data: any) {
+        let url = this.httpService.get_baseUrl() + '/hersteller/0';
+        let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
+        mitarbeiterRequest.subscribe((response: any) => {
+            this.herstellers = response.data;
+
+            if (data && data.length > 0) {
+                this.updateHerstellerDropdown(data);
+            }
         });
     }
 
@@ -344,6 +372,21 @@ export class BestellungEditComponentComponent implements OnInit {
             if (index !== -1) {
                 // Update the record at the found index
                 this.artikels[index] = data[0];
+
+                this.bestellungForm.patchValue({
+                    descriptionZusatz: data[0].description,
+                });
+
+                if (data[0] && data[0].artikelToLieferantBestellnummers && data[0].artikelToLieferantBestellnummers.length > 0) {
+                    this.bestellungForm.patchValue({
+                        bestellnummer: data[0].artikelToLieferantBestellnummers[0].bestellnummer,
+                    });
+                }
+                if (data[0] && data[0].artikelToHerstRefnummers && data[0].artikelToHerstRefnummers.length > 0) {
+                    this.bestellungForm.patchValue({
+                        refnummer: data[0].artikelToHerstRefnummers[0].refnummer,
+                    });
+                }
                 // Update the dropdown
 
                 this.lieferants = data[0].lieferants || [];

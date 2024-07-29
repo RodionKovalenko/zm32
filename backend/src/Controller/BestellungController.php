@@ -27,10 +27,11 @@ class BestellungController extends BaseController
         parent::__construct($serializer, $this->formFactory);
     }
 
-    #[Route(path: '/{departmentId}', name: 'app_bestellung_get_bestellung', methods: ['GET'])]
-    public function getBestellung(int $departmentId, Request $request)
+    #[Route(path: '/{departmentIds}', name: 'app_bestellung_get_bestellung', methods: ['GET'])]
+    public function getBestellung($departmentIds, Request $request)
     {
-        $departments = $this->departmentRepository->findBy(['id' => $departmentId]);
+        $departmentIdsArray = json_decode($departmentIds, true);
+        $departments = $this->departmentRepository->findBy(['id' => $departmentIdsArray]);
         $bestellungen = $this->bestellungRepository->getByDepartment($departments);
 
         $response = [

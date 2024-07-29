@@ -60,8 +60,7 @@
         <div class="dropdown-section">
             <label>Lieferant (Optional):</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="lieferants"
-                                         class="custom-select-no-margin"
+                <ng-multiselect-dropdown class="custom-select-no-margin"
                                          [placeholder]="'Lieferant auswählen (Optional)'"
                                          [settings]="singleSelectSettings"
                                          [data]="lieferants"
@@ -81,6 +80,13 @@
 <!--                    <mat-icon>add</mat-icon>-->
 <!--                </button>-->
             </div>
+        </div>
+
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Lieferanten-Bestellnummer</mat-label>
+                <input matInput id="bestellnummer" formControlName="bestellnummer">
+            </mat-form-field>
         </div>
 
         <!-- Hersteller -->
@@ -109,6 +115,13 @@
 <!--                    <mat-icon>add</mat-icon>-->
 <!--                </button>-->
             </div>
+        </div>
+
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Hersteller REF-Nummer</mat-label>
+                <input matInput id="refnummer" formControlName="refnummer">
+            </mat-form-field>
         </div>
 
         <div>
