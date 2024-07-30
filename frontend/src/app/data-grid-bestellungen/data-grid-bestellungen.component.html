@@ -96,7 +96,7 @@
         <ng-container matColumnDef="descriptionZusatz">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Zusatzinfo</th>
             <td mat-cell *matCellDef="let element">
-                {{ element.artikels[0].description }}
+                {{ getArtikelDescription(element) }}
             </td>
         </ng-container>
 

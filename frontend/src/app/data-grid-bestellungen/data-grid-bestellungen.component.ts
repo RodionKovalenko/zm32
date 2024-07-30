@@ -8,6 +8,7 @@ import { BestellungEditComponentComponent } from "./bestellung-edit-component/be
 import { Bestellung } from "../models/Bestellung";
 import { IDropdownSettings } from "ng-multiselect-dropdown";
 import { FormBuilder, Validators } from "@angular/forms";
+import {LoginErrorComponent} from "../login/login-error/login-error.component";
 
 
 @Component({
@@ -18,7 +19,8 @@ import { FormBuilder, Validators } from "@angular/forms";
 export class DataGridBestellungenComponent implements OnInit {
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    displayedColumns: string[] = ['id', 'artikels', 'descriptionZusatz', 'lieferants', 'departments', 'herstellers', 'amount', 'preis', 'description', 'mitarbeiter', 'edit', 'remove'];
+    displayedColumns: string[] = ['id', 'artikels', 'descriptionZusatz', 'lieferants', 'departments', 'herstellers',
+        'amount', 'preis', 'description', 'mitarbeiter', 'edit'];
     dataSource = new MatTableDataSource<Bestellung>([]);
 
     dropdownDepartmentSettings: IDropdownSettings = {};
@@ -139,22 +141,46 @@ export class DataGridBestellungenComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                result.id = this.dataSource.data.length + 1;
-                this.dataSource.data.push(result);
-                this.dataSource._updateChangeSubscription();
-                this.cdr.detectChanges(); // Manually trigger change detection
+              this.fetchDataByDepartmentId();
             }
         });
     }
 
     removeRecord(record: Bestellung) {
-        const index = this.dataSource.data.findIndex(user => user.id === record.id);
+        let url = this.httpService.get_baseUrl() + '/bestellung/delete/' + record.id;
 
-        this.dataSource.data = this.dataSource.data.filter((value, key) => {
-            return value.id !== record.id;
+        this.httpService.get_httpclient().post(url, record.id).subscribe({
+            next: (response: any) => {
+                if (response && response.success && Boolean(response?.success)) {
+                    this.fetchDataByDepartmentId();
+                } else {
+                    this.dialog.open(LoginErrorComponent, {
+                        width: '450px',
+                        height: '150px',
+                        data: {
+                            title: response?.message
+                        }
+                    });
+                }
+            },
+            error: (err) => {
+                console.log(err);
+                this.dialog.open(LoginErrorComponent, {
+                    width: '450px',
+                    height: '150px',
+                    data: {
+                        title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
+                    }
+                });
+            }
         });
-        this.dataSource._updateChangeSubscription();
-        this.cdr.detectChanges(); // Manually trigger change detection
+    }
+
+    getArtikelDescription(element: any) {
+        if (element && element.artikels && element.artikels.length > 0) {
+           return element.artikels[0]?.description;
+        }
+        return '';
     }
 }
 

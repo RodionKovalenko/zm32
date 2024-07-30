@@ -114,7 +114,7 @@ class BestellungController extends BaseController
         }
 
         try {
-            $this->bestellungRepository->delete($bestellung);
+            $this->bestellungRepository->remove($bestellung);
         } catch (\Exception $e) {
             return $this->getJsonResponse(['success' => false, 'message' => $e->getMessage()]);
         }
