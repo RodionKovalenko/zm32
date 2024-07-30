@@ -83,7 +83,14 @@ class BestellungController extends BaseController
 
             if ($form->isValid()) {
                 $this->bestellungRepository->save($bestellung);
-                return $this->getJsonResponse(['success' => true, 'data' => [$bestellung]]);
+                return $this->getJsonResponse(['success' => true, 'data' => $bestellung], [
+                    'Default',
+                    'Bestellung_Mitarbeiter',
+                    'Bestellung_Artikel',
+                    'Bestellung_Department',
+                    'Bestellung_Lieferant',
+                    'Bestellung_Hersteller'
+                ]);
             }
 
             return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors()]);

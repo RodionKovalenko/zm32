@@ -39,8 +39,6 @@ export class BestellungEditComponentComponent implements OnInit {
     ngOnInit(): void {
         this.loadDepartments();
         this.loadArtikel();
-        this.loadLieferants([]);
-        this.loadHerstellers([]);
 
         this.dropdownSettings = {
             idField: 'id',
@@ -102,21 +100,13 @@ export class BestellungEditComponentComponent implements OnInit {
         }
 
         if (this.data?.lieferants) {
-            this.lieferants = this.data.lieferants;
             this.data.lieferants.forEach(st => this.addLieferants(st));
         }
         if (this.data?.herstellers) {
-            this.herstellers = this.data.herstellers;
             this.data.herstellers.forEach(st => this.addHerstellers(st));
         }
 
         this.markAllAsTouched();
-
-        if (this.data.id && this.data.artikels && this.data.artikels.length > 0) {
-            this.loadArtikelFullData(this.data.artikels[0].id).then((data) => {
-                this.updateDropdowns(data);
-            });
-        }
     }
 
     addArtikel(value?: any): void {
@@ -192,39 +182,19 @@ export class BestellungEditComponentComponent implements OnInit {
         });
     }
 
-    loadLieferants(data: any) {
-        let url = this.httpService.get_baseUrl() + '/lieferant';
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
-        mitarbeiterRequest.subscribe((response: any) => {
-            this.lieferants = response.data;
-
-            if (data && data.length > 0) {
-                this.updateLieferantsDropdown(data);
-            }
-        });
-    }
-
-    loadHerstellers(data: any) {
-        let url = this.httpService.get_baseUrl() + '/hersteller/0';
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
-        mitarbeiterRequest.subscribe((response: any) => {
-            this.herstellers = response.data;
-
-            if (data && data.length > 0) {
-                this.updateHerstellerDropdown(data);
-            }
-        });
-    }
-
     loadArtikel() {
         let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/0');
         mitarbeiterRequest.subscribe((response: any) => {
             this.artikels = response.data;
+
+            if (this.data.artikels && this.data.artikels.length > 0) {
+                this.loadArtikelFullData(this.data.artikels[0].id);
+            }
         });
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(this.data);
     }
 
     addArtikelRecord(edit: boolean = false) {
@@ -276,9 +246,10 @@ export class BestellungEditComponentComponent implements OnInit {
             let artikelRequest = this.httpService.get_httpclient().get(url);
             artikelRequest.subscribe((response: any) => {
                 if (response.success) {
-                    resolve(response.data);
                     this.updateDropdowns(response.data);
                     response.data[0].formTitle = 'Artikel bearbeiten';
+
+                    resolve(response.data);
                 } else {
                     resolve({});
                 }
@@ -300,7 +271,7 @@ export class BestellungEditComponentComponent implements OnInit {
             this.httpService.get_httpclient().post(url, formValue).subscribe({
                 next: (response: any) => {
                     if (response && response.success && Boolean(response?.success)) {
-                        this.dialogRef.close(response);
+                        this.dialogRef.close(response.data);
                     } else {
                         this.dialog.open(LoginErrorComponent, {
                             width: '450px',
@@ -353,7 +324,7 @@ export class BestellungEditComponentComponent implements OnInit {
 
     private floatValidator(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
-        const floatRegex = /^[+-]?\d+(\.\d+)?$/;
+        const floatRegex = /^[+-]?\d+(\.\d+)?(,\d+)?$/;
         if (value && !floatRegex.test(value)) {
             return {invalidFloat: true};
         }
@@ -368,8 +339,16 @@ export class BestellungEditComponentComponent implements OnInit {
 
     updateBestellungToArtikelsDropdown(data: Artikel[]) {
         if (Array.isArray(this.artikels)) { // Ensure it is an array
-            const index = this.artikels.findIndex(record => record.id === data[0].id);
-            if (index !== -1) {
+            let artikel = null;
+            let index = 0;
+            this.artikels.forEach((record, ind) =>  {
+                if (record.id === data[0].id) {
+                    artikel = record;
+                    index = ind;
+                }
+            });
+
+            if (artikel) {
                 // Update the record at the found index
                 this.artikels[index] = data[0];
 
@@ -377,14 +356,23 @@ export class BestellungEditComponentComponent implements OnInit {
                     descriptionZusatz: data[0].description,
                 });
 
+                console.log(data[0]);
                 if (data[0] && data[0].artikelToLieferantBestellnummers && data[0].artikelToLieferantBestellnummers.length > 0) {
                     this.bestellungForm.patchValue({
                         bestellnummer: data[0].artikelToLieferantBestellnummers[0].bestellnummer,
+                    });
+                } else {
+                    this.bestellungForm.patchValue({
+                        bestellnummer: '',
                     });
                 }
                 if (data[0] && data[0].artikelToHerstRefnummers && data[0].artikelToHerstRefnummers.length > 0) {
                     this.bestellungForm.patchValue({
                         refnummer: data[0].artikelToHerstRefnummers[0].refnummer,
+                    });
+                } else {
+                    this.bestellungForm.patchValue({
+                        refnummer: '',
                     });
                 }
                 // Update the dropdown
@@ -393,20 +381,20 @@ export class BestellungEditComponentComponent implements OnInit {
                 this.herstellers = data[0].herstellers || [];
                 this.departments = data[0].departments || [];
 
-                if (data[0].departments && data[0].departments.length > 0) {
+                if (data[0].departments && data[0].departments.length > 0 && !this.data.id) {
                     this.updateDeparmentsDropdown(data[0].departments);
                 } else {
-                    this.updateDeparmentsDropdown([]);
+                    this.updateDeparmentsDropdown(this.data.departments || []);
                 }
-                if (data[0].lieferants && data[0].lieferants.length > 0) {
+                if (data[0].lieferants && data[0].lieferants.length > 0 && !this.data.id) {
                     this.updateLieferantsDropdown([data[0].lieferants[0]]);
                 } else {
-                    this.updateLieferantsDropdown([]);
+                    this.updateLieferantsDropdown(this.data.lieferants || []);
                 }
-                if (data[0].herstellers && data[0].herstellers.length > 0) {
+                if (data[0].herstellers && data[0].herstellers.length > 0 && !this.data.id) {
                     this.updateHerstellerDropdown([data[0].herstellers[0]]);
                 } else {
-                    this.updateHerstellerDropdown([]);
+                    this.updateHerstellerDropdown(this.data.herstellers || []);
                 }
             }
         }

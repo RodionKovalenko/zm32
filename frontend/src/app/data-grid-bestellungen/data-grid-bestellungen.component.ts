@@ -117,7 +117,9 @@ export class DataGridBestellungenComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 const index = this.dataSource.data.findIndex(user => user.id === result.id);
-                this.dataSource.data[index] = result;
+                const updatedData = [...this.dataSource.data];
+                updatedData[index] = result;
+                this.dataSource.data = updatedData;
                 this.dataSource._updateChangeSubscription();
                 this.cdr.detectChanges(); // Manually trigger change detection
             }

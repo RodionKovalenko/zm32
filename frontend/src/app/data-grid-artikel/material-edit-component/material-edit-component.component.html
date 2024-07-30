@@ -51,155 +51,156 @@
             </div>
         </div>
 
-
         <!-- Hersteller -->
-        <div class="dropdown-section">
-            <label>Hersteller (Optional):</label>
-            <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="herstellers"
-                                         class="custom-select-no-margin"
-                                         [placeholder]="'Hersteller auswählen (Optional)'"
-                                         [settings]="dropdownSettings"
-                                         [data]="herstellers"
-                                         formControlName="herstellers">
-                    <ng-template let-item="item">
-                        <div class="custom-item">
-                            {{ item.name }}
+        <div class="form-item background-hersteller">
+            <div class="dropdown-section">
+                <label>Hersteller (Optional):</label>
+                <div class="dropdown-wrapper">
+                    <ng-multiselect-dropdown id="herstellers"
+                                             class="custom-select-no-margin"
+                                             [placeholder]="'Hersteller auswählen (Optional)'"
+                                             [settings]="dropdownSettings"
+                                             [data]="herstellers"
+                                             formControlName="herstellers">
+                        <ng-template let-item="item">
+                            <div class="custom-item">
+                                {{ item.name }}
+                            </div>
+                        </ng-template>
+                    </ng-multiselect-dropdown>
+                    <button *ngIf="isOnlyOneHerstellerSelected()"
+                            mat-icon-button class="color-confirm"
+                            matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div formArrayName="artikelToHerstRefnummers">
+                <div *ngFor="let artikelToHerstRefnummer of artikelToHerstRefnummers.controls; let i = index" [formGroupName]="i" class="standort-item">
+                    <div class="standort-header">
+                        <span class="standort-index">{{ dynamicTitleHerstellers[i] || ('Hersteller REF-Nummer ' + (i + 1)) }}</span>
+                    </div>
+
+                    <div>
+                        <mat-form-field appearance="fill">
+                            <mat-label>REF-Nummer</mat-label>
+                            <input matInput id="refnummer" formControlName="refnummer">
+                            <mat-error *ngIf="artikelToHerstRefnummers.at(i).get('refnummer')?.invalid && artikelToHerstRefnummers.at(i).get('refnummer')?.touched">
+                                REF-Nummer ist erforderlich.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Hersteller REF-Nummer -->
+                    <div class="dropdown-section">
+                        <label>Hersteller:</label>
+                        <div class="dropdown-wrapper">
+                            <ng-multiselect-dropdown class="custom-select-no-margin"
+                                                     [placeholder]="'Hersteller auswählen'"
+                                                     [settings]="singleSelectSettings"
+                                                     [data]="artikelToHerstRefnummer.get('filteredHerstellers')?.value"
+                                                     formControlName="hersteller">
+                                <ng-template let-item="item">
+                                    <div class="custom-item">
+                                        {{ item.name }}
+                                    </div>
+                                </ng-template>
+                            </ng-multiselect-dropdown>
+
+                            <mat-error *ngIf="artikelForm.get('artikelToHerstRefnummers').invalid && artikelForm.get('artikelToHerstRefnummers').touched">
+                                Hersteller ist erforderlich.
+                            </mat-error>
                         </div>
-                    </ng-template>
-                </ng-multiselect-dropdown>
-                <button *ngIf="isOnlyOneHerstellerSelected()"
-                        mat-icon-button class="color-confirm"
-                        matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">
+                    </div>
+
+                    <button mat-button type="button" class="color-cancel" (click)="removeHerstellerRefNummer(i)">REF-Nummer löschen
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+                <button mat-raised-button type="button" class="color-confirm" (click)="addArtikelToHerstRefnummers()">REF-Nummer hinzufügen
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
-        </div>
-
-
-
-        <div formArrayName="artikelToHerstRefnummers">
-            <div *ngFor="let artikelToHerstRefnummer of artikelToHerstRefnummers.controls; let i = index" [formGroupName]="i" class="standort-item">
-                <div class="standort-header">
-                    <span class="standort-index">{{ dynamicTitleHerstellers[i] || ('Hersteller REF-Nummer ' + (i + 1)) }}</span>
-                </div>
-
-                <div>
-                    <mat-form-field appearance="fill">
-                        <mat-label>REF-Nummer</mat-label>
-                        <input matInput id="refnummer" formControlName="refnummer">
-                        <mat-error *ngIf="artikelToHerstRefnummers.at(i).get('refnummer')?.invalid && artikelToHerstRefnummers.at(i).get('refnummer')?.touched">
-                            REF-Nummer ist erforderlich.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
-                <!-- Hersteller REF-Nummer -->
-                <div class="dropdown-section">
-                    <label>Hersteller:</label>
-                    <div class="dropdown-wrapper">
-                        <ng-multiselect-dropdown class="custom-select-no-margin"
-                                                 [placeholder]="'Hersteller auswählen'"
-                                                 [settings]="singleSelectSettings"
-                                                 [data]="artikelToHerstRefnummer.get('filteredHerstellers')?.value"
-                                                 formControlName="hersteller">
-                            <ng-template let-item="item">
-                                <div class="custom-item">
-                                    {{ item.name }}
-                                </div>
-                            </ng-template>
-                        </ng-multiselect-dropdown>
-
-                        <mat-error *ngIf="artikelForm.get('artikelToHerstRefnummers').invalid && artikelForm.get('artikelToHerstRefnummers').touched">
-                            Hersteller ist erforderlich.
-                        </mat-error>
-                    </div>
-                </div>
-
-                <button mat-button type="button" class="color-cancel" (click)="removeHerstellerRefNummer(i)">REF-Nummer löschen
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </div>
-            <button mat-raised-button type="button" class="color-confirm" (click)="addArtikelToHerstRefnummers()">REF-Nummer hinzufügen
-                <mat-icon>add</mat-icon>
-            </button>
         </div>
 
         <!-- Lieferant -->
-        <div class="dropdown-section">
-            <label>Lieferant (Optional):</label>
-            <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown class="custom-select-no-margin"
-                                         [placeholder]="'Lieferant auswählen (Optional)'"
-                                         [settings]="dropdownSettings"
-                                         [data]="lieferants"
-                                         formControlName="lieferants">
-                    <ng-template let-item="item">
-                        <div class="custom-item">
-                            {{ item.name }}
+        <div class="form-item background-lieferant">
+            <div class="dropdown-section">
+                <label>Lieferant (Optional):</label>
+                <div class="dropdown-wrapper">
+                    <ng-multiselect-dropdown class="custom-select-no-margin"
+                                             [placeholder]="'Lieferant auswählen (Optional)'"
+                                             [settings]="dropdownSettings"
+                                             [data]="lieferants"
+                                             formControlName="lieferants">
+                        <ng-template let-item="item">
+                            <div class="custom-item">
+                                {{ item.name }}
+                            </div>
+                        </ng-template>
+                    </ng-multiselect-dropdown>
+                    <button *ngIf="isOnlyOneLieferantSelected()"
+                            mat-icon-button class="color-confirm"
+                            matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div formArrayName="artikelToLieferantBestellnummers">
+                <div *ngFor="let artikelToLieferantBestellnummer of artikelToLieferantBestellnummers.controls; let i = index" [formGroupName]="i" class="standort-item">
+                    <div class="standort-header">
+                        <span class="standort-index">{{ dynamicTitleLieferants[i] || ('Lieferant Bestellnummer ' + (i + 1)) }}</span>
+                    </div>
+
+                    <div>
+                        <mat-form-field appearance="fill">
+                            <mat-label>REF-Nummer</mat-label>
+                            <input matInput id="bestellnummer" formControlName="bestellnummer">
+                            <mat-error *ngIf="artikelToLieferantBestellnummer.get('bestellnummer')?.invalid && artikelToLieferantBestellnummer.get('bestellnummer')?.touched">
+                                Bestellnummer ist erforderlich.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Lieferant Bestellnummer -->
+                    <div class="dropdown-section">
+                        <label>Hersteller:</label>
+                        <div class="dropdown-wrapper">
+                            <ng-multiselect-dropdown id="lieferant"
+                                                     class="custom-select-no-margin"
+                                                     [placeholder]="'Lieferant auswählen'"
+                                                     [settings]="singleSelectSettings"
+                                                     [data]="artikelToLieferantBestellnummer.get('filteredLieferants')?.value"
+                                                     formControlName="lieferant">
+                                <ng-template let-item="item">
+                                    <div class="custom-item">
+                                        {{ item.name }}
+                                    </div>
+                                </ng-template>
+                            </ng-multiselect-dropdown>
+
+                            <mat-error *ngIf="artikelForm.get('artikelToLieferantBestellnummers').invalid && artikelForm.get('artikelToLieferantBestellnummers').touched">
+                                Lieferant ist erforderlich.
+                            </mat-error>
                         </div>
-                    </ng-template>
-                </ng-multiselect-dropdown>
-                <button *ngIf="isOnlyOneLieferantSelected()"
-                        mat-icon-button class="color-confirm"
-                        matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">
+                    </div>
+
+                    <button mat-button type="button" class="color-cancel" (click)="removeLiferantBestellnummer(i)">Bestellnummer löschen
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+                <button mat-raised-button type="button" class="color-confirm" (click)="addArtikelToLieferantBestellnummers()">Bestellnummer hinzufügen
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
-        </div>
-
-        <div formArrayName="artikelToLieferantBestellnummers">
-            <div *ngFor="let artikelToLieferantBestellnummer of artikelToLieferantBestellnummers.controls; let i = index" [formGroupName]="i" class="standort-item">
-                <div class="standort-header">
-                    <span class="standort-index">{{ dynamicTitleLieferants[i] || ('Lieferant Bestellnummer ' + (i + 1)) }}</span>
-                </div>
-
-                <div>
-                    <mat-form-field appearance="fill">
-                        <mat-label>REF-Nummer</mat-label>
-                        <input matInput id="bestellnummer" formControlName="bestellnummer">
-                        <mat-error *ngIf="artikelToLieferantBestellnummer.get('bestellnummer')?.invalid && artikelToLieferantBestellnummer.get('bestellnummer')?.touched">
-                            Bestellnummer ist erforderlich.
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
-                <!-- Lieferant Bestellnummer -->
-                <div class="dropdown-section">
-                    <label>Hersteller:</label>
-                    <div class="dropdown-wrapper">
-                        <ng-multiselect-dropdown id="lieferant"
-                                                 class="custom-select-no-margin"
-                                                 [placeholder]="'Lieferant auswählen'"
-                                                 [settings]="singleSelectSettings"
-                                                 [data]="artikelToLieferantBestellnummer.get('filteredLieferants')?.value"
-                                                 formControlName="lieferant">
-                            <ng-template let-item="item">
-                                <div class="custom-item">
-                                    {{ item.name }}
-                                </div>
-                            </ng-template>
-                        </ng-multiselect-dropdown>
-
-                        <mat-error *ngIf="artikelForm.get('artikelToLieferantBestellnummers').invalid && artikelForm.get('artikelToLieferantBestellnummers').touched">
-                            Lieferant ist erforderlich.
-                        </mat-error>
-                    </div>
-                </div>
-
-                <button mat-button type="button" class="color-cancel" (click)="removeLiferantBestellnummer(i)">Bestellnummer löschen
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </div>
-            <button mat-raised-button type="button" class="color-confirm" (click)="addArtikelToLieferantBestellnummers()">Bestellnummer hinzufügen
-                <mat-icon>add</mat-icon>
-            </button>
         </div>
 
     </form>

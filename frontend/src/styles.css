@@ -296,6 +296,22 @@ button[disabled] mat-icon {
 }
 
 .dropdown-section {
-    /*display: flex;*/
-    /*flex-direction: column;*/
+    display: flex;
+    flex-direction: column;
+}
+
+.form-item {
+    margin-bottom: 16px; /* Space between form items */
+}
+
+.background-hersteller {
+    margin-bottom: 16px; /* Space between form items */
+    border: #275681 1px solid;
+    background: #1d2631;
+}
+
+.background-lieferant {
+    margin-bottom: 16px; /* Space between form items */
+    border: #2b4624 1px solid;
+    background: #333328;
 }
