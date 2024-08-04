@@ -1,9 +1,10 @@
 FROM php:8.2-fpm
 
-# Switch to root user for installation
 USER root
 
-# Install system dependencies and PHP extensions
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Install system dependencies and tools
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -16,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     netcat-openbsd \
     default-mysql-client \
+    dos2unix \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql intl zip opcache gd bcmath \
     && apt-get clean \
@@ -25,33 +27,50 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
 
-# Copy wait-for-it script
-COPY wait-for-it.sh /usr/local/bin/wait-for-it
-RUN chmod +x /usr/local/bin/wait-for-it
-
 # Set working directory
 WORKDIR /var/www/symfony
+
+# Copy Composer files
+COPY composer.json composer.lock ./
+
+# Set permissions for Composer cache and vendor directory
+RUN mkdir -p /var/www/.composer/cache && \
+    chown -R www-data:www-data /var/www/.composer && \
+    mkdir -p /var/www/symfony/vendor && \
+    chown -R www-data:www-data /var/www/symfony/vendor
+
+# Install PHP dependencies as www-data user
+USER www-data
+RUN composer install --no-interaction --no-scripts --prefer-dist
+
+# Switch back to root to copy project files and set permissions
+USER root
 
 # Copy project files
 COPY . .
 
-# Set permissions for the application files
-RUN chown -R www-data:www-data /var/www/symfony
+# Ensure `bin/console` has Unix-style line endings
+RUN dos2unix /var/www/symfony/bin/console
 
-# Create Composer cache directory and set permissions
-RUN mkdir -p /var/www/.composer/cache && \
-    chown -R www-data:www-data /var/www/.composer
+# Create var/Migrations directory if it does not exist
+RUN mkdir -p /var/www/symfony/var/Migrations && \
+    chown -R www-data:www-data /var/www/symfony/var/Migrations
 
-# Copy entrypoint script and set permissions
+# Ensure necessary directories have correct permissions
+RUN chown -R www-data:www-data /var/www/symfony/var /var/www/symfony/vendor
+
+# Copy and fix line endings for entrypoint and wait-for-it scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/wait-for-it && dos2unix /usr/local/bin/entrypoint.sh /usr/local/bin/wait-for-it
 
-# Install Composer dependencies
-RUN composer install --no-interaction --prefer-dist --no-scripts --optimize-autoloader --no-dev
+# Fix line endings for entrypoint.sh
+RUN dos2unix /usr/local/bin/entrypoint.sh
 
 # Switch back to the non-root user
 USER www-data
 
 # Expose port 9000 and start PHP-FPM server
 EXPOSE 9000
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["php-fpm"]
