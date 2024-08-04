@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/index')]
+#[Route(path: '/api/index')]
 class IndexController extends BaseController
 {
     #[Route(path: '/materialliste', name: 'app_index_materialliste', methods: ['GET'])]

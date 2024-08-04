@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/hersteller')]
+#[Route(path: '/api/hersteller')]
 class HerstellerController extends BaseController
 {
     public function __construct(

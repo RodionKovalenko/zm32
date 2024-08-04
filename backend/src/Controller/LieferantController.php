@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/lieferant')]
+#[Route(path: '/api/lieferant')]
 class LieferantController extends BaseController
 {
     public function __construct(SerializerInterface $serializer, private readonly LieferantRepository $lieferantRepository, private readonly FormFactoryInterface $formFactory)

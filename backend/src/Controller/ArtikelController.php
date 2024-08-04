@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/artikel')]
+#[Route(path: '/api/artikel')]
 class ArtikelController extends BaseController
 {
     public function __construct(

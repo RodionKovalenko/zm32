@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/department')]
+#[Route(path: '/api/department')]
 class DepartmentController extends BaseController
 {
     public function __construct(SerializerInterface $serializer, private readonly DepartmentRepository $departmentRepository, private readonly FormFactoryInterface $formFactory)

@@ -52,10 +52,15 @@ export class DataGridBestellungenComponent implements OnInit {
             searchPlaceholderText: 'Suchen',
         };
 
+        let currentDate = new Date();
+
+        let twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(currentDate.getDate() - 14);
+
         this.bestellungForm = this.fb.group({
             departments: [[], Validators.required],
             status: [[]],
-            datum: ['']
+            datum: [twoWeeksAgo]
         });
     }
 

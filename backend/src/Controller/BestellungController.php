@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/bestellung')]
+#[Route(path: '/api/bestellung')]
 class BestellungController extends BaseController
 {
     public function __construct(

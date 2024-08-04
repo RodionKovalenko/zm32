@@ -26,7 +26,7 @@ class Bestellung
     private int $status;
 
     #[ORM\Column(type: Types::STRING, length: 512, nullable: true)]
-    private string $amount;
+    private ?string $amount = null;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $description = null;
@@ -111,7 +111,7 @@ class Bestellung
         return $this;
     }
 
-    public function getAmount(): string
+    public function getAmount(): ?string
     {
         return $this->amount;
     }

@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/login')]
+#[Route(path: '/api/login')]
 class LoginController extends BaseController
 {
     public function __construct(
