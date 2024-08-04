@@ -19,6 +19,7 @@ enum DepartmentTyp: int
             self::EDELMETALL => 'Edelmetall',
             self::KUNSTSTOFF => 'Kunststoff',
             self::PROTHETIK => 'Prothetik',
+            self::ALLGEMEIN => 'Allgemein',
             self::CADCAM => 'CADCAM',
         };
     }
@@ -26,6 +27,8 @@ enum DepartmentTyp: int
     public static function getByName(string $name): self
     {
         switch ($name) {
+            case 'Allgemein':
+                return self::ALLGEMEIN;
             case 'Arbeitsvorbereitung':
                 return self::ARBEITSVORBEREITUNG;
             case 'Edelmetall':

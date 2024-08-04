@@ -104,17 +104,6 @@ class GenerateArtikelDataCommand extends Command
     {
         $artikelNamen = array(
             array(
-                "abteilungname" => "Abteilung",
-                "artikelname" => "Artikel",
-                "artikelzusatzinfo" => "Artikel-Zusatzinfo mit Material-Gruppe & Material-Untergruppe",
-                "herstellername" => "Hersteller",
-                "refnummer" => "REF-Nummer (Hersteller)",
-                "lieferantname" => "Lieferant",
-                "bestellnummer" => "Bestellnummer (Lieferant)",
-                "url" => "Weblink",
-                "val8" => ""
-            ),
-            array(
                 "abteilungname" => "Allgemein",
                 "artikelname" => "_Med-Comfort® Style",
                 "artikelzusatzinfo" => "PSA; ; Größe: XS - L; div. Farben, Nitrilhandschuhe, unsteril, puderfrei",
@@ -304,14 +293,13 @@ class GenerateArtikelDataCommand extends Command
 
     private function saveArtikelListe($artikelNamen)
     {
-
         $artikels = [];
         foreach ($artikelNamen as $artikelData) {
 
             $departmentname = $artikelData['abteilungname'];
             $department = $this->departmentRepository->findOneBy(['name' => $departmentname]);
 
-            if ($department === null) {
+            if ($department === null && DepartmentTyp::getByName($departmentname) !== null) {
                 $department = new Department();
                 $department->setName($departmentname)
                     ->setTyp(DepartmentTyp::getByName($departmentname)->value);
@@ -338,43 +326,47 @@ class GenerateArtikelDataCommand extends Command
             $this->artikelRepository->save($artikel);
 
             $herstellerName = trim($artikelData['herstellername']);
-            $hersteller = $this->herstellerRepository->findOneBy(['name' => $herstellerName]);
 
             $refnummer = trim($artikelData['refnummer']) ?? null;
             $lieferName = trim($artikelData['lieferantname']) ?? null;
             $bestellnummer = trim($artikelData['bestellnummer']) ?? null;
 
+            if (!empty($herstellerName)) {
+                $hersteller = $this->herstellerRepository->findOneBy(['name' => $herstellerName]);
 
-            if ($hersteller === null) {
-                $hersteller = new Hersteller();
-                $hersteller->setName($herstellerName);
+                if ($hersteller === null) {
+                    $hersteller = new Hersteller();
+                    $hersteller->setName($herstellerName);
 
-                $this->herstellerRepository->save($hersteller);
+                    $this->herstellerRepository->save($hersteller);
+                }
+
+                if ($hersteller !== null && $refnummer !== null) {
+                    $artikelToHersRefNummer = new ArtikelToHerstRefnummer();
+
+                    $artikelToHersRefNummer->setHersteller($hersteller)
+                        ->setRefnummer($refnummer)
+                        ->setArtikel($artikel);
+                }
             }
 
-            if ($hersteller !== null && $refnummer !== null) {
-                $artikelToHersRefNummer = new ArtikelToHerstRefnummer();
+            if (!empty($lieferName)) {
+                $lieferant = $this->LieferantRepository->findOneBy(['name' => $lieferName]);
 
-                $artikelToHersRefNummer->setHersteller($hersteller)
-                    ->setRefnummer($refnummer)
-                    ->setArtikel($artikel);
-            }
+                if ($lieferant === null) {
+                    $lieferant = new Lieferant();
+                    $lieferant->setName($lieferName);
+                    $this->lieferantRepository->save($lieferant);
+                }
 
-            $lieferant = $this->LieferantRepository->findOneBy(['name' => $lieferName]);
+                if ($lieferant !== null && $bestellnummer !== null) {
+                    $artikelToLieferantBestellnummer = new ArtikelToLieferBestellnummer();
+                    $artikelToLieferantBestellnummer->setLieferant($lieferant)
+                        ->setArtikel($artikel)
+                        ->setBestellnummer($bestellnummer);
 
-            if ($lieferant === null) {
-                $lieferant = new Lieferant();
-                $lieferant->setName($lieferName);
-                $this->lieferantRepository->save($lieferant);
-            }
-
-            if ($lieferant !== null && $bestellnummer !== null) {
-                $artikelToLieferantBestellnummer = new ArtikelToLieferBestellnummer();
-                $artikelToLieferantBestellnummer->setLieferant($lieferant)
-                    ->setArtikel($artikel)
-                    ->setBestellnummer($bestellnummer);
-
-                $artikel->addArtikelToLieferantBestellnummer(artikelToLieferantBestellnummer);
+                    $artikel->addArtikelToLieferantBestellnummer(artikelToLieferantBestellnummer);
+                }
             }
 
 
