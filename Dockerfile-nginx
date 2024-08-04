@@ -1,29 +1,48 @@
-# Use the official lightweight Nginx image
-FROM nginx:alpine
+# Stage 1: Build Angular app
+FROM node:latest AS builder
+
+# Install vim (optional)
+RUN apt-get update && apt-get install -y vim && apt-get clean
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package files
+COPY frontend/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application
+COPY frontend/ ./
+
+# Build the Angular app
+RUN npm run build --prod --output-path=dist/browser
 
 
-#RUN apt-get update && apt-get install -y vim nano && apt-get clean
-#RUN docker-php-ext-install pdo pdo_mysql
 
-# Copy the self-signed certificate and key
-COPY frontend/ssl/server.crt /etc/ssl/certs/server.crt
-COPY frontend/ssl/server.key /etc/ssl/private/server.key
+# Stage 2: Serve with Nginx
+FROM nginx:1.19-alpine
+
+# Remove default Nginx content
+RUN rm -rf /var/www/angular/dist/*
+
+# Copy built files from the builder stage
+COPY --from=builder /app/dist/browser /var/www/angular/dist
 
 # Copy custom Nginx configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY php-fpm.conf /usr/local/etc/php-fpm.conf
+# Copy SSL certificates
+COPY frontend/ssl/server.crt /etc/nginx/ssl/server.crt
+COPY frontend/ssl/server.key /etc/nginx/ssl/server.key
 
-RUN rm /etc/nginx/conf.d/default.conf
+# Set permissions for SSL certificates
+RUN chmod 600 /etc/nginx/ssl/server.key \
+    && chmod 644 /etc/nginx/ssl/server.crt
 
-COPY ./frontend/ssl /etc/nginx/ssl
-
-RUN chmod 600 /etc/nginx/ssl/server.key
-RUN chmod 644 /etc/nginx/ssl/server.crt
-
-# Optional: Copy any static assets if needed
-# COPY /path/to/static/assets /usr/share/nginx/html/assets
-
-# Expose HTTP and HTTPS ports (optional, since defined in docker-compose)
+# Expose ports
 EXPOSE 80
 EXPOSE 443
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]

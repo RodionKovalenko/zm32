@@ -126,6 +126,8 @@ mysql -u zm_32 -p
  curl -I -X GET -k https://iba.local.de:4433/login/66
  curl -I -X OPTIONS -k https://iba.local.de:4433/login/66
 
+ curl -I -X GET -k https://iba.local.de:4200/api/login/66
+ curl -I -X OPTIONS -k https://iba.local.de:4200/api/login/66
 
 
 // show all containers running in dev for frontend

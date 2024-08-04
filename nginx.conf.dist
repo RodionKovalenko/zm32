@@ -3,41 +3,43 @@ events {
 }
 
 http {
-    fastcgi_cache_path /etc/nginx/cache levels=1:2 keys_zone=FASTCGI_CACHE:100m inactive=60m;
-    fastcgi_cache_key "$scheme$request_method$host$request_uri";
-
-    server {
-        listen 80;
-        server_name localhost;
-
-        # Redirect all HTTP requests to HTTPS
-        return 301 https://$host$request_uri;
+    upstream php-fpm {
+        server symfony:9000;  # Assuming your Symfony container is named 'symfony'
     }
 
     server {
-        listen 443 ssl;  # Enable SSL on port 443
-        server_name localhost;
-        root /var/www/symfony/public;
+        listen 80;
+        server_name iba.local.de;
+        return 301 https://$host$request_uri;  # Redirect all HTTP traffic to HTTPS
+    }
+
+    server {
+        listen 443 ssl;
+        server_name iba.local.de;
 
         ssl_certificate /etc/nginx/ssl/server.crt;
         ssl_certificate_key /etc/nginx/ssl/server.key;
 
+        root /var/www/symfony/public;
+
         location / {
             try_files $uri $uri/ /index.php$is_args$args;
+
+            # CORS headers
+            if ($request_method = OPTIONS) {
+                add_header 'Access-Control-Allow-Origin' 'https://iba.local.de:4200';
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+                add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
+                return 204;
+            }
         }
 
         location ~ \.php$ {
             include fastcgi_params;
-            fastcgi_pass php-fpm:9000;
-            fastcgi_cache FASTCGI_CACHE;
-            fastcgi_cache_valid 200 60m;
-            fastcgi_cache_min_uses 1;
-            fastcgi_cache_use_stale error timeout updating invalid_header http_500 http_503;
+            fastcgi_pass php-fpm;
             fastcgi_split_path_info ^(.+\.php)(/.*)$;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             fastcgi_param PATH_INFO $fastcgi_path_info;
-            client_max_body_size 200M;
-            fastcgi_read_timeout 600;
         }
 
         location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
