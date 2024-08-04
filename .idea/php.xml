@@ -236,6 +236,7 @@
       <path value="$PROJECT_DIR$/backend/vendor/sebastian/lines-of-code" />
       <path value="$PROJECT_DIR$/backend/vendor/sebastian/recursion-context" />
       <path value="$PROJECT_DIR$/backend/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/backend/vendor/tecnickcom/tcpdf" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

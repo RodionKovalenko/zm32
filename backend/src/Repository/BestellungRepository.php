@@ -14,9 +14,12 @@ class BestellungRepository extends DefaultRepository
         parent::__construct($registry, Bestellung::class);
     }
 
-    public function getByDepartment(array $deparments)
+    public function getByDepartment(array $filterParams = [])
     {
         $isAllDepartment = false;
+        $deparments = $filterParams['departments'] ?? [];
+        $status = $filterParams['status'] ?? [];
+        $createdAfter = $filterParams['createdAfter'] ?? [];
 
         foreach ($deparments as $department) {
             if ($department->getTyp() === DepartmentTyp::ALLE->value) {
@@ -31,6 +34,15 @@ class BestellungRepository extends DefaultRepository
         if (!$isAllDepartment) {
             $q->where('d.id IN (:departmentId)')
                 ->setParameter('departmentId', $deparments);
+        }
+
+        if (!empty($status)) {
+            $q->andWhere('b.status IN (:status)')
+                ->setParameter('status', $status);
+        }
+        if (!empty($createdAfter)) {
+            $q->andWhere('b.datum >= :createdAfter')
+                ->setParameter('createdAfter', $createdAfter);
         }
 
         return $q->orderBy('d.name', Order::Ascending->value)

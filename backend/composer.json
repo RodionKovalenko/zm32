@@ -77,6 +77,7 @@
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
         "symfony/yaml": "*",
+        "tecnickcom/tcpdf": "^6.7",
         "thecodingmachine/safe": "^2.5",
         "twig/extra-bundle": "^3.4",
         "voku/anti-xss": "^4.1",

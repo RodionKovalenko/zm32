@@ -1,17 +1,10 @@
 <mat-toolbar color="custom-toolbar">
 
-    <!--    <div class="flex-container margin-bottom-30">-->
-    <!--        <div class="column-layout">-->
-    <!--            <label> Abteilung:</label>-->
-    <!--            <select class="custom-select-no-margin" [(ngModel)]="selectedDepartment" (ngModelChange)="onDepartmentChange($event)">-->
-    <!--                <option *ngFor="let item of departmentRecords" [ngValue]="item">{{item.name}}</option>-->
-    <!--            </select>-->
-    <!--        </div>-->
-    <!--    </div>-->
     <form [formGroup]="bestellungForm">
-        <!-- Abteilung -->
         <div class="flex-container margin-bottom-30">
-            <div class="column-layout">
+
+            <!-- Abteilung -->
+            <div class="column-layout form-group">
                 <label>Abteilung:</label>
                 <div class="dropdown-wrapper">
                     <ng-multiselect-dropdown class="custom-select-no-margin"
@@ -29,9 +22,50 @@
                     </ng-multiselect-dropdown>
                 </div>
             </div>
+
+            <!-- Status der Bestellung -->
+            <div class="column-layout form-group">
+                <label>Status:</label>
+                <div class="dropdown-wrapper">
+                    <ng-multiselect-dropdown class="custom-select-no-margin"
+                                             [placeholder]="'Status auswählen (optional)'"
+                                             [settings]="dropdownDepartmentSettings"
+                                             (onSelect)="onFilterSelectChange()"
+                                             (onDeSelect)="onFilterSelectChange()"
+                                             [data]="statusOptions"
+                                             formControlName="status">
+                        <ng-template let-item="item">
+                            <div class="custom-item">
+                                {{ item.name }}
+                            </div>
+                        </ng-template>
+                    </ng-multiselect-dropdown>
+                </div>
+            </div>
+
+            <!-- Datum der Bestellung -->
+            <div class="column-layout margin-top-50 form-group">
+                <div class="dropdown-wrapper">
+                    <mat-form-field appearance="fill" class="custom-mat-form-field">
+                        <mat-label>Datum auswählen</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="datum" (dateChange)="onFilterSelectChange()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
         </div>
+
     </form>
 
+
+    <mat-toolbar color="custom-toolbar">
+        <span class="spacer"></span>
+        <button mat-icon-button class="color-download" matTooltip="Exportieren" (click)="exportData()">
+            <mat-icon>download</mat-icon>
+        </button>
+    </mat-toolbar>
 
     <mat-toolbar color="custom-toolbar">
         <span class="spacer"></span>
@@ -129,6 +163,19 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Notizen</th>
             <td mat-cell *matCellDef="let element">
                 {{ element.description }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let element">
+                <mat-form-field>
+                    <mat-select [(ngModel)]="element.status" (selectionChange)="onBestellungStatusChange(element)">
+                        <mat-option *ngFor="let status of statusOptions" [value]="status.id">
+                            {{ status.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </td>
         </ng-container>
 

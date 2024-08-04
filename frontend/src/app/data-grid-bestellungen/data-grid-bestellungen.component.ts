@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { MatSort, Sort } from "@angular/material/sort";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatDialog } from "@angular/material/dialog";
-import { HttpService } from "../services/http.service";
-import { BestellungEditComponentComponent } from "./bestellung-edit-component/bestellung-edit-component.component";
-import { Bestellung } from "../models/Bestellung";
-import { IDropdownSettings } from "ng-multiselect-dropdown";
-import { FormBuilder, Validators } from "@angular/forms";
+import {Component, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
+import {MatSort, Sort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
+import {HttpService} from "../services/http.service";
+import {BestellungEditComponentComponent} from "./bestellung-edit-component/bestellung-edit-component.component";
+import {Bestellung} from "../models/Bestellung";
+import {IDropdownSettings} from "ng-multiselect-dropdown";
+import {FormBuilder, Validators} from "@angular/forms";
 import {LoginErrorComponent} from "../login/login-error/login-error.component";
+import {HttpParams} from "@angular/common/http";
 
 
 @Component({
@@ -20,7 +21,7 @@ export class DataGridBestellungenComponent implements OnInit {
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     displayedColumns: string[] = ['id', 'artikels', 'descriptionZusatz', 'lieferants', 'departments', 'herstellers',
-        'amount', 'preis', 'description', 'mitarbeiter', 'edit'];
+        'amount', 'preis', 'description', 'status', 'mitarbeiter', 'edit'];
     dataSource = new MatTableDataSource<Bestellung>([]);
 
     dropdownDepartmentSettings: IDropdownSettings = {};
@@ -29,7 +30,14 @@ export class DataGridBestellungenComponent implements OnInit {
     selectedDepartments: any[] = [];
     bestellungForm: any;
 
-    constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
+    statusOptions = [
+        {id: 1, name: 'Offen'},
+        {id: 2, name: 'Bestellt'},
+        {id: 3, name: 'Geliefert'},
+    ];
+
+    constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+    }
 
     ngOnInit() {
         this.loadDepartments();
@@ -46,6 +54,8 @@ export class DataGridBestellungenComponent implements OnInit {
 
         this.bestellungForm = this.fb.group({
             departments: [[], Validators.required],
+            status: [[]],
+            datum: ['']
         });
     }
 
@@ -76,19 +86,40 @@ export class DataGridBestellungenComponent implements OnInit {
         this.fetchDataByDepartmentId();
     }
 
-    fetchDataByDepartmentId(): void {
-        let departmentId = this.selectedDepartments.map((d: any) => d.id);
+    onFilterSelectChange() {
+        this.fetchDataByDepartmentId();
+    }
+
+    getQueryParams() {
+        let departmentId = this.bestellungForm.get('departments')?.value.map((d: any) => d.id);
+        let status = this.bestellungForm.get('status')?.value.map((d: any) => d.id);
+        let datum = this.bestellungForm.get('datum').value;
+
         if (departmentId.length === 0) {
             departmentId = this.originalDepartments.map((d: any) => d.id);
         }
 
-        let url = this.httpService.get_baseUrl() + '/bestellung/' + JSON.stringify(departmentId);
-        let bestellungRequest = this.httpService.get_httpclient().get(url);
+        let params = new HttpParams();
+        params = params.append('departments', JSON.stringify(departmentId));
 
-        bestellungRequest.subscribe((response: any) => {
-            this.dataSource = new MatTableDataSource<Bestellung>(response.data);
-            this.cdr.detectChanges(); // Manually trigger change detection
-        });
+        if (status.length !== 0) {
+            params = params.append('status', JSON.stringify(status));
+        }
+        if (datum instanceof Date) {
+            params = params.append('createdAfter', datum.toISOString());
+        }
+
+        return params;
+    }
+
+    fetchDataByDepartmentId(): void {
+        let params = this.getQueryParams();
+
+        this.httpService.get_httpclient().get(`${this.httpService.get_baseUrl()}/bestellung/get_bestellungen`, {params})
+            .subscribe((response: any) => {
+                this.dataSource = new MatTableDataSource<Bestellung>(response.data);
+                this.cdr.detectChanges(); // Manually trigger change detection
+            });
     }
 
     sortData(sort: Sort) {
@@ -141,7 +172,7 @@ export class DataGridBestellungenComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-              this.fetchDataByDepartmentId();
+                this.fetchDataByDepartmentId();
             }
         });
     }
@@ -178,9 +209,74 @@ export class DataGridBestellungenComponent implements OnInit {
 
     getArtikelDescription(element: any) {
         if (element && element.artikels && element.artikels.length > 0) {
-           return element.artikels[0]?.description;
+            return element.artikels[0]?.description;
         }
         return '';
+    }
+
+    onBestellungStatusChange(element: any) {
+        let url = this.httpService.get_baseUrl() + '/bestellung/update_status/' + element.id;
+        let formValue = {
+            status: element.status
+        };
+
+        this.httpService.get_httpclient().post(url, formValue).subscribe({
+            next: (response: any) => {
+                if (response && response.success && Boolean(response?.success)) {
+                } else {
+                    this.dialog.open(LoginErrorComponent, {
+                        width: '450px',
+                        height: '150px',
+                        data: {
+                            title: response?.message
+                        }
+                    });
+                }
+            },
+            error: (err) => {
+                console.log(err);
+                this.dialog.open(LoginErrorComponent, {
+                    width: '450px',
+                    height: '150px',
+                    data: {
+                        title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
+                    }
+                });
+            }
+        });
+    }
+
+    exportData() {
+        let params = this.getQueryParams();
+
+        this.httpService.get_httpclient()
+            .get(`${this.httpService.get_baseUrl()}/bestellung/download_bestellungen`, {
+                responseType: 'blob',
+                params: params
+            })
+            .subscribe({
+                next: (response: any) => {
+                    const url = window.URL.createObjectURL(response);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    let date = new Date();
+                    let dateString = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+
+                    a.download = 'zm32_bestellungen' + dateString + '.pdf';
+                    a.click();
+                    window.URL.revokeObjectURL(url); // Clean up the URL object
+                },
+                error: (err) => {
+                    console.log(err);
+                    this.dialog.open(LoginErrorComponent, {
+                        width: '450px',
+                        height: '150px',
+                        data: {
+                            title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
+                        }
+                    });
+                }
+            });
     }
 }
 

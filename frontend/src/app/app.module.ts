@@ -38,6 +38,10 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {LieferantEditComponentComponent} from "./data-grid-artikel/lieferant-edit-component/lieferant-edit-component.component";
 import {HerstellerEditComponentComponent} from "./data-grid-artikel/hersteller-edit-component/hersteller-edit-component.component";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import {MatCheckbox} from "@angular/material/checkbox";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {MatDatepicker, MatDatepickerInput, MatDatepickerModule, MatDatepickerToggle} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 @NgModule({
     declarations: [
@@ -84,6 +88,16 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
         MatTooltip,
         ReactiveFormsModule,
         NgMultiSelectDropDownModule.forRoot(),
+        MatCheckbox,
+        MatSelect,
+        MatOption,
+        MatDatepickerToggle,
+        MatDatepicker,
+        MatDatepickerInput,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatFormFieldModule,
+        MatInputModule
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),
