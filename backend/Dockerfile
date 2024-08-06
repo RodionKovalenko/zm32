@@ -59,6 +59,9 @@ RUN mkdir -p /var/www/symfony/var/Migrations && \
 # Ensure necessary directories have correct permissions
 RUN chown -R www-data:www-data /var/www/symfony/var /var/www/symfony/vendor
 
+# Copy PHP-FPM configuration
+COPY fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
 # Copy and fix line endings for entrypoint and wait-for-it scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY wait-for-it.sh /usr/local/bin/wait-for-it

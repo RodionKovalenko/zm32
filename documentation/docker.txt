@@ -138,3 +138,8 @@ npm run ng generate component data-grid-artikel/hersteller-edit-component
 
 // bash in symfony in docker
  docker exec -it zm32-symfony-1 sh
+//insure that php-fpm is running
+ php-fpm -F
+
+
+ docker exec -it zm32-symfony-1 curl -I http://localhost:9001

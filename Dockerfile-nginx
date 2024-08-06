@@ -27,6 +27,8 @@ FROM nginx:1.19-alpine
 # Remove default Nginx content
 RUN rm -rf /var/www/angular/dist/*
 
+RUN mkdir -p /var/www/symfony/public
+
 # Copy built files from the builder stage
 COPY --from=builder /app/dist/browser /var/www/angular/dist
 

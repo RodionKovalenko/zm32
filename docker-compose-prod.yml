@@ -24,7 +24,7 @@ services:
         condition: service_healthy
     entrypoint: /usr/local/bin/entrypoint.sh
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:9000", "pidof", "php-fpm"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -62,6 +62,7 @@ services:
       - ./php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./frontend/ssl:/etc/nginx/ssl
       - angular_dist:/var/www/angular/dist  # Angular build output
+      - angular_dist:/var/www/symfony/public
     networks:
       - symfony-angular-network
     depends_on:

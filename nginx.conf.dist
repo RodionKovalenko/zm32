@@ -14,7 +14,7 @@ http {
     }
 
     server {
-        listen 443 ssl;
+        listen 443 ssl http2;
         server_name iba.local.de;
 
         ssl_certificate /etc/nginx/ssl/server.crt;
@@ -22,17 +22,18 @@ http {
 
         root /var/www/symfony/public;
 
-        location / {
+        location /api/ {
             try_files $uri $uri/ /index.php$is_args$args;
 
             # CORS headers
             if ($request_method = OPTIONS) {
-                add_header 'Access-Control-Allow-Origin' 'https://iba.local.de:4200';
+                add_header 'Access-Control-Allow-Origin' 'https://iba.local.de';
                 add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
                 add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
                 return 204;
             }
         }
+
 
         location ~ \.php$ {
             include fastcgi_params;
