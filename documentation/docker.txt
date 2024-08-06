@@ -147,3 +147,7 @@ npm run ng generate component data-grid-artikel/hersteller-edit-component
 
 
  docker run --rm -it --name certbot -v "${PWD}/letsencrypt/certbot:/etc/letsencrypt" -v "${PWD}/angular_dist:/var/www/html" certbot/certbot certonly --webroot -w /var/www/html -d iba.local.de
+
+
+// install ssl certificates for local hosts 
+ Open certmgr.msc.
