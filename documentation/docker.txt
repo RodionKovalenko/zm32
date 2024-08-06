@@ -143,3 +143,7 @@ npm run ng generate component data-grid-artikel/hersteller-edit-component
 
  docker exec -it zm32-symfony-1 php-fpm -F
  docker exec -it zm32-symfony-1 curl -I http://localhost:9001
+
+
+
+ docker run --rm -it --name certbot -v "${PWD}/letsencrypt/certbot:/etc/letsencrypt" -v "${PWD}/angular_dist:/var/www/html" certbot/certbot certonly --webroot -w /var/www/html -d iba.local.de

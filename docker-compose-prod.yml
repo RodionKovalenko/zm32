@@ -61,12 +61,27 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./frontend/ssl:/etc/nginx/ssl
-      - angular_dist:/var/www/angular/dist  # Angular build output
-      - angular_dist:/var/www/symfony/public
+      - angular_dist:/var/www/symfony/public # Angular build output
+      - ./letsencrypt/certbot:/etc/letsencrypt
     networks:
       - symfony-angular-network
     depends_on:
       - symfony
+  
+  # certbot:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-letsencrypt
+  #   container_name: certbot
+  #   volumes:
+  #     - ./letsencrypt/certbot:/etc/letsencrypt
+  #     - ./letsencrypt-entrypoint.sh:/usr/local/bin/letsencrypt-entrypoint.sh
+  #     - angular_dist:/var/www/html   # Correct volume for challenge responses
+  #   entrypoint: /usr/local/bin/renewal.sh
+  #   networks:
+  #     - symfony-angular-network
+  #   depends_on:
+  #     - nginx
 
 networks:
   symfony-angular-network:

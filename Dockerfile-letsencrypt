@@ -1,0 +1,10 @@
+FROM certbot/certbot
+
+# Copy the renewal script
+COPY letsencrypt_entrypoint.sh /usr/local/bin/renewal.sh
+
+# Ensure the renewal script is executable
+RUN chmod +x /usr/local/bin/renewal.sh
+
+# Run the renewal script as the default command
+CMD ["/usr/local/bin/renewal.sh"]

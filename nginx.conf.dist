@@ -21,7 +21,19 @@ http {
         ssl_certificate_key /etc/nginx/ssl/server.key;
 
         root /var/www/symfony/public;
+        index index.html index.htm;
+        index index.html;
+        include /etc/nginx/mime.types;
 
+        # Static file handling
+        location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            try_files $uri $uri/ =404;
+            expires 30d;
+            access_log off;
+            # No need to set Content-Type here; it's handled by MIME types
+        }
+
+        # Handle API requests
         location /api/ {
             try_files $uri $uri/ /index.php$is_args$args;
 
@@ -34,18 +46,13 @@ http {
             }
         }
 
-
+        # PHP handling
         location ~ \.php$ {
             include fastcgi_params;
             fastcgi_pass php-fpm;
             fastcgi_split_path_info ^(.+\.php)(/.*)$;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             fastcgi_param PATH_INFO $fastcgi_path_info;
-        }
-
-        location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-            expires 30d;
-            access_log off;
         }
 
         error_log /var/log/nginx/symfony_error.log;
