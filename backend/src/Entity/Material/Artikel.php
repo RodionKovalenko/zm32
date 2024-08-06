@@ -77,6 +77,7 @@ class Artikel
         $this->departments = new ArrayCollection();
         $this->herstellers = new ArrayCollection();
         $this->artikelToLieferantBestellnummers = new ArrayCollection();
+        $this->artikelToHerstRefnummers = new ArrayCollection();
     }
 
     #[ORM\Table(name: 'artikel_to_departments', indexes: [new ORM\Index(name: 'artikel_department_idx', columns: ['artikel_id', 'department_id'])])]
