@@ -12,4 +12,4 @@ docker-compose -f docker-compose-prod.yml --env-file .env.local up -d
 Start-Sleep -Seconds 10
 
 # Open the URL in the default browser
-Start-Process "https://iba.local.de:4200"
+Start-Process "https://iba.local.de"
