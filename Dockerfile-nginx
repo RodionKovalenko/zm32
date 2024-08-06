@@ -29,6 +29,16 @@ RUN rm -rf /var/www/angular/dist/*
 
 RUN mkdir -p /var/www/symfony/public
 
+# Copy Angular build output to a temporary directory
+COPY --from=builder /app/dist/browser /tmp/angular-build
+
+# Copy custom file merging script
+COPY merge-files.sh /usr/local/bin/merge-files.sh
+RUN chmod +x /usr/local/bin/merge-files.sh
+
+# Run the file merging script
+RUN /usr/local/bin/merge-files.sh
+
 # Copy built files from the builder stage
 COPY --from=builder /app/dist/browser /var/www/angular/dist
 
