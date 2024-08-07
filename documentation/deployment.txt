@@ -34,7 +34,45 @@ Application Directory:
 Ensure the target directory (~/app in the example) exists on your server and is writable by the user you are SSHing in as.
 
 
+install dns proxy server
+https://sourceforge.net/projects/acrylic/files/Acrylic/2.2.0/Acrylic.exe/download
 
 
+On Windows
+
+   1.  Using the Services Management Console:
+        Press Win + R to open the Run dialog.
+        Type services.msc and press Enter to open the Services management console.
+        In the list of services, locate Acrylic DNS Proxy.
+        Right-click on Acrylic DNS Proxy and select Restart.
+
+OR 
+    2. Using Command Prompt:
+        Open Command Prompt as an administrator. You can do this by searching for cmd, right-clicking on Command Prompt, and selecting Run as administrator.
+        Run the following commands to restart the service:
+
+        cmd
+
+net stop AcrylicDNSProxy
+net start AcrylicDNSProxy
 
 
+For Windows Firewall:
+1. Open Windows Defender Firewall Settings
+
+    Press Win + R, type control, and press Enter to open the Control Panel.
+    Go to System and Security and then click on Windows Defender Firewall.
+
+2. Allow an App or Feature Through Windows Defender Firewall
+
+    Click on Allow an app or feature through Windows Defender Firewall from the left-hand menu.
+    Click on Change settings (you may need to provide administrator permissions).
+    Look for any DNS server software or services listed and ensure that it is allowed. If your local DNS server application is not listed, you may need to add it manually.
+
+
+#test dns connection: 
+nslookup iba.local.de
+
+
+#clear dns cache
+ipconfig /flushdns
