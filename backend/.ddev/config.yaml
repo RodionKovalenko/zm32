@@ -16,6 +16,10 @@ nodejs_version: "18"
 hooks:
     post-start:
         - exec: mysql -uroot -proot -hdb -e "CREATE DATABASE IF NOT EXISTS db_test; GRANT ALL ON db_test.* TO 'db'@'%';"
+
+upload_dirs:
+  - /var/www/html/uploads
+
 # Key features of ddev's config.yaml:
 
 # name: <projectname> # Name of the project, automatically provides
