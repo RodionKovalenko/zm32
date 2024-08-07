@@ -32,6 +32,15 @@
             </div>
         </div>
 
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Zusatzinfo zum Artikel  - </mat-label>
+                <textarea matInput id="descriptionZusatz" formControlName="descriptionZusatz" #textarea rows="1"></textarea>
+                <mat-label> <a [href]="safeUrl" target="_blank" rel="noopener noreferrer">Link zum Artikel</a> </mat-label>
+            </mat-form-field>
+
+        </div>
+
         <!-- Abteilung -->
         <div class="dropdown-section">
             <label>Abteilung:</label>
@@ -50,9 +59,9 @@
                     </ng-template>
                 </ng-multiselect-dropdown>
 
-<!--                <mat-error *ngIf="bestellungForm.get('departments').invalid && bestellungForm.get('departments').touched">-->
-<!--                    Abteilung ist erforderlich.-->
-<!--                </mat-error>-->
+                <!--                <mat-error *ngIf="bestellungForm.get('departments').invalid && bestellungForm.get('departments').touched">-->
+                <!--                    Abteilung ist erforderlich.-->
+                <!--                </mat-error>-->
             </div>
         </div>
 
@@ -71,14 +80,14 @@
                         </div>
                     </ng-template>
                 </ng-multiselect-dropdown>
-<!--                <button *ngIf="isOnlyOneLieferantSelected()"-->
-<!--                        mat-icon-button class="color-confirm"-->
-<!--                        matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">-->
-<!--                    <mat-icon>edit</mat-icon>-->
-<!--                </button>-->
-<!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">-->
-<!--                    <mat-icon>add</mat-icon>-->
-<!--                </button>-->
+                <!--                <button *ngIf="isOnlyOneLieferantSelected()"-->
+                <!--                        mat-icon-button class="color-confirm"-->
+                <!--                        matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">-->
+                <!--                    <mat-icon>edit</mat-icon>-->
+                <!--                </button>-->
+                <!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">-->
+                <!--                    <mat-icon>add</mat-icon>-->
+                <!--                </button>-->
             </div>
         </div>
 
@@ -106,14 +115,14 @@
                     </ng-template>
                 </ng-multiselect-dropdown>
 
-<!--                <button *ngIf="isOnlyOneHerstellerSelected()"-->
-<!--                        mat-icon-button class="color-confirm"-->
-<!--                        matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">-->
-<!--                    <mat-icon>edit</mat-icon>-->
-<!--                </button>-->
-<!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">-->
-<!--                    <mat-icon>add</mat-icon>-->
-<!--                </button>-->
+                <!--                <button *ngIf="isOnlyOneHerstellerSelected()"-->
+                <!--                        mat-icon-button class="color-confirm"-->
+                <!--                        matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">-->
+                <!--                    <mat-icon>edit</mat-icon>-->
+                <!--                </button>-->
+                <!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">-->
+                <!--                    <mat-icon>add</mat-icon>-->
+                <!--                </button>-->
             </div>
         </div>
 
@@ -126,15 +135,12 @@
 
         <div>
             <mat-form-field appearance="fill">
-                <mat-label>Zusatzinfo zum Artikel</mat-label>
-                <input matInput id="descriptionZusatz" formControlName="descriptionZusatz">
-            </mat-form-field>
-        </div>
-
-        <div>
-            <mat-form-field appearance="fill">
                 <mat-label>Anzahl</mat-label>
                 <input matInput id="amount" formControlName="amount">
+
+                <mat-error *ngIf="bestellungForm.get('amount').invalid && bestellungForm.get('amount').touched">
+                    Anzahl ist erforderlich.
+                </mat-error>
             </mat-form-field>
         </div>
 

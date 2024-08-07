@@ -10,6 +10,7 @@ import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {FormBuilder, Validators} from "@angular/forms";
 import {LoginErrorComponent} from "../login/login-error/login-error.component";
 import {HttpParams} from "@angular/common/http";
+import {dateRangeValidator} from "../data-adapters/date.validator";
 
 
 @Component({
@@ -58,10 +59,11 @@ export class DataGridBestellungenComponent implements OnInit {
         twoWeeksAgo.setDate(currentDate.getDate() - 14);
 
         this.bestellungForm = this.fb.group({
-            departments: [[], Validators.required],
+            departments: [[]],
             status: [[]],
-            datum: [twoWeeksAgo]
-        });
+            datum: [twoWeeksAgo],
+            datumBis: ['']
+        }, { validator: dateRangeValidator()});
     }
 
     loadDepartments() {
@@ -99,6 +101,7 @@ export class DataGridBestellungenComponent implements OnInit {
         let departmentId = this.bestellungForm.get('departments')?.value.map((d: any) => d.id);
         let status = this.bestellungForm.get('status')?.value.map((d: any) => d.id);
         let datum = this.bestellungForm.get('datum').value;
+        let datumBis = this.bestellungForm.get('datumBis').value;
 
         if (departmentId.length === 0) {
             departmentId = this.originalDepartments.map((d: any) => d.id);
@@ -111,7 +114,12 @@ export class DataGridBestellungenComponent implements OnInit {
             params = params.append('status', JSON.stringify(status));
         }
         if (datum instanceof Date) {
+            datum.setHours(0, 0, 0, 0);
             params = params.append('createdAfter', datum.toISOString());
+        }
+        if (datumBis instanceof Date) {
+            datumBis.setHours(23, 59, 59, 999);
+            params = params.append('datumBis', datumBis.toISOString());
         }
 
         return params;

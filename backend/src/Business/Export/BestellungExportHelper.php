@@ -64,7 +64,7 @@ class BestellungExportHelper
             $html .= '<tr><td><strong>Status:</strong></td><td>' . BestellungStatus::getStatusString($bestellung->getStatus()) . '</td></tr>';
             $html .= '<tr><td><strong>Preis:</strong></td><td>' . $bestellung->getPreis() . '</td></tr>';
             $html .= '<tr><td><strong>Menge:</strong></td><td>' . $bestellung->getAmount() . '</td></tr>';
-            $html .= '<tr><td><strong>Bestellt von:</strong></td><td>' . $bestellung->getMitarbeiter()->getNachname() . ' ' . $bestellung->getMitarbeiter()->getVorname() . '</td></tr>';
+            $html .= '<tr><td><strong>Bestellt von:</strong></td><td>' . $bestellung->getMitarbeiter()->getVorname() . ' ' . $bestellung->getMitarbeiter()->getNachname() . '</td></tr>';
             $html .= '</tbody></table>';
 
             // Add Departments, Lieferants, and Herstellers

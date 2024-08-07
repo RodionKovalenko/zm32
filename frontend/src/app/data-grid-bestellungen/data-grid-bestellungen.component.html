@@ -43,17 +43,38 @@
                 </div>
             </div>
 
-            <!-- Datum der Bestellung -->
+            <!-- Datum von der Bestellung -->
             <div class="column-layout margin-top-50 form-group">
                 <div class="dropdown-wrapper">
                     <mat-form-field appearance="fill" class="custom-mat-form-field">
-                        <mat-label>Datum auswählen</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="datum" (dateChange)="onFilterSelectChange()">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-label>Von Datum</mat-label>
+                        <input matInput [matDatepicker]="pickerFrom" formControlName="datum" (dateChange)="onFilterSelectChange()">
+                        <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerFrom></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>
+
+            <!-- Datum bist der Bestellung -->
+            <div class="column-layout margin-top-50 form-group">
+                <div class="dropdown-wrapper">
+                    <mat-form-field appearance="fill" class="custom-mat-form-field">
+                        <mat-label>Bis Datum</mat-label>
+                        <input matInput [matDatepicker]="pickerTo" formControlName="datumBis" (dateChange)="onFilterSelectChange()">
+                        <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerTo></mat-datepicker>
+
+                    </mat-form-field>
+
+                    <span class="mat-error">
+                        <mat-error *ngIf="bestellungForm.hasError('dateRangeInvalid')">
+                            Das Enddatum muss größer als das Anfangsdatum sein.
+                        </mat-error>
+                    </span>
+                </div>
+
+            </div>
+
 
         </div>
 

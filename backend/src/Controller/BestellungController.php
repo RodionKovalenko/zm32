@@ -36,6 +36,7 @@ class BestellungController extends BaseController
         $departmentIds = $request->get('departments') ? json_decode($request->get('departments')) : [DepartmentTyp::ALLE];
         $status = $request->get('status') ? json_decode($request->get('status')) : [];
         $createdAfter = $request->get('createdAfter') ?? [];
+        $datumBis = $request->get('datumBis') ?? [];
 
         $filterParams = [];
 
@@ -48,6 +49,9 @@ class BestellungController extends BaseController
         }
         if (!empty($createdAfter)) {
             $filterParams['createdAfter'] = $createdAfter;
+        }
+        if (!empty($datumBis)) {
+            $filterParams['datumBis'] = $datumBis;
         }
 
         $bestellungen = $this->bestellungRepository->getByDepartment($filterParams);

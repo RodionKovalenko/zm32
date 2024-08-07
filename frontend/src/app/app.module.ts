@@ -41,7 +41,9 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerModule, MatDatepickerToggle} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
+import {DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule} from "@angular/material/core";
+import {MY_DATE_FORMATS} from "./models/DateFormat";
+import {CustomDateAdapter} from "./data-adapters/date.adapter";
 
 @NgModule({
     declarations: [
@@ -96,8 +98,7 @@ import {MatNativeDateModule} from "@angular/material/core";
         MatDatepickerInput,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatFormFieldModule,
-        MatInputModule
+        MatFormFieldModule
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),
@@ -106,7 +107,9 @@ import {MatNativeDateModule} from "@angular/material/core";
             provide: HTTP_INTERCEPTORS,
             useClass: HttpAppInterceptor,
             multi: true
-        }
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+        { provide: DateAdapter, useClass: CustomDateAdapter },
     ],
     bootstrap: [AppComponent],
     exports: [

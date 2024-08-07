@@ -7,10 +7,12 @@ import {HttpClient} from "@angular/common/http";
 export class HttpService {
     //private baseUrl = 'https://iba-backend.ddev.site/api';
     //private baseUrl = 'https://localhost:4433' ;
-    private baseUrl = 'https://iba.local.de/api';
+    baseUrl = 'https://iba.local.de/api';
     loginURL = `${this.baseUrl}/login`;
 
     constructor(private httpClient: HttpClient) {
+        this.baseUrl = window.location.href.split('#')[0] + 'api';
+        this.loginURL = `${this.baseUrl}/login`;
     }
 
     get_httpclient() {

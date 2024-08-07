@@ -20,6 +20,7 @@ class BestellungRepository extends DefaultRepository
         $deparments = $filterParams['departments'] ?? [];
         $status = $filterParams['status'] ?? [];
         $createdAfter = $filterParams['createdAfter'] ?? [];
+        $datumBis = $filterParams['datumBis'] ?? [];
 
         foreach ($deparments as $department) {
             if ($department->getTyp() === DepartmentTyp::ALLE->value) {
@@ -41,8 +42,20 @@ class BestellungRepository extends DefaultRepository
                 ->setParameter('status', $status);
         }
         if (!empty($createdAfter)) {
+            if (!($createdAfter instanceof \DateTimeInterface)) {
+                $createdAfter = new \DateTime($createdAfter);
+                $createdAfter->setTime(0, 0);
+            }
             $q->andWhere('b.datum >= :createdAfter')
                 ->setParameter('createdAfter', $createdAfter);
+        }
+        if (!empty($datumBis)) {
+            if (!($datumBis instanceof \DateTimeInterface)) {
+                $datumBis = new \DateTime($datumBis);
+                $datumBis->setTime(23, 59, 59);
+            }
+            $q->andWhere('b.datum <= :datumBis')
+                ->setParameter('datumBis', $datumBis);
         }
 
         return $q->orderBy('d.name', Order::Ascending->value)

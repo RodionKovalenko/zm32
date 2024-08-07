@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
@@ -10,13 +10,16 @@ import {Hersteller} from "../../models/Hersteller";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {Artikel} from "../../models/Artikel";
 import {DepartmentData} from "../../models/Department";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
     selector: 'app-bestellung-edit-component',
     templateUrl: './bestellung-edit-component.component.html',
     styleUrl: './bestellung-edit-component.component.css'
 })
-export class BestellungEditComponentComponent implements OnInit {
+export class BestellungEditComponentComponent implements OnInit, AfterViewChecked  {
+    @ViewChild('textarea', { static: false }) textarea: ElementRef | undefined;
+
     herstellers: any[] = [];
     lieferants: any[] = [];
     artikels: any[] = [];
@@ -28,11 +31,13 @@ export class BestellungEditComponentComponent implements OnInit {
     dropdownDepartmentSettings: IDropdownSettings = {};
     singleSelectSettings: IDropdownSettings = {};
     bestellungForm: any;
+    safeUrl: any;
 
     constructor(private httpService: HttpService,
                 public dialogRef: MatDialogRef<BestellungEditComponentComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: Bestellung,
                 private fb: FormBuilder,
+                private sanitizer: DomSanitizer,
                 public dialog: MatDialog) {
     }
 
@@ -69,7 +74,7 @@ export class BestellungEditComponentComponent implements OnInit {
         this.bestellungForm = this.fb.group({
             id: [this.data?.id || 0],
             description: [this.data?.description || ''],
-            amount: [this.data?.amount || ''],
+            amount: [this.data?.amount || '', Validators.required],
             preis: [this.data?.preis || '', this.floatValidator],
             artikels: [this.data?.artikels || [], Validators.required],
             departments: [this.data?.departments || [], Validators.required],
@@ -80,6 +85,7 @@ export class BestellungEditComponentComponent implements OnInit {
             bestellnummer: [{value: '', disabled: true}],
             refnummer: [{value: '', disabled: true}],
             descriptionZusatz: [{value: '', disabled: true}],
+            url: [{value: '', disabled: true}],
         });
 
         if (this.data?.artikels) {
@@ -105,6 +111,10 @@ export class BestellungEditComponentComponent implements OnInit {
         if (this.data?.herstellers) {
             this.data.herstellers.forEach(st => this.addHerstellers(st));
         }
+
+        this.bestellungForm.get('url')?.valueChanges.subscribe((value: any) => {
+            this.safeUrl = value ? this.sanitizer.bypassSecurityTrustUrl(value) : null;
+        });
 
         this.markAllAsTouched();
     }
@@ -354,9 +364,9 @@ export class BestellungEditComponentComponent implements OnInit {
 
                 this.bestellungForm.patchValue({
                     descriptionZusatz: data[0].description,
+                    url: data[0].url,
                 });
 
-                console.log(data[0]);
                 if (data[0] && data[0].artikelToLieferantBestellnummers && data[0].artikelToLieferantBestellnummers.length > 0) {
                     this.bestellungForm.patchValue({
                         bestellnummer: data[0].artikelToLieferantBestellnummers[0].bestellnummer,
@@ -427,5 +437,17 @@ export class BestellungEditComponentComponent implements OnInit {
 
     updateHerstellerDropdown(data: Hersteller[]) {
         this.bestellungForm.get('herstellers')?.setValue(data);
+    }
+
+    ngAfterViewChecked(): void {
+        this.adjustTextareaHeight();
+    }
+
+    adjustTextareaHeight(): void {
+        if (this.textarea) {
+            const textareaElement = this.textarea.nativeElement as HTMLTextAreaElement;
+            textareaElement.style.height = 'auto'; // Reset height
+            textareaElement.style.height = `${textareaElement.scrollHeight}px`; // Set height to scrollHeight
+        }
     }
 }

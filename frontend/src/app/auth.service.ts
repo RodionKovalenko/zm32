@@ -6,6 +6,7 @@ import {HttpService} from "./services/http.service";
 import {Router} from "@angular/router";
 import {LoginErrorComponent} from "./login/login-error/login-error.component";
 import {MatDialog} from "@angular/material/dialog";
+import {UserService} from "./services/user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class AuthService {
 
     private loggedIn = new BehaviorSubject<boolean>(false);
 
-    constructor(private httpService: HttpService, private router: Router, private dialog: MatDialog) {
+    constructor(private httpService: HttpService, private router: Router, private dialog: MatDialog, private userService: UserService) {
     }
 
     login(mitarbeiterId: Number): Observable<boolean> {
@@ -30,6 +31,8 @@ export class AuthService {
                     // this.router.navigate(['/app-bestelliste']);
                     this.router.navigate(['/app-navigation-menu']);
                 });
+
+                this.userService.setUser(response.data[0]);
 
                 isLoggedIn = true;
                 this.loggedIn.next(true);

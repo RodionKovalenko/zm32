@@ -66,8 +66,6 @@ export class HerstellerEditComponentComponent implements OnInit {
         let url = this.httpService.get_baseUrl() + '/hersteller/save';
 
         if (this.manufacturerForm.valid) {
-            console.log(this.manufacturerForm.value);
-
             this.httpService.get_httpclient().post(url, this.manufacturerForm.value).subscribe({
                 next: (response: any) => {
                     if (response && response.success && Boolean(response?.success)) {

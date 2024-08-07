@@ -1,11 +1,23 @@
 <div class="container">
-    <div class="background">
-        <div class="triangle-1"></div>
-        <div class="triangle-2"></div>
-    </div>
     <div class="login-form">
         <h1>PIN</h1>
-        <input type="password" id="personalnummer" placeholder="Bitte geben Sie die Personalnummer ein"  [(ngModel)]="mitarbeiterId">
+
+        <mat-form-field appearance="fill">
+            <input matInput type="password" id="personalnummer" placeholder="Bitte geben Sie die PIN ein"
+                   [(ngModel)]="mitarbeiterId" (keyup)="onKeyup($event)" (tap)="onLoginClick()" (input)="onLoginChange($event)">
+            <button mat-icon-button matSuffix *ngIf="mitarbeiterId" (click)="clearInput()">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <div class="number-pad">
+            <button *ngFor="let number of numbers" (click)="onNumberClick(number)" (keydown)="preventEnter($event)">
+                <span *ngIf="number !== 10"> {{ number }} </span>
+                <!-- Add an icon next to number 0 -->
+                <mat-icon *ngIf="number === 10"> login </mat-icon>
+            </button>
+        </div>
+
         <button (click)="onLoginClick()" id="login-button"><h3> Verbinden</h3></button>
     </div>
 </div>
