@@ -11,7 +11,7 @@ export class HttpService {
     loginURL = `${this.baseUrl}/login`;
 
     constructor(private httpClient: HttpClient) {
-        this.baseUrl = window.location.href.split('/#')[0] + ':4444/api';
+        this.baseUrl = window.location.href.split('/#')[0] + '/api';
         this.loginURL = `${this.baseUrl}/login`;
     }
 
