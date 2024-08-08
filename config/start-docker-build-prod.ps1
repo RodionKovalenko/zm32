@@ -6,7 +6,7 @@
 # Start Docker Compose
 #docker-compose -f docker-compose-prod.yml --env-file .env.local build --no-cache
 docker-compose -f docker-compose-prod.yml --env-file .env.local build 
-docker-compose -f docker-compose-prod.yml --env-file .env.local up -d
+docker-compose -f docker-compose-prod.yml --env-file .env.local up
 
 # Wait a few seconds
 Start-Sleep -Seconds 10

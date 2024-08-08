@@ -1,28 +1,43 @@
-# Stage 1: Build Angular app
-FROM node:latest AS builder
+FROM node:18 AS builder
 
-# Install vim (optional)
-RUN apt-get update && apt-get install -y vim && apt-get clean
+USER root
 
 # Set the working directory
 WORKDIR /app
 
-# Copy package files
+# Install vim (optional)
+RUN apt-get update && apt-get install -y vim && apt-get clean
+
+# Copy package.json and package-lock.json
 COPY frontend/package*.json ./
 
-# Install dependencies
-RUN npm install
+RUN rm -rf node_modules && npm cache clean --force
+
+# Update npm to the latest version within 10.x range
+RUN npm install -g npm@latest
+
+# Install project dependencies using npm ci if package-lock.json exists,
+# otherwise fall back to npm install with --legacy-peer-deps
+RUN if [ -f package-lock.json ]; then npm ci; else npm install --legacy-peer-deps; fi
+
+# Install Angular CLI globally
+RUN npm install -g @angular/cli@18.0.2
 
 # Copy the rest of the application
 COPY frontend/ ./
+
+COPY frontend/ssl/server.crt /etc/nginx/ssl/server.crt
+COPY frontend/ssl/server.key /etc/nginx/ssl/server.key
 
 # Build the Angular app
 RUN npm run build --prod --output-path=dist/browser
 
 
-
 # Stage 2: Serve with Nginx
 FROM nginx:1.19-alpine
+
+# Install system dependencies and tools
+RUN apk update && apk add --no-cache dos2unix
 
 # Remove default Nginx content
 RUN rm -rf /var/www/angular/dist/*
@@ -33,11 +48,15 @@ RUN mkdir -p /var/www/symfony/public
 COPY --from=builder /app/dist/browser /tmp/angular-build
 
 # Copy custom file merging script
-COPY merge-files.sh /usr/local/bin/merge-files.sh
+COPY frontend/merge-files.sh /usr/local/bin/merge-files.sh
+# Add debugging steps to check file presence
+RUN ls -la /usr/local/bin
+
 RUN chmod +x /usr/local/bin/merge-files.sh
 
+RUN dos2unix /usr/local/bin/merge-files.sh
 # Run the file merging script
-RUN /usr/local/bin/merge-files.sh
+RUN sh /usr/local/bin/merge-files.sh
 
 # Copy built files from the builder stage
 COPY --from=builder /app/dist/browser /var/www/angular/dist
