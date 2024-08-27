@@ -61,6 +61,8 @@
                                              [placeholder]="'Hersteller auswählen (Optional)'"
                                              [settings]="dropdownSettings"
                                              [data]="herstellers"
+                                             (onSelect)="onHerstellerSelect($event)"
+                                             (onDeSelect)="onHerstellerSelect($event)"
                                              formControlName="herstellers">
                         <ng-template let-item="item">
                             <div class="custom-item">
@@ -102,6 +104,8 @@
                             <ng-multiselect-dropdown class="custom-select-no-margin"
                                                      [placeholder]="'Hersteller auswählen'"
                                                      [settings]="singleSelectSettings"
+                                                     (onSelect)="onHerstellerSelect($event)"
+                                                     (onDeSelect)="onHerstellerSelect($event)"
                                                      [data]="artikelToHerstRefnummer.get('filteredHerstellers')?.value"
                                                      formControlName="hersteller">
                                 <ng-template let-item="item">
@@ -136,6 +140,8 @@
                                              [placeholder]="'Lieferant auswählen (Optional)'"
                                              [settings]="dropdownSettings"
                                              [data]="lieferants"
+                                             (onSelect)="onLieferantSelect($event)"
+                                             (onDeSelect)="onLieferantSelect($event)"
                                              formControlName="lieferants">
                         <ng-template let-item="item">
                             <div class="custom-item">
@@ -162,7 +168,7 @@
 
                     <div>
                         <mat-form-field appearance="fill">
-                            <mat-label>REF-Nummer</mat-label>
+                            <mat-label>Bestellnummer</mat-label>
                             <input matInput id="bestellnummer" formControlName="bestellnummer">
                             <mat-error *ngIf="artikelToLieferantBestellnummer.get('bestellnummer')?.invalid && artikelToLieferantBestellnummer.get('bestellnummer')?.touched">
                                 Bestellnummer ist erforderlich.
@@ -178,6 +184,8 @@
                                                      class="custom-select-no-margin"
                                                      [placeholder]="'Lieferant auswählen'"
                                                      [settings]="singleSelectSettings"
+                                                     (onSelect)="onLieferantSelect($event)"
+                                                     (onDeSelect)="onLieferantSelect($event)"
                                                      [data]="artikelToLieferantBestellnummer.get('filteredLieferants')?.value"
                                                      formControlName="lieferant">
                                 <ng-template let-item="item">

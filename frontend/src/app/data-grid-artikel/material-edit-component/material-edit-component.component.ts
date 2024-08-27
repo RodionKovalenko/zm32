@@ -108,7 +108,7 @@ export class MaterialEditComponentComponent implements OnInit {
         let valueGroup = this.fb.group({
             refnummer: [value?.refnummer || '', Validators.required],
             hersteller: [value?.hersteller || null],
-            filteredHerstellers: [herstellerFormLength === 0 ? this.herstellers :  this.artikelToHerstRefnummers.controls[herstellerFormLength - 1]?.get('filteredHerstellers')?.value],
+            filteredHerstellers: [herstellerFormLength === 0 ? this.artikelForm.get('herstellers').value : this.artikelToHerstRefnummers.controls[herstellerFormLength - 1]?.get('filteredHerstellers')?.value],
         });
 
         valueGroup.get('hersteller')?.valueChanges.subscribe((selectedHersteller) => {
@@ -123,6 +123,15 @@ export class MaterialEditComponentComponent implements OnInit {
         });
 
         this.artikelToHerstRefnummers.push(valueGroup);
+
+        this.filterHerstellerOptions();
+    }
+
+    onHerstellerSelect(event: any) {
+        this.filterHerstellerOptions();
+    }
+    onLieferantSelect(event: any) {
+        this.filterLieferantOptions();
     }
 
     get artikelToLieferantBestellnummers(): FormArray {
@@ -149,6 +158,8 @@ export class MaterialEditComponentComponent implements OnInit {
             }
         });
         this.artikelToLieferantBestellnummers.push(valueGroup);
+
+        this.filterLieferantOptions();
     }
 
     removeHerstellerRefNummer(index: number): void {
@@ -418,20 +429,41 @@ export class MaterialEditComponentComponent implements OnInit {
             .filter(value => value != null);
 
         this.artikelToHerstRefnummers.controls.forEach((control: any, index: number) => {
-            const currentHersteller = control.get('hersteller').value;
-
-            const filteredHerstellers = this.herstellers.filter(
+            const filteredHerstellers = this.artikelForm.get('herstellers').value.filter(
                 (hersteller: any) => {
                     let isHerstellerSelected = false;
-                    selectedHerstellers.forEach((selectedHersteller: any) => {
-                        if (selectedHersteller[0]?.name === hersteller.name) {
-                            isHerstellerSelected = true;
-                        }
-                    });
+                    const currentHersteller = control.get('hersteller').value?.[0];
 
-                    return !isHerstellerSelected || hersteller === currentHersteller;
+                    if (selectedHerstellers.length > 0) {
+                        selectedHerstellers.forEach((selectedHersteller: any) => {
+                            if (selectedHersteller[0]?.name === hersteller.name && hersteller.name !== currentHersteller?.name) {
+                               isHerstellerSelected = true;
+                            }
+                        });
+                    }
+
+                    return !isHerstellerSelected;
                 }
             );
+
+            let selecterHerstellerExists = false;
+            selectedHerstellers.forEach((selectedHersteller: any) => {
+                filteredHerstellers.forEach((filteredHersteller: any) => {
+                    if (selectedHersteller[0]?.name === filteredHersteller.name) {
+                        selecterHerstellerExists = true;
+                    }
+                });
+            });
+
+            if (!selecterHerstellerExists && control.get('hersteller').value?.length > 0) {
+                control.get('hersteller').setValue([]);
+            }
+
+            if (control.get('hersteller').value?.length > 0) {
+                this.dynamicTitleHerstellers[index] = `REF-Nummer Hersteller "${control.get('hersteller').value[0].name}"`;
+            } else {
+                this.dynamicTitleHerstellers[index] = `Hersteller REF-Nummer ${index + 1}`;
+            }
 
             return control.get('filteredHerstellers').setValue(filteredHerstellers);
         });
@@ -443,20 +475,41 @@ export class MaterialEditComponentComponent implements OnInit {
             .filter(value => value != null);
 
         this.artikelToLieferantBestellnummers.controls.forEach((control: any, index: number) => {
-            const currentLieferant = control.get('lieferant').value;
-
-            const filteredLieferants = this.lieferants.filter(
+            const filteredLieferants = this.artikelForm.get('lieferants').value.filter(
                 (lieferant: any) => {
-                    let isHerstellerSelected = false;
-                    selectedLiferants.forEach((selectedHersteller: any) => {
-                        if (selectedHersteller[0]?.name === lieferant.name) {
-                            isHerstellerSelected = true;
-                        }
-                    });
+                    let isLieferantSelected = false;
+                    const currentLieferant = control.get('lieferant').value?.[0];
 
-                    return !isHerstellerSelected || lieferant === currentLieferant;
+                    if (selectedLiferants.length > 0) {
+                        selectedLiferants.forEach((selectedLieferant: any) => {
+                            if (selectedLieferant[0]?.name === lieferant.name && lieferant.name !== currentLieferant?.name) {
+                                isLieferantSelected = true;
+                            }
+                        });
+                    }
+
+                    return !isLieferantSelected;
                 }
             );
+
+            let selecterLieferantExists = false;
+            selectedLiferants.forEach((selectedLiferant: any) => {
+                filteredLieferants.forEach((filteredLieferant: any) => {
+                    if (selectedLiferant[0]?.name === filteredLieferant.name) {
+                        selecterLieferantExists = true;
+                    }
+                });
+            });
+
+            if (!selecterLieferantExists && control.get('lieferant').value?.length > 0) {
+                control.get('lieferant').setValue([]);
+            }
+
+            if (control.get('lieferant').value?.length > 0) {
+                this.dynamicTitleLieferants[index] = `Bestellnummer Lieferant "${control.get('lieferant').value[0].name}"`;
+            } else {
+                this.dynamicTitleLieferants[index] = `Bestellnummer ${index + 1}`;
+            }
 
             return control.get('filteredLieferants').setValue(filteredLieferants);
         });

@@ -17,10 +17,6 @@ mat-toolbar.custom-toolbar {
     color: white !important; /* Custom text color */
 }
 
-body {
-    font-family: 'Be Vietnam Pro', sans-serif;
-}
-
 :root {
     --primary-color: #605DC8;
     --secondary-color: #8B89E6;
@@ -36,13 +32,14 @@ button.primary {
     border-radius: 8px;
 }
 
-html, body {
+html {
     height: 100%;
 }
 
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+    height: 100%;
 }
 
 .mat-form-field {
@@ -132,10 +129,6 @@ body {
 .dialog-actions > button {
     position: sticky;
     margin-left: 8px; /* Adjust spacing between buttons */
-}
-
-#mat-mdc-dialog-0 > div > div > app-bestellung-edit-component > div {
-
 }
 
 .mat-mdc-dialog-surface {
