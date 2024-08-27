@@ -1,4 +1,4 @@
-<mat-toolbar color="custom-toolbar">
+<mat-toolbar>
 
     <form [formGroup]="bestellungForm">
         <div class="flex-container margin-bottom-30">
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <!-- Datum bist der Bestellung -->
+            <!-- Datum bis der Bestellung -->
             <div class="column-layout margin-top-50 form-group">
                 <div class="dropdown-wrapper">
                     <mat-form-field appearance="fill" class="custom-mat-form-field">
@@ -63,40 +63,36 @@
                         <input matInput [matDatepicker]="pickerTo" formControlName="datumBis" (dateChange)="onFilterSelectChange()">
                         <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
                         <mat-datepicker #pickerTo></mat-datepicker>
-
                     </mat-form-field>
-
                     <span class="mat-error">
                         <mat-error *ngIf="bestellungForm.hasError('dateRangeInvalid')">
                             Das Enddatum muss größer als das Anfangsdatum sein.
                         </mat-error>
                     </span>
                 </div>
-
             </div>
 
-
         </div>
-
     </form>
 
-
-    <mat-toolbar color="custom-toolbar">
+    <mat-toolbar>
         <span class="spacer"></span>
         <button mat-icon-button class="color-download" matTooltip="Exportieren" (click)="exportData()">
             <mat-icon>download</mat-icon>
         </button>
     </mat-toolbar>
 
-    <mat-toolbar color="custom-toolbar">
+    <mat-toolbar>
         <span class="spacer"></span>
         <button mat-icon-button class="color-confirm" matTooltip="Neue Bestellung hinzufügen" (click)="addRecord()">
             <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar>
+
 </mat-toolbar>
 
-<div class="mat-elevation-z8">
+
+<div class="mat-elevation-z8 grid-view">
     <table mat-table [dataSource]="dataSource.data" matSort (matSortChange)="sortData($event)">
 
         <!-- ID Column -->

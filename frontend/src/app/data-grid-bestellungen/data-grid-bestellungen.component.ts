@@ -35,6 +35,7 @@ export class DataGridBestellungenComponent implements OnInit {
         {id: 1, name: 'Offen'},
         {id: 2, name: 'Bestellt'},
         {id: 3, name: 'Geliefert'},
+        {id: 4, name: 'Storniert'},
     ];
 
     constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
@@ -236,6 +237,7 @@ export class DataGridBestellungenComponent implements OnInit {
         this.httpService.get_httpclient().post(url, formValue).subscribe({
             next: (response: any) => {
                 if (response && response.success && Boolean(response?.success)) {
+                    this.fetchDataByDepartmentId();
                 } else {
                     this.dialog.open(LoginErrorComponent, {
                         width: '450px',
