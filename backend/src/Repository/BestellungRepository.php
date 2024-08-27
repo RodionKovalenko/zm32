@@ -21,6 +21,7 @@ class BestellungRepository extends DefaultRepository
         $status = $filterParams['status'] ?? [];
         $createdAfter = $filterParams['createdAfter'] ?? [];
         $datumBis = $filterParams['datumBis'] ?? [];
+        $search = $filterParams['search'] ?? null;
 
         foreach ($deparments as $department) {
             if ($department->getTyp() === DepartmentTyp::ALLE->value) {
@@ -56,6 +57,26 @@ class BestellungRepository extends DefaultRepository
             }
             $q->andWhere('b.datum <= :datumBis')
                 ->setParameter('datumBis', $datumBis);
+        }
+        if (!empty($search)) {
+            $q->leftJoin('b.artikels', 'a')
+                ->leftJoin('a.artikelToHerstRefnummers', 'hrn')
+                ->leftJoin('a.artikelToLieferantBestellnummers', 'lbn')
+                ->leftJoin('a.herstellers', 'h')
+                ->leftJoin('a.lieferants', 'l')
+                ->andWhere(
+                    '((a.name LIKE :searchWord)
+                 OR (h.name LIKE :searchWord)
+                 OR (a.description LIKE :searchWord)
+                   OR (b.description LIKE :searchWord)
+                   OR (b.descriptionZusatz LIKE :searchWord)
+                   OR (b.preis LIKE :searchWord)
+                   OR (b.amount LIKE :searchWord)
+                 OR (l.name LIKE :searchWord)
+                  OR (hrn.refnummer LIKE :searchWord)
+                   OR (lbn.bestellnummer LIKE :searchWord))'
+                )
+                ->setParameter('searchWord', '%' . $search . '%');
         }
 
         return $q->orderBy('d.name', Order::Ascending->value)

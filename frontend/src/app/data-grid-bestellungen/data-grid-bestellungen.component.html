@@ -1,5 +1,15 @@
 <mat-toolbar>
+    <span class="spacer"></span>
+    <div class="input-wrapper">
+        <input type="text" [value]="searchTerm" (input)="onBestellungSearchChange($event)" placeholder="Suche" class="limited-width-input"/>
+        <button *ngIf="searchTerm" mat-icon-button class="align-button color-cancel edit-button" matTooltip="Abbrechen" (click)="clearSearch()">
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+</mat-toolbar>
 
+
+<mat-toolbar>
     <form [formGroup]="bestellungForm">
         <div class="flex-container margin-bottom-30">
 

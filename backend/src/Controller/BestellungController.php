@@ -37,6 +37,7 @@ class BestellungController extends BaseController
         $status = $request->get('status') ? json_decode($request->get('status')) : [];
         $createdAfter = $request->get('createdAfter') ?? [];
         $datumBis = $request->get('datumBis') ?? [];
+        $search = $request->get('search') ?? [];
 
         $filterParams = [];
 
@@ -52,6 +53,9 @@ class BestellungController extends BaseController
         }
         if (!empty($datumBis)) {
             $filterParams['datumBis'] = $datumBis;
+        }
+        if (!empty($search)) {
+            $filterParams['search'] = $search;
         }
 
         $bestellungen = $this->bestellungRepository->getByDepartment($filterParams);

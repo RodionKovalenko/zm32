@@ -1,24 +1,26 @@
-import {AfterViewChecked, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
-import {Bestellung} from "../../models/Bestellung";
 import {MaterialEditComponentComponent} from "../../data-grid-artikel/material-edit-component/material-edit-component.component";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {Hersteller} from "../../models/Hersteller";
-import {IDropdownSettings} from "ng-multiselect-dropdown";
+import {IDropdownSettings, MultiSelectComponent} from "ng-multiselect-dropdown";
 import {Artikel} from "../../models/Artikel";
 import {DepartmentData} from "../../models/Department";
 import {DomSanitizer} from "@angular/platform-browser";
+import {HttpParams} from "@angular/common/http";
+import {Bestellung} from "../../models/Bestellung";
 
 @Component({
     selector: 'app-bestellung-edit-component',
     templateUrl: './bestellung-edit-component.component.html',
     styleUrl: './bestellung-edit-component.component.css'
 })
-export class BestellungEditComponentComponent implements OnInit, AfterViewChecked  {
-    @ViewChild('textarea', { static: false }) textarea: ElementRef | undefined;
+export class BestellungEditComponentComponent implements OnInit, AfterViewChecked {
+    @ViewChild('textarea', {static: false}) textarea: ElementRef | undefined;
+    @ViewChild('dropdownArtikels', { static: false }) dropdownArtikels: MultiSelectComponent | undefined;
 
     herstellers: any[] = [];
     lieferants: any[] = [];
@@ -33,12 +35,15 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     bestellungForm: any;
     safeUrl: any;
 
+    searchTerm: string = '';
+
     constructor(private httpService: HttpService,
                 public dialogRef: MatDialogRef<BestellungEditComponentComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: Bestellung,
                 private fb: FormBuilder,
                 private sanitizer: DomSanitizer,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                private renderer: Renderer2) {
     }
 
     ngOnInit(): void {
@@ -67,8 +72,10 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             singleSelection: true, // Set to true for single selection
             idField: 'id',
             textField: 'name',
-            itemsShowLimit: 3,
-            allowSearchFilter: true
+            itemsShowLimit: 1,
+            allowSearchFilter: false,
+            searchPlaceholderText: 'Suchen',
+            allowRemoteDataSearch: false
         };
 
         this.bestellungForm = this.fb.group({
@@ -192,10 +199,15 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         });
     }
 
-    loadArtikel() {
+    loadArtikel(params: any = null) {
         let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/0');
+
+        if (params) {
+            mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/0', {params});
+        }
+
         mitarbeiterRequest.subscribe((response: any) => {
-            this.artikels = response.data;
+            this.artikels = response.data; // Update the dropdown items with filtered data
 
             if (this.data.artikels && this.data.artikels.length > 0) {
                 this.loadArtikelFullData(this.data.artikels[0].id);
@@ -351,7 +363,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         if (Array.isArray(this.artikels)) { // Ensure it is an array
             let artikel = null;
             let index = 0;
-            this.artikels.forEach((record, ind) =>  {
+            this.artikels.forEach((record, ind) => {
                 if (record.id === data[0].id) {
                     artikel = record;
                     index = ind;
@@ -449,5 +461,33 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             textareaElement.style.height = 'auto'; // Reset height
             textareaElement.style.height = `${textareaElement.scrollHeight}px`; // Set height to scrollHeight
         }
+    }
+
+    onArtikelSearchChange(searchWord: any) {
+        let params = new HttpParams();
+        let search: any = '';
+
+        if (searchWord && searchWord?.target && searchWord.target.value) {
+            search = searchWord.target.value;
+        } else {
+            search = searchWord;
+        }
+
+        if (search && search.length > 0) {
+            this.searchTerm = search;
+        }
+        if (search && search.length > 3) {
+            params = params.append('search', search);
+            this.loadArtikel(params);
+
+            this.dropdownArtikels?.toggleDropdown(searchWord);
+        } else {
+            this.loadArtikel()
+        }
+    }
+
+    clearSearch() {
+        this.searchTerm = '';
+        this.loadArtikel();
     }
 }

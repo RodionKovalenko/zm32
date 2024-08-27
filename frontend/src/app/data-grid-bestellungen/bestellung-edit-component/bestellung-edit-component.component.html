@@ -6,8 +6,17 @@
         <!-- Artikel -->
         <div class="dropdown-section">
             <label>Artikel:</label>
+
+
+            <div class="input-wrapper">
+                <input type="text" [value]="searchTerm" (input)="onArtikelSearchChange($event)" placeholder="Artikel suchen"  class="limited-width-input" />
+                <button *ngIf="searchTerm" mat-icon-button class="align-button color-cancel"  matTooltip="Abbrechen" (click)="clearSearch()">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+
+            </div>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="artikels"
+                <ng-multiselect-dropdown #dropdownArtikels
                                          class="custom-select-no-margin"
                                          [placeholder]="'Artikel auswählen'"
                                          [settings]="singleSelectSettings"

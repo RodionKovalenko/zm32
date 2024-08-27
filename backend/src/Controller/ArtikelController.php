@@ -17,8 +17,7 @@ class ArtikelController extends BaseController
     public function __construct(
         SerializerInterface $serializer,
         private readonly ArtikelRepository $artikelRepository,
-        private readonly FormFactoryInterface $formFactory,
-        private readonly DepartmentRepository $departmentRepository
+        private readonly FormFactoryInterface $formFactory
     ) {
         parent::__construct($serializer, $this->formFactory);
     }
@@ -26,12 +25,14 @@ class ArtikelController extends BaseController
     #[Route(path: '/{departmentId}', name: 'app_artikel_get_artikels', defaults: ['departmentId' => null], methods: ['GET'])]
     public function getArtikels(int $departmentId, Request $request)
     {
-        if (!empty($departmentId)) {
-            $departments = $this->departmentRepository->findBy(['id' => $departmentId]);
-            $artikels = $this->artikelRepository->getByDepartmentId($departments);
-        } else {
-            $artikels = $this->artikelRepository->findAllOrderedBy('name');
+        $params = [];
+        $search = $request->query->get('search') ?? null;
+
+        if (!empty($search)) {
+            $params['search'] = $search;
         }
+
+        $artikels = $this->artikelRepository->getByParams($params);
 
         $response = [
             'success' => true,

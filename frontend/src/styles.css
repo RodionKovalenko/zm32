@@ -263,6 +263,11 @@ button {
     position: relative;
 }
 
+.limited-width-input {
+    max-width: 300px; /* Set the maximum width */
+    width: 100%; /* Make it responsive */
+}
+
 .add-button,
 .edit-button {
     margin-left: 8px; /* Adjust spacing between button and dropdown */
@@ -388,4 +393,20 @@ mat-form-field {
 .error-container {
     color: ghostwhite;
     background-color: #de504b;
+}
+
+.input-wrapper {
+    position: fixed; /* Fixes the position relative to the viewport */
+    top: 10px; /* Adjust the top position as needed */
+    right: 10px; /* Adjust the right position as needed */
+    z-index: 1000; /* Ensures the input field appears above other elements */
+    background-color: #fff; /* Optional: Set a background color for better visibility */
+    padding: 10px; /* Optional: Add padding to the input wrapper */
+    border-radius: 4px; /* Optional: Add border radius for rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+}
+
+/* Style for the input field inside the fixed wrapper */
+.input-wrapper input {
+    width: 200px; /* Set a fixed width for the input field */
 }

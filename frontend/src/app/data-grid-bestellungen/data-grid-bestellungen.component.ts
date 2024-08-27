@@ -30,6 +30,7 @@ export class DataGridBestellungenComponent implements OnInit {
     originalDepartments: any[] = [];
     selectedDepartments: any[] = [];
     bestellungForm: any;
+    searchTerm: string = '';
 
     statusOptions = [
         {id: 1, name: 'Offen'},
@@ -121,6 +122,9 @@ export class DataGridBestellungenComponent implements OnInit {
         if (datumBis instanceof Date) {
             datumBis.setHours(23, 59, 59, 999);
             params = params.append('datumBis', datumBis.toISOString());
+        }
+        if (this.searchTerm) {
+            params = params.append('search', this.searchTerm);
         }
 
         return params;
@@ -292,6 +296,30 @@ export class DataGridBestellungenComponent implements OnInit {
                     });
                 }
             });
+    }
+
+
+    onBestellungSearchChange(searchWord: any) {
+        let search: any = '';
+
+        if (searchWord && searchWord?.target && searchWord.target.value) {
+            search = searchWord.target.value;
+        } else {
+            search = searchWord;
+        }
+
+        if (search && search.length > 0) {
+            this.searchTerm = search;
+        }  else {
+            this.searchTerm = '';
+        }
+
+        this.fetchDataByDepartmentId();
+    }
+
+    clearSearch() {
+        this.searchTerm = '';
+        this.fetchDataByDepartmentId();
     }
 }
 
