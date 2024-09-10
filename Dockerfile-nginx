@@ -1,3 +1,4 @@
+# Stage 1: Build
 FROM node:18 AS builder
 
 USER root
@@ -5,33 +6,33 @@ USER root
 # Set the working directory
 WORKDIR /app
 
-# Install vim (optional)
-RUN apt-get update && apt-get install -y vim && apt-get clean
+# Verify Node.js and npm versions
+RUN node -v
+RUN npm -v
 
 # Copy package.json and package-lock.json
 COPY frontend/package*.json ./
 
+# Clean up existing node_modules and npm cache
 RUN rm -rf node_modules && npm cache clean --force
 
-# Update npm to the latest version within 10.x range
-RUN npm install -g npm@latest
+# Install a specific version of npm
+RUN npm install -g npm@10.8.3
 
-# Install project dependencies using npm ci if package-lock.json exists,
-# otherwise fall back to npm install with --legacy-peer-deps
-RUN if [ -f package-lock.json ]; then npm ci; else npm install --legacy-peer-deps; fi
+# Install project dependencies
+RUN npm ci
 
 # Install Angular CLI globally
-RUN npm install -g @angular/cli@18.0.2
+RUN npm install -g @angular/cli@16.2.1
 
 # Copy the rest of the application
 COPY frontend/ ./
 
-COPY frontend/ssl/server.crt /etc/nginx/ssl/server.crt
-COPY frontend/ssl/server.key /etc/nginx/ssl/server.key
+# Remove old dist folder if it exists
+RUN rm -rf /app/dist
 
 # Build the Angular app
 RUN npm run build --prod --output-path=dist/browser
-
 
 # Stage 2: Serve with Nginx
 FROM nginx:1.19-alpine
@@ -42,24 +43,21 @@ RUN apk update && apk add --no-cache dos2unix
 # Remove default Nginx content
 RUN rm -rf /var/www/angular/dist/*
 
-RUN mkdir -p /var/www/symfony/public
-
 # Copy Angular build output to a temporary directory
 COPY --from=builder /app/dist/browser /tmp/angular-build
 
 # Copy custom file merging script
 COPY frontend/merge-files.sh /usr/local/bin/merge-files.sh
-# Add debugging steps to check file presence
-RUN ls -la /usr/local/bin
-
 RUN chmod +x /usr/local/bin/merge-files.sh
-
 RUN dos2unix /usr/local/bin/merge-files.sh
+
 # Run the file merging script
 RUN sh /usr/local/bin/merge-files.sh
 
 # Copy built files from the builder stage
 COPY --from=builder /app/dist/browser /var/www/angular/dist
+
+RUN mkdir -p /var/www/symfony/public
 
 # Copy custom Nginx configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -75,5 +73,6 @@ RUN chmod 600 /etc/nginx/ssl/server.key \
 # Expose ports
 EXPOSE 80
 EXPOSE 443
+
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

@@ -8,13 +8,13 @@
             <label>Artikel:</label>
 
 
-            <div class="input-wrapper">
-                <input type="text" [value]="searchTerm" (input)="onArtikelSearchChange($event)" placeholder="Artikel suchen"  class="limited-width-input" />
+            <span class="input-wrapper-relative">
+                <input type="text" *ngIf="isDropdownOpen" [value]="searchTerm" (input)="onArtikelSearchChange($event)" placeholder="Artikel suchen"  class="limited-width-input" />
                 <button *ngIf="searchTerm" mat-icon-button class="align-button color-cancel"  matTooltip="Abbrechen" (click)="clearSearch()">
                     <mat-icon>cancel</mat-icon>
                 </button>
+            </span>
 
-            </div>
             <div class="dropdown-wrapper">
                 <ng-multiselect-dropdown #dropdownArtikels
                                          class="custom-select-no-margin"
