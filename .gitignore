@@ -3,3 +3,4 @@
 /my_sqldata/
 /cron.log
 /.env.local
+/config/start-docker-build-prod.ps1
