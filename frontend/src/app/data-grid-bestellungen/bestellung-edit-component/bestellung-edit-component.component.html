@@ -9,7 +9,7 @@
 
 
             <span class="input-wrapper-relative">
-                <input type="text" *ngIf="isDropdownOpen" [value]="searchTerm" (input)="onArtikelSearchChange($event)" placeholder="Artikel suchen"  class="limited-width-input" />
+                <input type="text" [value]="searchTerm" (input)="onArtikelSearchChange($event)" placeholder="Artikel suchen"  class="limited-width-input" />
                 <button *ngIf="searchTerm" mat-icon-button class="align-button color-cancel"  matTooltip="Abbrechen" (click)="clearSearch()">
                     <mat-icon>cancel</mat-icon>
                 </button>

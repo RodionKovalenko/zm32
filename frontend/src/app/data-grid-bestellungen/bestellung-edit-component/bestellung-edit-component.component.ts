@@ -27,7 +27,6 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     artikels: any[] = [];
     departments: any[] = [];
     childDialogOpened: boolean = false;
-    isDropdownOpen: boolean = false;
     dropdownSettings: IDropdownSettings = {};
     dropdownDepartmentSettings: IDropdownSettings = {};
     singleSelectSettings: IDropdownSettings = {};
