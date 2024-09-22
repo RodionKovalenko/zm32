@@ -2120,17 +2120,17 @@ class GenerateArtikelDataCommand extends Command
             [
                 'mitarbeiterId' => 1,
                 'vorname' => 'Sandra',
-                'nachname' => 'Mic'
+                'nachname' => 'Michels'
             ],
             [
                 'mitarbeiterId' => 10,
                 'vorname' => 'Daniela',
-                'nachname' => 'Rös'
+                'nachname' => 'Rösler'
             ],
             [
                 'mitarbeiterId' => 100,
                 'vorname' => 'Kyra',
-                'nachname' => 'Mic'
+                'nachname' => 'Michels'
             ],
             [
                 'mitarbeiterId' => 13,
@@ -2178,6 +2178,11 @@ class GenerateArtikelDataCommand extends Command
                 'nachname' => 'Tre'
             ],
             [
+                'mitarbeiterId' => 7,
+                'vorname' => 'Bianka',
+                'nachname' => 'Dav'
+            ],
+            [
                 'mitarbeiterId' => 72,
                 'vorname' => 'Stephanie',
                 'nachname' => 'Hof'
@@ -2185,7 +2190,7 @@ class GenerateArtikelDataCommand extends Command
             [
                 'mitarbeiterId' => 75,
                 'vorname' => 'Nabi',
-                'nachname' => 'Hai'
+                'nachname' => 'Haj'
             ],
             [
                 'mitarbeiterId' => 79,
