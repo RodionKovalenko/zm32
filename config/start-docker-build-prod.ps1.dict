@@ -4,9 +4,14 @@
 # Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # Start Docker Compose
-#docker-compose -f docker-compose-prod.yml --env-file .env.local build --no-cache
-docker-compose -f docker-compose-prod.yml --env-file .env.local build 
-docker-compose -f docker-compose-prod.yml --env-file .env.local up -d
+# Step 1: Force rebuild images without cache
+docker-compose -f docker-compose-prod.yml --env-file .env.local build --no-cache
+
+# Step 2: Bring down the running containers
+docker-compose down
+
+# Step 3: Start containers, forcing recreation
+docker-compose -f docker-compose-prod.yml --env-file .env.local up --force-recreate -d
 
 # Wait a few seconds
 Start-Sleep -Seconds 10
