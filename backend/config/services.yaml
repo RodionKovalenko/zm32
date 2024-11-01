@@ -67,5 +67,8 @@ services:
     # Drittanbieter (Overrides)
     jms_serializer.naming_strategy:
         alias: jms_serializer.identical_property_naming_strategy
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
     App\Security\LoginFormAuthenticator:
         autowire: true

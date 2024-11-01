@@ -6,7 +6,6 @@ use App\Entity\Material\Hersteller;
 use App\Forms\HerstellerFormType;
 use App\Repository\Material\HerstellerRepository;
 use App\Repository\Material\HerstellerStandortRepository;
-use Doctrine\Common\Collections\Order;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,15 +23,18 @@ class HerstellerController extends BaseController
         parent::__construct($serializer, $this->formFactory);
     }
 
-    #[Route(path: '/{artikelId}', name: 'app_hersteller_get_herstellers', defaults: ['artikelId' => null], methods: ['GET'])]
-    public function getHerstellers(int $artikelId, Request $request)
+    #[Route(path: '/get_hersteller', name: 'app_hersteller_get_hersteller', methods: ['GET'])]
+    public function getHersteller(Request $request)
     {
         try {
-            if (empty($artikelId)) {
-                $hersteller = $this->herstellerRepository->findAllOrderedBy('name', Order::Ascending->value);
-            } else {
-                $hersteller = $this->herstellerRepository->getByArtikelId($artikelId);
+            $params = [];
+            $search = $request->query->get('search') ?? null;
+
+            if (!empty($search)) {
+                $params['search'] = $search;
             }
+
+            $hersteller = $this->herstellerRepository->getHerstellersByParams($params);
 
             $response = [
                 'success' => true,
@@ -78,8 +80,8 @@ class HerstellerController extends BaseController
                     [
                         'success' => true,
                         'data' => [$hersteller],
-                        ['Default', 'Hersteller', 'Hersteller_HerstellerStandort']
-                    ]
+                    ],
+                    ['Default', 'Hersteller_HerstellerStandort']
                 );
             }
 
@@ -104,7 +106,7 @@ class HerstellerController extends BaseController
         }
 
         try {
-            $this->herstellerRepository->delete($hersteller);
+            $this->herstellerRepository->remove($hersteller);
         } catch (\Exception $e) {
             return $this->getJsonResponse(['success' => false, 'message' => $e->getMessage()]);
         }
@@ -122,7 +124,7 @@ class HerstellerController extends BaseController
         }
 
         try {
-            $this->herstellerStandortRepository->delete($herstellerStandort);
+            $this->herstellerStandortRepository->remove($herstellerStandort);
         } catch (\Exception $e) {
             return $this->getJsonResponse(['success' => false, 'message' => $e->getMessage()]);
         }

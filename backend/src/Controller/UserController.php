@@ -94,8 +94,7 @@ class UserController extends BaseController
     public function deleteUser($id, Request $request)
     {
         try {
-            $user = $this->userRepository->find($id);
-            $this->userRepository->remove($user);
+            $this->userHandler->deleteUser($id);
 
             $response = [
                 'success' => true,

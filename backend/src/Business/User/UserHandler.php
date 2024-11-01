@@ -97,4 +97,16 @@ class UserHandler
 
         return $user;
     }
+
+    public function deleteUser($userId): void
+    {
+        /** @var User $user */
+        $user = $this->userRepository->find($userId);
+
+        $mitarbeiter = $user->getMitarbeiter();
+
+        $mitarbeiter->setUser(null);
+        $this->mitarbeiterRepository->remove($mitarbeiter);
+        $this->userRepository->remove($user);
+    }
 }

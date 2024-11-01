@@ -2,8 +2,6 @@
 
 namespace App\Repository\Material;
 
-use App\Entity\Department;
-use App\Entity\DepartmentTyp;
 use App\Entity\Material\Artikel;
 use App\Repository\DefaultRepository;
 use Doctrine\Common\Collections\Order;

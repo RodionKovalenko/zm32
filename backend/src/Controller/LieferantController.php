@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\Material\Lieferant;
 use App\Forms\LieferantFormType;
 use App\Repository\Material\LieferantRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Order;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,21 +18,34 @@ class LieferantController extends BaseController
         parent::__construct($serializer, $this->formFactory);
     }
 
-    #[Route(path: '/{artikelId}', name: 'app_lieferant_get_lieferants', defaults: ['artikelId' => null], methods: ['GET'])]
-    public function getLieferants($artikelId, Request $request)
+    #[Route(path: '/get_lieferant', name: 'app_lieferant_get_lieferants', methods: ['GET'])]
+    public function getLieferants(Request $request)
     {
-        if ($artikelId !== null) {
-            $lieferants = $this->lieferantRepository->getByArtikel($artikelId);
-        } else {
-            $lieferants = $this->lieferantRepository->findAllOrderedBy('name', Order::Ascending->value);
+        try {
+            $params = [];
+            $search = $request->query->get('search') ?? null;
+
+            if (!empty($search)) {
+                $params['search'] = $search;
+            }
+
+            $lieferants = $this->lieferantRepository->getLieferantsByParams($params);
+
+            $response = [
+                'success' => true,
+                'data' => $lieferants
+            ];
+
+            return $this->getJsonResponse(
+                $response,
+                [
+                    'Default',
+                    'Lieferant_LieferantStammdaten'
+                ]
+            );
+        } catch (\Exception $e) {
+            return $this->getJsonResponse(['success' => false, 'message' => $e->getMessage()]);
         }
-
-        $response = [
-            'success' => true,
-            'data' => $lieferants
-        ];
-
-        return $this->getJsonResponse($response, ['Default', 'Lieferant', 'Lieferant_LieferantStammdaten']);
     }
 
     #[Route(path: '/save/{id}', name: 'app_lieferant_save_lieferant', defaults: ['id' => null], methods: ['POST'])]
@@ -64,9 +75,9 @@ class LieferantController extends BaseController
                 return $this->getJsonResponse(
                     [
                         'success' => true,
-                        'data' => [$lieferant],
-                        ['Default', 'Lieferant', 'Lieferant_LieferantStammdaten']
-                    ]
+                        'data' => [$lieferant]
+                    ],
+                    ['Default', 'Lieferant_LieferantStammdaten']
                 );
             }
 

@@ -25,9 +25,9 @@ class Mitarbeiter
     private $nachname;
 
     #[Groups(['Mitarbeiter_User', 'User'])]
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['merge', 'persist', 'remove'])]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
-    private User $user;
+    private ?User $user = null;
 
     #[Groups(['Mitarbeiter_MitarbeiterToDepartment', 'MitarbeiterToDepartment'])]
     #[ORM\OneToMany(
@@ -127,12 +127,12 @@ class Mitarbeiter
         return $this;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user): Mitarbeiter
+    public function setUser(?User $user): Mitarbeiter
     {
         $this->user = $user;
         return $this;

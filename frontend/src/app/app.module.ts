@@ -52,6 +52,8 @@ import {PersonalGridComponent} from "./personal/personal-grid/personal-grid.comp
 import {PersonalComponent} from "./personal/personal.component";
 import {PersonalFormComponent} from "./personal/personal-form/personal-form.component";
 import {DepartmentFormComponent} from "./departments/department-form/department-form.component";
+import {HerstellersComponent} from "./herstellers/herstellers.component";
+import {LieferantsComponent} from "./lieferants/lieferants.component";
 
 @NgModule({
     declarations: [
@@ -74,7 +76,11 @@ import {DepartmentFormComponent} from "./departments/department-form/department-
         DepartmentGridComponent,
         PersonalGridComponent,
         PersonalFormComponent,
-        PersonalComponent
+        PersonalComponent,
+        HerstellersComponent,
+        HerstellerGridComponent,
+        LieferantGridComponent,
+        LieferantsComponent
     ],
     imports: [
         BrowserModule,
@@ -112,9 +118,7 @@ import {DepartmentFormComponent} from "./departments/department-form/department-
         MatDatepickerInput,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatFormFieldModule,
-        HerstellerGridComponent,
-        LieferantGridComponent,
+        MatFormFieldModule
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),

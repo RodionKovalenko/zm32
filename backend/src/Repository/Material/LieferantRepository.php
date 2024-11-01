@@ -4,7 +4,6 @@ namespace App\Repository\Material;
 
 use App\Entity\Material\Lieferant;
 use App\Repository\DefaultRepository;
-use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 class LieferantRepository extends DefaultRepository
@@ -14,13 +13,14 @@ class LieferantRepository extends DefaultRepository
         parent::__construct($registry, Lieferant::class);
     }
 
-    public function getByArtikel(int $artikelId)
+    public function getLieferantsByParams(array $params)
     {
-        $q = $this->createQueryBuilder('l')
-            ->join('l.artikels', 'la')
-            ->where('la.artikel = :artikelId')
-            ->setParameter('artikelId', $artikelId)
-            ->orderBy('l.name', Order::Ascending->value);
+        $q = $this->createQueryBuilder('l');
+
+        if (isset($params['search'])) {
+            $q->andWhere('l.name LIKE :search')
+                ->setParameter('search', '%' . $params['search'] . '%');
+        }
 
         return $q->getQuery()->getResult();
     }

@@ -4,7 +4,6 @@ namespace App\Repository\Material;
 
 use App\Entity\Material\Hersteller;
 use App\Repository\DefaultRepository;
-use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 class HerstellerRepository extends DefaultRepository
@@ -14,17 +13,16 @@ class HerstellerRepository extends DefaultRepository
         parent::__construct($registry, Hersteller::class);
     }
 
-    public function getByArtikelId($artikelId)
+    public function getHerstellersByParams(array $params): array
     {
         $qb = $this->createQueryBuilder('h')
-            ->leftJoin('h.herstellerArtikels', 'ha')
-            ->leftJoin('ha.artikel', 'a')
-            ->where('a.id = :artikelId')
-            ->setParameter('artikelId', $artikelId)
-            ->orderBy('h.name', Order::Ascending->value)
-            ->getQuery()
-            ->getResult();
+            ->leftJoin('h.standorte', 'hs');
 
-        return $qb;
+        if (isset($params['search'])) {
+            $qb->andWhere('(h.name LIKE :search) OR (hs.ort LIKE :search) OR (hs.adresse LIKE :search) OR (hs.plz LIKE :search)')
+                ->setParameter('search', '%' . $params['search'] . '%');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }
