@@ -37,7 +37,7 @@ class DepartmentController extends BaseController
         return $this->getJsonResponse($response);
     }
 
-    #[Route(path: '/save/{id}', name: 'app_department_save_department', defaults: ['id' => null], methods: ['POST'])]
+    #[Route(path: '/save/{id}', name: 'app_department_save', defaults: ['id' => null], methods: ['POST'])]
     public function saveDepartment($id, Request $request)
     {
         $data = json_decode($request->getContent(), true);

@@ -1,6 +1,8 @@
 
 export interface Mitarbeiter {
     id: number;
-    vorname?: string;
-    nachname?: string;
+    firstname?: string;
+    lastname?: string;
+    mitarbeiterId?: string;
+    formTitle?: string;
 }

@@ -3,11 +3,9 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {Artikel} from "../../models/Artikel";
-import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {HttpService} from "../../services/http.service";
 import {MatDialog} from "@angular/material/dialog";
-import {AbstractControlOptions, FormBuilder} from "@angular/forms";
-import {dateRangeValidator} from "../../data-adapters/date.validator";
+import {FormBuilder} from "@angular/forms";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
 import {HttpParams} from "@angular/common/http";
 import {DepartmentFormComponent} from "../department-form/department-form.component";
@@ -58,7 +56,7 @@ export class DepartmentGridComponent implements OnInit {
             return;
         }
 
-        this.dataSource.data = data.sort((a: Artikel, b: Artikel) => {
+        this.dataSource.data = data.sort((a: DepartmentData, b: DepartmentData) => {
             const isAsc = sort.direction === 'asc';
             let key: string = sort.active.toString();
 

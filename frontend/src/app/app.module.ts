@@ -72,6 +72,9 @@ import {DepartmentFormComponent} from "./departments/department-form/department-
         DepartmentsComponent,
         DepartmentFormComponent,
         DepartmentGridComponent,
+        PersonalGridComponent,
+        PersonalFormComponent,
+        PersonalComponent
     ],
     imports: [
         BrowserModule,
@@ -112,8 +115,6 @@ import {DepartmentFormComponent} from "./departments/department-form/department-
         MatFormFieldModule,
         HerstellerGridComponent,
         LieferantGridComponent,
-        PersonalGridComponent,
-        PersonalFormComponent
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),
@@ -128,6 +129,7 @@ import {DepartmentFormComponent} from "./departments/department-form/department-
     ],
     bootstrap: [AppComponent],
     exports: [
+        PersonalGridComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
