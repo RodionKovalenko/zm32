@@ -22,4 +22,15 @@ class MitarbeiterRepository extends DefaultRepository
             ->getOneOrNullResult();
     }
 
+    public function getUserByParams(array $params = [])
+    {
+        $qb = $this->createQueryBuilder('m');
+
+        if (isset($params['search'])) {
+            $qb->andWhere('m.firstname LIKE :search')
+                ->setParameter('search', '%' . $params['search'] . '%');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -2,6 +2,27 @@
 
 <form [formGroup]="personalForm" (ngSubmit)="onSubmit()">
     <div mat-dialog-content class="mat-dialog-content" fxLayout="column">
+
+        <!-- Abteilung -->
+        <div class="dropdown-section">
+            <label>Abteilung:</label>
+            <div class="dropdown-wrapper">
+                <ng-multiselect-dropdown id="departments"
+                                         class="custom-select-no-margin"
+                                         [placeholder]="'Abteilung auswählen'"
+                                         [settings]="dropdownDepartmentSettings"
+                                         (onSelect)="onDepartmentSelect($event)"
+                                         [data]="departments"
+                                         formControlName="departments">
+                    <ng-template let-item="item">
+                        <div class="custom-item">
+                            {{ item.name }}
+                        </div>
+                    </ng-template>
+                </ng-multiselect-dropdown>
+            </div>
+        </div>
+
         <div>
             <mat-form-field appearance="fill">
                 <mat-label>Vorname</mat-label>

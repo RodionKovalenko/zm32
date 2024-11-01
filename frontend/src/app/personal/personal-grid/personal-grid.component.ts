@@ -66,7 +66,6 @@ export class PersonalGridComponent implements OnInit {
     loadPersonal() {
         let params = this.getQueryParams();
 
-        debugger
         let mitarbeiterRequest = this.httpService.get_httpclient().get(
             `${this.httpService.get_baseUrl()}/user/get_user`, {params}
         );
@@ -84,7 +83,7 @@ export class PersonalGridComponent implements OnInit {
         if (departmentId.length === 0) {
             departmentId = this.originalDepartments.map((d: any) => d.id);
         }
-        params = params.append('departments', JSON.stringify(departmentId));
+        params = params.append('departments', departmentId.join(','));
 
         if (this.searchTerm) {
             params = params.append('search', this.searchTerm);

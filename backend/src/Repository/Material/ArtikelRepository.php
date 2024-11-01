@@ -46,6 +46,7 @@ class ArtikelRepository extends DefaultRepository
         }
 
         return $q->orderBy('a.name', Order::Ascending->value)
+            ->setMaxResults(1000)
             ->getQuery()
             ->getResult();
     }

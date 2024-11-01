@@ -14,16 +14,18 @@ class UserRepository extends DefaultRepository
 
     public function getUserByParams(array $params = [])
     {
-        $qb = $this->createQueryBuilder('u');
+        $qb = $this->createQueryBuilder('u')
+            ->orderBy('u.vorname', 'ASC')
+            ->orderBy('u.lastname', 'ASC');
 
         if (isset($params['search'])) {
-            $qb->andWhere('u.name LIKE :search')
+            $qb->andWhere('(u.firstname LIKE :search) OR (u.lastname LIKE :search)')
                 ->setParameter('search', '%' . $params['search'] . '%');
         }
-
         if (isset($params['departmentIds'])) {
-            $qb->join('u.department', 'd')
-                ->andWhere('d.id IN (:departmentIds)')
+            $qb->leftJoin('u.mitarbeiter', 'm')
+                ->leftJoin('m.mitarbeiterToDepartments', 'd')
+                ->andWhere('d.department IN (:departmentIds)')
                 ->setParameter('departmentIds', $params['departmentIds']);
         }
 

@@ -107,6 +107,15 @@ class Mitarbeiter
         return $this;
     }
 
+    public function addMitarbeiterToDepartment(MitarbeiterToDepartment $mitarbeiterToDepartment): Mitarbeiter
+    {
+        if (!$this->mitarbeiterToDepartments->contains($mitarbeiterToDepartment)) {
+            $mitarbeiterToDepartment->setMitarbeiter($this);
+            $this->mitarbeiterToDepartments->add($mitarbeiterToDepartment);
+        }
+        return $this;
+    }
+
     public function getBestellungen(): Collection
     {
         return $this->bestellungen;

@@ -24,6 +24,9 @@ class User
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private $lastname;
 
+    #[ORM\OneToOne(targetEntity: Mitarbeiter::class, mappedBy: 'user')]
+    private ?Mitarbeiter $mitarbeiter = null;
+
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $mitarbeiterId;
 
@@ -86,6 +89,17 @@ class User
     public function setMitarbeiterId($mitarbeiterId)
     {
         $this->mitarbeiterId = $mitarbeiterId;
+        return $this;
+    }
+
+    public function getMitarbeiter(): ?Mitarbeiter
+    {
+        return $this->mitarbeiter;
+    }
+
+    public function setMitarbeiter(?Mitarbeiter $mitarbeiter): User
+    {
+        $this->mitarbeiter = $mitarbeiter;
         return $this;
     }
 }

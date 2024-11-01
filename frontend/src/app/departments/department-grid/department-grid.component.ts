@@ -92,7 +92,7 @@ export class DepartmentGridComponent implements OnInit {
 
         const dialogRef = this.dialog.open(DepartmentFormComponent, {
             width: '550px',
-            data: {},
+            data: data,
             disableClose: true,
         });
 

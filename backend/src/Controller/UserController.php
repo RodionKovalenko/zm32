@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Business\User\UserHandler;
 use App\Entity\Department;
 use App\Entity\DepartmentTyp;
 use App\Entity\User;
-use App\Forms\UserFormType;
 use App\Repository\DepartmentRepository;
 use App\Repository\UserRepository;
 use JMS\Serializer\SerializerInterface;
@@ -20,6 +20,7 @@ class UserController extends BaseController
         SerializerInterface $serializer,
         private readonly UserRepository $userRepository,
         private readonly DepartmentRepository $departmentRepository,
+        private readonly UserHandler $userHandler,
         private readonly FormFactoryInterface $formFactory
     ) {
         parent::__construct($serializer, $this->formFactory);
@@ -67,35 +68,17 @@ class UserController extends BaseController
     public function saveUser($id, Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $userId = $data['id'] ?? null;
-
-        if (empty($userId)) {
-            $userId = $id;
-        }
 
         try {
-            if ($userId !== null) {
-                $user = $this->userRepository->find($userId);
-            } else {
-                $user = new User();
-            }
+            $user = $this->userHandler->saveUser($data);
 
-            $form = $this->createForm(UserFormType::class, $user);
-            $form->submit($data, false);
+            $response = [
+                'success' => true,
+                'message' => 'User saved successfully!',
+                'data' => [$user]
+            ];
 
-            if ($form->isValid()) {
-                $this->userRepository->save($user);
-
-                $response = [
-                    'success' => true,
-                    'message' => 'User saved successfully!',
-                    'data' => $user
-                ];
-
-                return $this->getJsonResponse($response);
-            }
-
-            return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors(true)]);
+            return $this->getJsonResponse($response);
         } catch (\Exception $e) {
             $response = [
                 'success' => false,
@@ -112,7 +95,7 @@ class UserController extends BaseController
     {
         try {
             $user = $this->userRepository->find($id);
-            $this->userRepository->delete($user);
+            $this->userRepository->remove($user);
 
             $response = [
                 'success' => true,
@@ -127,6 +110,30 @@ class UserController extends BaseController
                 'data' => $e->getMessage()
             ];
         }
+
+        return $this->getJsonResponse($response);
+    }
+
+    #[Route(path: '/get_user_departments/{userId}', name: 'app_user_get_user_departments', methods: ['GET'])]
+    public function getUserDepartments($userId)
+    {
+        /** @var User $user */
+        $user = $this->userRepository->find($userId);
+        $mitarbeiter = $user->getMitarbeiter();
+        $departments = [];
+
+        if ($mitarbeiter !== null) {
+            $mitarbeiterDepartments = $mitarbeiter->getMitarbeiterToDepartments();
+
+            $departments = array_map(function ($mitarbeiterDepartment) {
+                return $mitarbeiterDepartment->getDepartment();
+            }, $mitarbeiterDepartments->getValues());
+        }
+
+        $response = [
+            'success' => true,
+            'data' => $departments
+        ];
 
         return $this->getJsonResponse($response);
     }

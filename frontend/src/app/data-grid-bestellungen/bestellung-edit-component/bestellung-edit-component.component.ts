@@ -12,7 +12,6 @@ import {DepartmentData} from "../../models/Department";
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpParams} from "@angular/common/http";
 import {Bestellung} from "../../models/Bestellung";
-import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-bestellung-edit-component',

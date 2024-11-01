@@ -5,4 +5,5 @@ export interface Mitarbeiter {
     lastname?: string;
     mitarbeiterId?: string;
     formTitle?: string;
+    departments?: any[];
 }
