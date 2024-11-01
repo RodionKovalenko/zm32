@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Department;
+use App\Entity\DepartmentTyp;
 use App\Entity\Material\Artikel;
 use App\Forms\ArtikelFormType;
 use App\Repository\DepartmentRepository;
@@ -17,7 +19,8 @@ class ArtikelController extends BaseController
     public function __construct(
         SerializerInterface $serializer,
         private readonly ArtikelRepository $artikelRepository,
-        private readonly FormFactoryInterface $formFactory
+        private readonly FormFactoryInterface $formFactory,
+        private readonly DepartmentRepository $departmentRepository
     ) {
         parent::__construct($serializer, $this->formFactory);
     }
@@ -27,6 +30,24 @@ class ArtikelController extends BaseController
     {
         $params = [];
         $search = $request->query->get('search') ?? null;
+        $departmentIds = $request->query->get('departments') ?? null;
+        $withAssociatedDate = $request->query->get('withAssociatedData') ?? false;
+
+        if (!empty($departmentIds)) {
+            $departmentIds = explode(',', $departmentIds);
+            $params['departmentIds'] = $departmentIds;
+
+            $departments = $this->departmentRepository->findBy(['id' => $departmentIds]);
+
+            // Check if department of type Alle is
+            $isAllDepartment = array_filter($departments, function (Department $department) {
+                return $department->getTyp() === DepartmentTyp::ALLE->value;
+            });
+
+            if (!empty($isAllDepartment)) {
+                $params['departmentIds'] = null;
+            }
+        }
 
         if (!empty($search)) {
             $params['search'] = $search;
@@ -38,13 +59,22 @@ class ArtikelController extends BaseController
             'success' => true,
             'data' => $artikels
         ];
-        return $this->getJsonResponse(
-            $response,
-            [
-                'Default',
-                'Artikel',
-            ]
-        );
+
+        if ($withAssociatedDate) {
+            return $this->getJsonResponse(
+                $response,
+                [
+                    'Default',
+                    'Artikel_Department',
+                    'Artikel_Hersteller',
+                    'Artikel_Lieferant',
+                    'Artikel_ArtikelToLieferBestellnummer',
+                    'Artikel_ArtikelToHerstRefnummer'
+                ]
+            );
+        }
+
+        return $this->getJsonResponse($response);
     }
 
     #[Route(path: '/save/{id}', name: 'app_artikel_save_artikel', defaults: ['id' => null], methods: ['POST'])]
@@ -95,8 +125,31 @@ class ArtikelController extends BaseController
     #[Route(path: '/delete/{id}', name: 'app_artikel_delete_artikel', defaults: ['id' => null], methods: ['POST'])]
     public function deleteArtikel($id, Request $request)
     {
-        $lieferant = $this->artikelRepository->find($id);
-        $this->artikelRepository->remove($lieferant);
+        try {
+            /** @var Artikel $artikel */
+            $artikel = $this->artikelRepository->find($id);
+
+            $artikel->getDepartments()->clear();
+            $artikel->getHerstellers()->clear();
+            $artikel->getLieferants()->clear();
+            $artikel->getArtikelToHerstRefnummers()->clear();
+            $artikel->getArtikelToLieferantBestellnummers()->clear();
+
+            $this->artikelRepository->remove($artikel);
+        } catch (\Exception $e) {
+            $response = [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+
+            return $this->getJsonResponse($response);
+        }
+
+        $response = [
+            'success' => true,
+        ];
+
+        return $this->getJsonResponse($response);
     }
 
     #[Route(path: '/get_by_id/{id}', name: 'app_artikel_get_artikel_by_id', methods: ['GET'])]

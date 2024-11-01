@@ -44,6 +44,14 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerModule, MatDatepickerTog
 import {DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule} from "@angular/material/core";
 import {MY_DATE_FORMATS} from "./models/DateFormat";
 import {CustomDateAdapter} from "./data-adapters/date.adapter";
+import {DepartmentsComponent} from "./departments/departments.component";
+import {DepartmentGridComponent} from "./departments/department-grid/department-grid.component";
+import {HerstellerGridComponent} from "./herstellers/hersteller-grid/hersteller-grid.component";
+import {LieferantGridComponent} from "./lieferants/lieferant-grid/lieferant-grid.component";
+import {PersonalGridComponent} from "./personal/personal-grid/personal-grid.component";
+import {PersonalComponent} from "./personal/personal.component";
+import {PersonalFormComponent} from "./personal/personal-form/personal-form.component";
+import {DepartmentFormComponent} from "./departments/department-form/department-form.component";
 
 @NgModule({
     declarations: [
@@ -60,7 +68,10 @@ import {CustomDateAdapter} from "./data-adapters/date.adapter";
         BestellungEditComponentComponent,
         BestelllisteComponent,
         NavigationMenuComponent,
-        HerstellerEditComponentComponent
+        HerstellerEditComponentComponent,
+        DepartmentsComponent,
+        DepartmentFormComponent,
+        DepartmentGridComponent,
     ],
     imports: [
         BrowserModule,
@@ -98,7 +109,11 @@ import {CustomDateAdapter} from "./data-adapters/date.adapter";
         MatDatepickerInput,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        HerstellerGridComponent,
+        LieferantGridComponent,
+        PersonalGridComponent,
+        PersonalFormComponent
     ],
     providers: [
         provideHttpClient(withInterceptorsFromDi()),

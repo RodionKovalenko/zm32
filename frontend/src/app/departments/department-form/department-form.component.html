@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>{{ data.formTitle }}</h1>
+
+<form [formGroup]="departmentForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content class="mat-dialog-content" fxLayout="column">
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Abteilungsname</mat-label>
+                <input matInput id="name" formControlName="name">
+                <mat-error *ngIf="departmentForm.get('name')?.invalid && departmentForm.get('name')?.touched">
+                    Abteilungsname ist erforderlich.
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+    </div>
+    <mat-toolbar class="fixed-toolbar">
+        <span class="spacer"></span>
+        <button mat-icon-button class="align-button color-cancel" matTooltip="Abbrechen" (click)="onNoClick()">
+            <mat-icon>cancel</mat-icon>
+        </button>
+        <button mat-icon-button type="submit" class="align-button color-confirm" matTooltip="Speichern" [disabled]="departmentForm.invalid">
+            <mat-icon>save</mat-icon>
+        </button>
+    </mat-toolbar>
+</form>

@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
@@ -12,13 +12,14 @@ import {DepartmentData} from "../../models/Department";
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpParams} from "@angular/common/http";
 import {Bestellung} from "../../models/Bestellung";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-bestellung-edit-component',
     templateUrl: './bestellung-edit-component.component.html',
     styleUrl: './bestellung-edit-component.component.css'
 })
-export class BestellungEditComponentComponent implements OnInit, AfterViewChecked {
+export class BestellungEditComponentComponent implements OnInit, AfterViewChecked, AfterViewInit {
     @ViewChild('textarea', {static: false}) textarea: ElementRef | undefined;
     @ViewChild('dropdownArtikels', { static: false }) dropdownArtikels: MultiSelectComponent | undefined;
 
@@ -42,6 +43,28 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                 private sanitizer: DomSanitizer,
                 public dialog: MatDialog,
                 private renderer: Renderer2) {
+    }
+
+
+    ngAfterViewInit(): void {
+        // Access the dropdown element's input field to listen for filter changes
+        setTimeout(() => {
+            if (this.dropdownArtikels) {
+                // Subscribe to the onFilterChange event
+                this.dropdownArtikels.onFilterChange.subscribe((filterData: any) => {
+                    this.onArtikelSearchChange(filterData);
+                });
+                this.dropdownArtikels.onDeSelect.subscribe(() => {
+                    // load all deparments again
+                    this.loadDepartments();
+                    // load all artikels again
+                    this.loadArtikel();
+                    this.resetForm();
+                });
+            } else {
+                console.error("Dropdown component is undefined. Ensure @ViewChild reference is correct.");
+            }
+        }, 2000);
     }
 
     ngOnInit(): void {
@@ -71,9 +94,9 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             idField: 'id',
             textField: 'name',
             itemsShowLimit: 1,
-            allowSearchFilter: false,
+            allowSearchFilter: true,
             searchPlaceholderText: 'Suchen',
-            allowRemoteDataSearch: false
+            allowRemoteDataSearch: true
         };
 
         this.bestellungForm = this.fb.group({
@@ -187,7 +210,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     }
 
     isOnlyOneArtikelSelected(): boolean {
-        return this.bestellungForm.get('artikels').value.length === 1;
+        return this.bestellungForm.get('artikels')?.value?.length === 1;
     }
 
     loadDepartments() {
@@ -205,6 +228,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         }
 
         mitarbeiterRequest.subscribe((response: any) => {
+            this.artikels = [];
             this.artikels = response.data; // Update the dropdown items with filtered data
 
             if (this.data.artikels && this.data.artikels.length > 0) {
@@ -377,6 +401,8 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                     url: data[0].url,
                 });
 
+                this.bestellungForm.get('artikels').setValue(data);
+
                 if (data[0] && data[0].artikelToLieferantBestellnummers && data[0].artikelToLieferantBestellnummers.length > 0) {
                     this.bestellungForm.patchValue({
                         bestellnummer: data[0].artikelToLieferantBestellnummers[0].bestellnummer,
@@ -435,6 +461,8 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             });
             this.updateDeparmentsDropdown(departments);
         }
+
+        this.onArtikelSearchChange(this.searchTerm);
     }
 
     updateDeparmentsDropdown(data: DepartmentData[]) {
@@ -461,24 +489,30 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         }
     }
 
-    onArtikelSearchChange(searchWord: any) {
+    onArtikelSearchChange(event: any) {
         let params = new HttpParams();
+        let departments = this.bestellungForm.get('departments').value;
         let search: any = '';
 
-        if (searchWord && searchWord?.target && searchWord.target.value) {
-            search = searchWord.target.value;
+        if (departments && departments.length > 0) {
+            const hasIdZero = departments.some((dept: any) => dept.typ === 0);
+            if (!hasIdZero) {
+                params = params.append('departments', departments.map((dept: any) => dept.id).join(','));
+            }
+        }
+
+        if (event && event?.target && event.target.value) {
+            search = event.target.value;
         } else {
-            search = searchWord;
+            search = event;
         }
 
         if (search && search.length > 0) {
             this.searchTerm = search;
         }
-        if (search && search.length > 3) {
+        if ((search && search.length > 0) || (departments && departments.length > 0)) {
             params = params.append('search', search);
             this.loadArtikel(params);
-
-            this.dropdownArtikels?.toggleDropdown(searchWord);
         } else {
             this.loadArtikel()
         }
@@ -487,5 +521,9 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     clearSearch() {
         this.searchTerm = '';
         this.loadArtikel();
+    }
+
+    resetForm(): void {
+        this.bestellungForm.reset(); // This will reset the form to its initial state
     }
 }

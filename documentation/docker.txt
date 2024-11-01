@@ -33,9 +33,14 @@ mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba localhost 127.0.0.
 
 FRONTEND:
 // start frontend in dev mode
-cd frontend
+cd frontend in dev mode
 docker-compose -f docker-compose-dev.yml up --build
 https://localhost:4201/#/app-login
+
+// remove all containers
+docker-compose -f docker-compose-dev.yml down --rmi all --volumes --remove-orphans
+docker-compose -f docker-compose-dev.yml build --no-cache
+docker-compose -f docker-compose-dev.yml up
 
 // build frontend
 // ddev exec npm run build
@@ -133,7 +138,7 @@ mysql -u zm_32 -p
 // show all containers running in dev for frontend
 docker-compose -f docker-compose-dev.yml ps
 docker exec -it angularcontainer sh
-npm run ng generate component data-grid-artikel/hersteller-edit-component
+npm run ng generate component data-griddd-artikel/hersteller-edit-component
 
 
 // bash in symfony in docker

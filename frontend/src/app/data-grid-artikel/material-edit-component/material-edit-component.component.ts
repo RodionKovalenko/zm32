@@ -267,7 +267,6 @@ export class MaterialEditComponentComponent implements OnInit {
             formValue.lieferants = formValue.lieferants.map((lieferant: any) => (lieferant.id));
             formValue.herstellers = formValue.herstellers.map((hersteller: any) => (hersteller.id));
 
-
             formValue.artikelToHerstRefnummers = formValue.artikelToHerstRefnummers.map((artikelToHersteller: any) => {
                 return {
                     artikel: formValue.id || null,
@@ -436,7 +435,7 @@ export class MaterialEditComponentComponent implements OnInit {
 
                     if (selectedHerstellers.length > 0) {
                         selectedHerstellers.forEach((selectedHersteller: any) => {
-                            if (selectedHersteller[0]?.name === hersteller.name && hersteller.name !== currentHersteller?.name) {
+                            if (selectedHersteller[0]?.id === hersteller.id && hersteller.id !== currentHersteller?.id) {
                                isHerstellerSelected = true;
                             }
                         });
@@ -449,7 +448,7 @@ export class MaterialEditComponentComponent implements OnInit {
             let selecterHerstellerExists = false;
             selectedHerstellers.forEach((selectedHersteller: any) => {
                 filteredHerstellers.forEach((filteredHersteller: any) => {
-                    if (selectedHersteller[0]?.name === filteredHersteller.name) {
+                    if (selectedHersteller[0]?.id === filteredHersteller.id) {
                         selecterHerstellerExists = true;
                     }
                 });
@@ -482,7 +481,7 @@ export class MaterialEditComponentComponent implements OnInit {
 
                     if (selectedLiferants.length > 0) {
                         selectedLiferants.forEach((selectedLieferant: any) => {
-                            if (selectedLieferant[0]?.name === lieferant.name && lieferant.name !== currentLieferant?.name) {
+                            if (selectedLieferant[0]?.id === lieferant.id && lieferant.id !== currentLieferant?.id) {
                                 isLieferantSelected = true;
                             }
                         });
@@ -495,7 +494,7 @@ export class MaterialEditComponentComponent implements OnInit {
             let selecterLieferantExists = false;
             selectedLiferants.forEach((selectedLiferant: any) => {
                 filteredLieferants.forEach((filteredLieferant: any) => {
-                    if (selectedLiferant[0]?.name === filteredLieferant.name) {
+                    if (selectedLiferant[0]?.id === filteredLieferant.id) {
                         selecterLieferantExists = true;
                     }
                 });

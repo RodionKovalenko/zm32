@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
             return;
         }
 
-        let loginStr = this.mitarbeiterId.substring(2, 4);
+        let loginStr = Number(this.mitarbeiterId.substring(1, 4));
 
         this.authService.login(Number(loginStr)).subscribe(
             loggedIn => {

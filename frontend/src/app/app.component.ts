@@ -1,8 +1,6 @@
 import {Component} from '@angular/core';
 import {NavigationEnd, Router, RouterOutlet} from "@angular/router";
 import {routes} from "./app.routes";
-import {LoginComponent} from "./login/login.component";
-import {NgIf} from "@angular/common";
 import {AuthService} from "./auth.service";
 
 @Component({

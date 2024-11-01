@@ -7,7 +7,7 @@ import {HttpService} from "../services/http.service";
 import {BestellungEditComponentComponent} from "./bestellung-edit-component/bestellung-edit-component.component";
 import {Bestellung} from "../models/Bestellung";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
-import {FormBuilder, Validators} from "@angular/forms";
+import {AbstractControlOptions, FormBuilder, Validators} from "@angular/forms";
 import {LoginErrorComponent} from "../login/login-error/login-error.component";
 import {HttpParams} from "@angular/common/http";
 import {dateRangeValidator} from "../data-adapters/date.validator";
@@ -57,15 +57,17 @@ export class DataGridBestellungenComponent implements OnInit {
 
         let currentDate = new Date();
 
-        let twoWeeksAgo = new Date();
-        twoWeeksAgo.setDate(currentDate.getDate() - 14);
+        let dateSinceAgo = new Date();
+
+        currentDate.setHours(0, 0, 0, 0);
+        dateSinceAgo.setDate(currentDate.getDate() - 60);
 
         this.bestellungForm = this.fb.group({
             departments: [[]],
             status: [[]],
-            datum: [twoWeeksAgo],
+            datum: [dateSinceAgo],
             datumBis: ['']
-        }, { validator: dateRangeValidator()});
+        }, { validator: dateRangeValidator()} as AbstractControlOptions);
     }
 
     loadDepartments() {

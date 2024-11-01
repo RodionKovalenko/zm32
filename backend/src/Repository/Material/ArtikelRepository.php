@@ -19,9 +19,15 @@ class ArtikelRepository extends DefaultRepository
     public function getByParams(array $params): array
     {
         $searchWord = $params['search'] ?? null;
+        $departmentsId =  $params['departmentIds'] ?? null;
 
         $q = $this->createQueryBuilder('a')
             ->leftJoin('a.departments', 'd');
+
+        if (!empty($departmentsId)) {
+            $q->andWhere('d.id IN (:departmentsId)')
+                ->setParameter('departmentsId', $departmentsId);
+        }
 
         if (!empty($searchWord)) {
             $q->leftJoin('a.artikelToHerstRefnummers', 'hrn')
