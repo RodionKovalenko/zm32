@@ -20,84 +20,74 @@ class BestellungExportHelper
         $dokumentTitle = 'Export Bestellungen ' . $currentDateString;
 
         // Set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('ZM 32');
-        $pdf->SetTitle($dokumentTitle);
-        $pdf->SetSubject('Bestellungen');
+        $pdf->setCreator(PDF_CREATOR);
+        $pdf->setAuthor('ZM 32');
+        $pdf->setTitle($dokumentTitle);
+        $pdf->setSubject('Bestellungen');
 
-        $pdf->SetHeaderData('', 0, $dokumentTitle, 'ZM 32', array(0, 64, 255), array(0, 64, 128));
+        $pdf->setHeaderData('', 0, $dokumentTitle, 'ZM 32', array(0, 64, 255), array(0, 64, 128));
         $pdf->setHeaderFont(array('helvetica', '', 12));
         $pdf->setFooterFont(array('helvetica', '', 10));
-        $pdf->SetMargins(15, 30, 15);
-        $pdf->SetHeaderMargin(10);
-        $pdf->SetFooterMargin(15);
-        $pdf->SetAutoPageBreak(true, 20);
-        $pdf->SetFont('helvetica', '', 12);
-        $pdf->AddPage();
+        $pdf->setMargins(15, 30, 15);
+        $pdf->setHeaderMargin(10);
+        $pdf->setFooterMargin(15);
+        $pdf->setAutoPageBreak(true, 20);
+        $pdf->setFont('helvetica', '', 10);
+        $pdf->addPage();
 
         // Initialize content variable
-        $html = '';
+        $html = '<h1 style="margin-bottom: 5px;">' . $dokumentTitle . '</h1>';
 
-        /** @var Bestellung $bestellung */
+        // Group Bestellungen by Lieferants
+        $bestellungenByLieferant = [];
+
         foreach ($bestellungen as $bestellung) {
-            // Add a section title for each Bestellung with visual separation
-            $html .= '<h2 style="border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px; margin-top: 20px; font-size: 16px;">Bestellung ID: ' . $bestellung->getId() . '</h2>';
-            $html .= '<div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 25px; background-color: #f9f9f9;">';
+            /** @var Lieferant $lieferant */
+            $lieferant = $bestellung->getLieferants()[0] ?? null;
 
-            // Add article details using a table
-            $html .= '<table border="0" cellpadding="4" cellspacing="0" width="100%">';
-            $html .= '<thead><tr><th style="border-bottom: 1px solid #ddd; background-color: #f2f2f2;">Artikel Details</th></tr></thead>';
-            $html .= '<tbody>';
-            foreach ($bestellung->getArtikels() as $artikel) {
-                $html .= '<tr>';
-                $html .= '<td><strong>Artikel:</strong> ' . $artikel->getName() . '<br>';
-                $html .= '<strong>Zusatzinfo:</strong> ' . $artikel->getDescription() . '</td>';
-                $html .= '</tr>';
+            if ($lieferant !== null) {
+                $bestellungenByLieferant[$lieferant->getName()][] = $bestellung;
+            } else {
+                $bestellungenByLieferant['N/A'][] = $bestellung;
             }
-            $html .= '</tbody></table>';
+        }
 
-            // Add Bestellung details
-            $html .= '<table border="0" cellpadding="4" cellspacing="0" width="100%" style="margin-top: 15px;">';
+        // Loop through each Lieferant group
+        foreach ($bestellungenByLieferant as $lieferantName => $bestellungen) {
+            // Add Lieferant header with smaller font and reduced margin
+            $html .= '<h2 style="font-size: 14px; margin: 5px 0;">Lieferant: ' . $lieferantName . '</h2>';
+
+            // Start the table for this Lieferant group with smaller cell padding
+            $html .= '<table border="1" cellpadding="3" cellspacing="0" width="100%" style="border-collapse: collapse;">';
+
+            // Add table header (only once per Lieferant)
+            $html .= '<thead>
+                    <tr>
+                        <th width="30mm" style="border: 1px solid #000; background-color: #f2f2f2; text-align: left;">Menge</th>
+                        <th width="45mm" style="border: 1px solid #000; background-color: #f2f2f2; text-align: left;">Bestellnummer</th>
+                        <th width="45mm" style="border: 1px solid #000; background-color: #f2f2f2; text-align: left;">Artikel</th>
+                        <th width="30mm" style="border: 1px solid #000; background-color: #f2f2f2; text-align: left;">Notizen</th>
+                    </tr>
+                  </thead>';
+
             $html .= '<tbody>';
-            $html .= '<tr><td style="width: 30%;"><strong>Notizen:</strong></td><td>' . $bestellung->getDescription() . '</td></tr>';
-            $html .= '<tr><td><strong>Datum:</strong></td><td>' . $bestellung->getDatum()->format('d.m.Y') . '</td></tr>';
-            $html .= '<tr><td><strong>Status:</strong></td><td>' . BestellungStatus::getStatusString($bestellung->getStatus()) . '</td></tr>';
-            $html .= '<tr><td><strong>Preis:</strong></td><td>' . $bestellung->getPreis() . '</td></tr>';
-            $html .= '<tr><td><strong>Menge:</strong></td><td>' . $bestellung->getAmount() . '</td></tr>';
-            $html .= '<tr><td><strong>Bestellt von:</strong></td><td>' . $bestellung->getMitarbeiter()->getVorname() . ' ' . $bestellung->getMitarbeiter()->getNachname() . '</td></tr>';
-            $html .= '</tbody></table>';
 
-            // Add Departments, Lieferants, and Herstellers
-            $html .= '<table border="0" cellpadding="4" cellspacing="0" width="100%" style="margin-top: 15px;">';
-            $html .= '<thead><tr><th style="border-bottom: 1px solid #ddd; background-color: #f2f2f2;">Weitere Informationen</th></tr></thead>';
-            $html .= '<tbody>';
-            foreach ($bestellung->getDepartments() as $department) {
-                $html .= '<tr><td><strong>Abteilung:</strong> ' . $department->getName() . '</td></tr>';
-            }
-            foreach ($bestellung->getLieferants() as $lieferant) {
-                $html .= '<tr><td><strong>Lieferant:</strong> ' . $lieferant->getName() . '</td></tr>';
-                $bestellnummer = $this->getLieferantBestellnummer($bestellung, $lieferant);
+            // Data rows for each Bestellung in the current Lieferant group
+            foreach ($bestellungen as $bestellung) {
+                /** @var Artikel $artikel */
+                foreach ($bestellung->getArtikels() as $artikel) {
+                    $lieferantBestellnummer = $this->getLieferantBestellnummer($bestellung, $bestellung->getLieferants()[0]);
 
-                if ($bestellnummer !== null) {
-                    $html .= '<tr><td><strong>Lieferant-Bestellnummer:</strong> ' . $bestellnummer . '</td></tr>';
+                    $html .= '<tr>';
+                    $html .= '<td width="30mm" style="border: 1px solid #000; vertical-align: top; padding: 3px;">' . $bestellung->getAmount() . '</td>';
+                    $html .= '<td width="45mm" style="border: 1px solid #000; vertical-align: top; padding: 3px;">' . ($lieferantBestellnummer ?? 'N/A') . '</td>';
+                    $html .= '<td width="45mm" style="border: 1px solid #000; vertical-align: top; padding: 3px;">' . $artikel->getName() . '</td>';
+                    $html .= '<td width="30mm" style="border: 1px solid #000; vertical-align: top; padding: 3px;">' . $bestellung->getDescription() . '</td>';
+                    $html .= '</tr>';
                 }
             }
-            foreach ($bestellung->getHerstellers() as $hersteller) {
-                $html .= '<tr><td><strong>Hersteller:</strong> ' . $hersteller->getName() . '</td></tr>';
 
-                $refnummer = $this->getHerstellerRefnummer($bestellung, $hersteller);
-
-                if ($refnummer !== null) {
-                    $html .= '<tr><td><strong>Hersteller-REF-Nummer:</strong> ' . $refnummer . '</td></tr>';
-                }
-            }
-            $html .= '</tbody></table>';
-
-            $html .= '</div>';
-
-            // Add a page break if desired
-            // Uncomment the line below if you want each Bestellung on a new page
-            // $pdf->AddPage();
+            $html .= '</tbody></table>';  // Close the table for this Lieferant group
         }
 
         // Output the content
@@ -108,16 +98,19 @@ class BestellungExportHelper
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
         header('Content-Type: application/pdf');
-        header('Content-Disposition: inline; filename="example.pdf"');
+        header('Content-Disposition: inline; filename="export_bestellungen.pdf"');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . strlen($pdf->Output('', 'S')));
 
         // Close and output PDF document
-        $pdf->Output('example.pdf', 'D');
+        $pdf->Output('export_bestellungen.pdf', 'D');
     }
 
-    private function getLieferantBestellnummer(Bestellung $bestellung, Lieferant $lieferant)
+    private function getLieferantBestellnummer(Bestellung $bestellung, ?Lieferant $lieferant = null)
     {
+        if ($lieferant === null) {
+            return null;
+        }
         /** @var Artikel $artikel */
         foreach ($bestellung->getArtikels() as $artikel) {
             /** @var ArtikelToLieferBestellnummer $artikelToLieferantBestellnummer */
