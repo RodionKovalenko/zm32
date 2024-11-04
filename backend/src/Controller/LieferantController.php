@@ -18,7 +18,7 @@ class LieferantController extends BaseController
         parent::__construct($serializer, $this->formFactory);
     }
 
-    #[Route(path: '/get_lieferant', name: 'app_lieferant_get_lieferants', methods: ['GET'])]
+    #[Route(path: '/get_lieferant', name: 'app_lieferant_get_lieferant', methods: ['GET'])]
     public function getLieferants(Request $request)
     {
         try {

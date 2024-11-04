@@ -218,7 +218,7 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     loadLieferants(data: any) {
-        let url = this.httpService.get_baseUrl() + '/lieferant';
+        let url = this.httpService.get_baseUrl() + '/lieferant/get_lieferant';
         let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
         mitarbeiterRequest.subscribe((response: any) => {
             this.lieferants = response.data;
@@ -231,7 +231,7 @@ export class MaterialEditComponentComponent implements OnInit {
     }
 
     loadHerstellers(data: any) {
-        let url = this.httpService.get_baseUrl() + '/hersteller/0';
+        let url = this.httpService.get_baseUrl() + '/hersteller/get_hersteller';
         let mitarbeiterRequest = this.httpService.get_httpclient().get(url);
         mitarbeiterRequest.subscribe((response: any) => {
             this.herstellers = response.data;
