@@ -25,7 +25,7 @@ export class DataGridArtikelComponent implements OnInit {
     @Input() departmentId: Number = 0;
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    displayedColumns: string[] = ['id', 'name', 'description', 'departments', 'lieferants', 'herstellers', 'descriptionZusatz', 'edit', 'remove'];
+    displayedColumns: string[] = ['id', 'name', 'description', 'departments', 'lieferants', 'herstellers', 'edit', 'remove'];
     dataSource = new MatTableDataSource<Artikel>([]);
 
     dropdownDepartmentSettings: IDropdownSettings = {};
