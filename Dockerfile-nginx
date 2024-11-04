@@ -32,7 +32,7 @@ COPY frontend/ ./
 RUN rm -rf /app/dist
 
 # Build the Angular app
-RUN npm run build --prod --output-path=dist/browser
+RUN npm run build --omit=dev --output-path=dist/browser
 
 # Stage 2: Serve with Nginx
 FROM nginx:1.19-alpine
