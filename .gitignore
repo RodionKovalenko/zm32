@@ -4,3 +4,4 @@
 /cron.log
 /.env.local
 /config/start-docker-build-prod.ps1
+/backend/var/export/

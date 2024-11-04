@@ -24,6 +24,12 @@ parameters:
     env(STATS_MAIL_RECIPIENTS): null
     database_url: '%env(resolve:DATABASE_URL)%'
     database_url_console: '%env(resolve:DATABASE_URL_CONSOLE)%'
+    export_mail_recipients: '%env(EXPORT_MAIL_RECIPIENTS)%'
+    env(EXPORT_MAIL_RECIPIENTS): null
+    export_mail_sender: '%env(EXPORT_MAIL_SENDER)%'
+    env(EXPORT_MAIL_SENDER): null
+    export_mail_sender_password: '%env(EXPORT_MAIL_SENDER_PASSWORD)%'
+    env(EXPORT_MAIL_SENDER_PASSWORD): null
 
 services:
     # default configuration for services in *this* file
@@ -72,3 +78,10 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
     App\Security\LoginFormAuthenticator:
         autowire: true
+    App\Command\Notification\ExportNotificationCommand:
+        arguments:
+            $exportMailRecipients: '%export_mail_recipients%'
+    App\Business\Email\EmailNotificationService:
+        arguments:
+            $exportMailSender: '%export_mail_sender%'
+            $exportMailSenderPassword: '%export_mail_sender_password%'

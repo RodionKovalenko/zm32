@@ -51,6 +51,7 @@
         "nelmio/cors-bundle": "^2.2",
         "nelmio/security-bundle": "^3.0",
         "paragonie/random-lib": "^2.0",
+        "phpmailer/phpmailer": "^6.9",
         "phpoffice/phpspreadsheet": "^1.26",
         "phpseclib/phpseclib": "^2.0",
         "ramsey/uuid": "^3.9",

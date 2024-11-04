@@ -3,7 +3,6 @@
 namespace App\Business\Export;
 
 use App\Entity\Bestellung;
-use App\Entity\BestellungStatus;
 use App\Entity\Material\Artikel;
 use App\Entity\Material\ArtikelToHerstRefnummer;
 use App\Entity\Material\ArtikelToLieferBestellnummer;
@@ -12,7 +11,11 @@ use App\Entity\Material\Lieferant;
 
 class BestellungExportHelper
 {
-    public function generateExport($bestellungen)
+    public function __construct(private readonly string $pathUploadsRoot)
+    {
+    }
+
+    public function generateExport($bestellungen, $returnOnlyFilePath = false): ?string
     {
         // Create new PDF document
         $pdf = new \TCPDF();
@@ -90,7 +93,7 @@ class BestellungExportHelper
                 foreach ($bestellung->getArtikels() as $artikel) {
                     $lieferantBestellnummer = $this->getLieferantBestellnummer($bestellung, $bestellung->getLieferants()[0]);
                     $bestelltVon = $bestellung->getMitarbeiter()->getVorname() . ' ' . $bestellung->getMitarbeiter()->getNachname();
-                    $preis = $bestellung->getPreis() ? $bestellung->getPreis()  . ' €' : '';
+                    $preis = $bestellung->getPreis() ? $bestellung->getPreis() . ' €' : '';
 
                     $html .= '<tr>';
                     $html .= '<td width="15mm" style="border: 1px solid #000; vertical-align: top; padding: 3px;">' . $bestellung->getAmount() . '</td>';
@@ -109,22 +112,30 @@ class BestellungExportHelper
         // Output the content
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Set HTTP headers for PDF inline display or download
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization');
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: inline; filename="export_bestellungen.pdf"');
-        header('Content-Transfer-Encoding: binary');
-        header('Content-Length: ' . strlen($pdf->Output('', 'S')));
+        if (!$returnOnlyFilePath) {
+            // Set HTTP headers for PDF inline display or download
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization');
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="export_bestellungen.pdf"');
+            header('Content-Transfer-Encoding: binary');
+            header('Content-Length: ' . strlen($pdf->Output('', 'S')));
+        }
+
+        $filePath = $this->pathUploadsRoot . '/export/' . $currentDateString . '.pdf';
 
         // Close and output PDF document
         $pdf->Output('export_bestellungen.pdf', 'D');
+
+        if ($returnOnlyFilePath) {
+            return $filePath;
+        }
+
+        return null;
     }
 
-
-
-        private function getLieferantBestellnummer(Bestellung $bestellung, ?Lieferant $lieferant = null)
+    private function getLieferantBestellnummer(Bestellung $bestellung, ?Lieferant $lieferant = null)
     {
         if ($lieferant === null) {
             return null;
