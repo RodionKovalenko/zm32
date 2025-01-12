@@ -39,6 +39,10 @@ export class AuthService {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('mitarbeiterId', mitarbeiterId.toString());
             } else {
+              this.loggedIn.next(false);
+              localStorage.setItem('isLoggedIn', 'false');
+              localStorage.setItem('mitarbeiterId', '');
+
                 this.dialog.open(LoginErrorComponent, {
                     width: '450px',
                     height: '150px',

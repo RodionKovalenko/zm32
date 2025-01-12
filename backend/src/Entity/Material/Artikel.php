@@ -37,6 +37,9 @@ class Artikel
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $model;
 
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $preis = null;
+
     #[Groups(['Artikel_Department', 'Department'])]
     #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: 'artikels')]
     #[ORM\JoinTable(name: 'artikel_to_departments')]
@@ -123,6 +126,17 @@ class Artikel
     public function setModel(?string $model): self
     {
         $this->model = $model;
+        return $this;
+    }
+
+    public function getPreis(): ?string
+    {
+        return $this->preis;
+    }
+
+    public function setPreis(?string $preis): Artikel
+    {
+        $this->preis = $preis;
         return $this;
     }
 

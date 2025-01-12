@@ -11,6 +11,7 @@ import {dateRangeValidator} from "../data-adapters/date.validator";
 import {HttpParams} from "@angular/common/http";
 import {AbstractControlOptions, FormBuilder} from "@angular/forms";
 import {LoginErrorComponent} from "../login/login-error/login-error.component";
+import {BestellungEditComponentComponent} from "../data-grid-bestellungen/bestellung-edit-component/bestellung-edit-component.component";
 
 @Component({
     selector: 'app-data-grid-artikel',
@@ -25,7 +26,7 @@ export class DataGridArtikelComponent implements OnInit {
     @Input() departmentId: Number = 0;
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    displayedColumns: string[] = ['id', 'name', 'description', 'departments', 'lieferants', 'herstellers', 'edit', 'remove'];
+    displayedColumns: string[] = ['id', 'name', 'description', 'departments', 'lieferants', 'herstellers', 'add-bestellung', 'edit', 'remove'];
     dataSource = new MatTableDataSource<Artikel>([]);
 
     dropdownDepartmentSettings: IDropdownSettings = {};
@@ -189,6 +190,26 @@ export class DataGridArtikelComponent implements OnInit {
             }
         });
     }
+
+  addBestellung(record: Artikel) {
+    let data: any = {};
+    data.formTitle = 'Bestellung hinzufügen';
+    data.artikels = [record];
+    data.preis = record.preis;
+
+    const dialogRef = this.dialog.open(BestellungEditComponentComponent, {
+      width: '550px',
+      maxHeight: '100vh',
+      data,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fetchDataByDepartmentId();
+      }
+    });
+  }
 
     removeRecord(record: Artikel) {
         let url = this.httpService.get_baseUrl() + '/artikel/delete/' + record.id;

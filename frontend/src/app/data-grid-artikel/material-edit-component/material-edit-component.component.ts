@@ -74,6 +74,7 @@ export class MaterialEditComponentComponent implements OnInit {
             id: [this.data?.id || 0],
             name: [this.data?.name || '', Validators.required],
             url: [this.data?.url || ''],
+            preis: [this.data?.preis || ''],
             description: [this.data?.description || ''],
             departments: [this.data?.departments || [], Validators.required],
             lieferants: [this.data?.lieferants || []],
@@ -271,7 +272,7 @@ export class MaterialEditComponentComponent implements OnInit {
                 return {
                     artikel: formValue.id || null,
                     hersteller: artikelToHersteller.hersteller[0].id,
-                    refnummer: artikelToHersteller.refnummer,
+                    refnummer: artikelToHersteller.refnummer
                 }
             });
 

@@ -3,6 +3,7 @@ export interface Artikel {
     id: number;
     name: string;
     description?: string;
+    preis?: number;
     formTitle?: string;
     quantity?: number;
     lieferants?: any[];
