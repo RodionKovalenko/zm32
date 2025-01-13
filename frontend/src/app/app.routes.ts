@@ -10,6 +10,7 @@ import {DepartmentsComponent} from "./departments/departments.component";
 import {HerstellersComponent} from "./herstellers/herstellers.component";
 import {LieferantsComponent} from "./lieferants/lieferants.component";
 import {PersonalComponent} from "./personal/personal.component";
+import {NavigationMenuComponent} from "./navigation-menu/navigation-menu.component";
 
 export const routes: Routes = [
   {path: 'app-login', component: LoginComponent},
@@ -20,6 +21,7 @@ export const routes: Routes = [
   {path: 'app-lieferants', component: LieferantsComponent, canActivate: [AuthGuard]},
   {path: 'app-personal', component: PersonalComponent, canActivate: [AuthGuard]},
   {path: 'app-logout', component: LogoutComponent, canActivate: [AuthGuard]},
+  { path: '**', component: BestelllisteComponent, pathMatch: 'full', canActivateChild: [false] }
 ];
 
 
