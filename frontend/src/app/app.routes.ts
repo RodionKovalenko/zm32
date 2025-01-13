@@ -1,5 +1,4 @@
 import {RouterModule, Routes} from '@angular/router';
-import {AppComponent} from "./app.component";
 import {ArtikellisteComponent} from "./artikelliste/artikelliste.component";
 import {NgModule} from "@angular/core";
 import {LoginComponent} from "./login/login.component";
@@ -10,7 +9,6 @@ import {DepartmentsComponent} from "./departments/departments.component";
 import {HerstellersComponent} from "./herstellers/herstellers.component";
 import {LieferantsComponent} from "./lieferants/lieferants.component";
 import {PersonalComponent} from "./personal/personal.component";
-import {NavigationMenuComponent} from "./navigation-menu/navigation-menu.component";
 
 export const routes: Routes = [
   {path: 'app-login', component: LoginComponent},
