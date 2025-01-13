@@ -11,12 +11,9 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button'; // Import MatButtonModule for MatButton
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator'; // Import MatPaginatorModule for MatPaginator
 
-import {HttpAppInterceptor} from './services/http.service';
-import {AppRoutingModule} from './app.routes';
 import {RouterOutlet} from "@angular/router";
 import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./app.component";
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {LoginComponent} from "./login/login.component";
 import {ArtikellisteComponent} from "./artikelliste/artikelliste.component";
 import {MatIconModule} from "@angular/material/icon";
@@ -41,9 +38,7 @@ import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerModule, MatDatepickerToggle} from "@angular/material/datepicker";
-import {DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule} from "@angular/material/core";
-import {MY_DATE_FORMATS} from "./models/DateFormat";
-import {CustomDateAdapter} from "./data-adapters/date.adapter";
+import {MatNativeDateModule} from "@angular/material/core";
 import {DepartmentsComponent} from "./departments/departments.component";
 import {DepartmentGridComponent} from "./departments/department-grid/department-grid.component";
 import {HerstellerGridComponent} from "./herstellers/hersteller-grid/hersteller-grid.component";
@@ -56,86 +51,73 @@ import {HerstellersComponent} from "./herstellers/herstellers.component";
 import {LieferantsComponent} from "./lieferants/lieferants.component";
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        LoginComponent,
-        LogoutComponent,
-        LoginErrorComponent,
-        ArtikellisteComponent,
-        RegistrateUserComponent,
-        DataGridArtikelComponent,
-        DataGridBestellungenComponent,
-        MaterialEditComponentComponent,
-        LieferantEditComponentComponent,
-        BestellungEditComponentComponent,
-        BestelllisteComponent,
-        NavigationMenuComponent,
-        HerstellerEditComponentComponent,
-        DepartmentsComponent,
-        DepartmentFormComponent,
-        DepartmentGridComponent,
-        PersonalGridComponent,
-        PersonalFormComponent,
-        PersonalComponent,
-        HerstellersComponent,
-        HerstellerGridComponent,
-        LieferantGridComponent,
-        LieferantsComponent
-    ],
-    imports: [
-        BrowserModule,
-        CommonModule,
-        AppRoutingModule,
-        AgGridModule,
-        MatSortModule,
-        MatTableModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatTableModule,
-        MatPaginator,
-        MatIconModule,
-        MatButtonModule,
-        MatPaginatorModule,
-        FormsModule,
-        RouterOutlet,
-        BrowserAnimationsModule,
-        MatToolbar,
-        MatSidenavContent,
-        MatSidenavContainer,
-        MatNavList,
-        MatListItem,
-        MatSidenav,
-        FlexModule,
-        MatTooltip,
-        ReactiveFormsModule,
-        NgMultiSelectDropDownModule.forRoot(),
-        MatCheckbox,
-        MatSelect,
-        MatOption,
-        MatDatepickerToggle,
-        MatDatepicker,
-        MatDatepickerInput,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatFormFieldModule
-    ],
-    providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        // Add your interceptors to the HTTP_INTERCEPTORS multi-provider
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: HttpAppInterceptor,
-            multi: true
-        },
-        { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-        { provide: DateAdapter, useClass: CustomDateAdapter },
-    ],
-    bootstrap: [AppComponent],
-    exports: [
-        PersonalGridComponent
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  declarations: [],
+  imports: [
+    AppComponent,
+    LoginComponent,
+    LogoutComponent,
+    LoginErrorComponent,
+    ArtikellisteComponent,
+    RegistrateUserComponent,
+    DataGridArtikelComponent,
+    DataGridBestellungenComponent,
+    MaterialEditComponentComponent,
+    LieferantEditComponentComponent,
+    BestellungEditComponentComponent,
+    BestelllisteComponent,
+    NavigationMenuComponent,
+    HerstellerEditComponentComponent,
+    DepartmentsComponent,
+    DepartmentFormComponent,
+    DepartmentGridComponent,
+    PersonalGridComponent,
+    PersonalFormComponent,
+    PersonalComponent,
+    HerstellersComponent,
+    HerstellerGridComponent,
+    LieferantGridComponent,
+    LieferantsComponent,
+    BrowserModule,
+    CommonModule,
+    AgGridModule,
+    MatSortModule,
+    MatTableModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginator,
+    MatIconModule,
+    MatButtonModule,
+    MatPaginatorModule,
+    FormsModule,
+    RouterOutlet,
+    BrowserAnimationsModule,
+    MatToolbar,
+    MatSidenavContent,
+    MatSidenavContainer,
+    MatNavList,
+    MatListItem,
+    MatSidenav,
+    FlexModule,
+    MatTooltip,
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    MatCheckbox,
+    MatSelect,
+    MatOption,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule
+  ],
+  exports: [
+    PersonalGridComponent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 }
+

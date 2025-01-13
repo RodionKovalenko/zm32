@@ -1,22 +1,41 @@
 import {AfterViewChecked, AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
 import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
 import {MaterialEditComponentComponent} from "../../data-grid-artikel/material-edit-component/material-edit-component.component";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
 import {Hersteller} from "../../models/Hersteller";
-import {IDropdownSettings, MultiSelectComponent} from "ng-multiselect-dropdown";
+import {IDropdownSettings, MultiSelectComponent, NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {Artikel} from "../../models/Artikel";
 import {DepartmentData} from "../../models/Department";
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpParams} from "@angular/common/http";
 import {Bestellung} from "../../models/Bestellung";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatIcon} from "@angular/material/icon";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-bestellung-edit-component',
-    templateUrl: './bestellung-edit-component.component.html',
-    styleUrl: './bestellung-edit-component.component.css'
+  selector: 'app-bestellung-edit-component',
+  templateUrl: './bestellung-edit-component.component.html',
+  imports: [
+    ReactiveFormsModule,
+    MatDialogContent,
+    MatFormFieldModule,
+    MatInputModule,
+    NgMultiSelectDropDownModule,
+    MatIcon,
+    MatToolbar,
+    MatIconButton,
+    MatTooltip,
+    NgIf,
+  ],
+  styleUrl: './bestellung-edit-component.component.css'
 })
 export class BestellungEditComponentComponent implements OnInit, AfterViewChecked, AfterViewInit {
     @ViewChild('textarea', {static: false}) textarea: ElementRef | undefined;

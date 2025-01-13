@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpService} from "../services/http.service";
-import {DepartmentData} from "../models/Department";
+import {Component} from '@angular/core';
+import {DataGridBestellungenComponent} from "../data-grid-bestellungen/data-grid-bestellungen.component";
 @Component({
-    selector: 'app-bestellliste',
-    templateUrl: './bestellliste.component.html',
-    styleUrl: './bestellliste.component.css'
+  selector: 'app-bestellliste',
+  templateUrl: './bestellliste.component.html',
+  imports: [
+    DataGridBestellungenComponent
+  ],
+  styleUrl: './bestellliste.component.css'
 })
 
-export class BestelllisteComponent  {
-
-}
+export class BestelllisteComponent  {}

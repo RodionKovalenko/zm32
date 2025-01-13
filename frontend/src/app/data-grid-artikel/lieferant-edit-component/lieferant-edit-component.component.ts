@@ -1,14 +1,37 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {HttpService} from "../../services/http.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Lieferant} from "../../models/Lieferant";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
-import {FormArray, FormBuilder, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
+import {MatInput, MatInputModule} from "@angular/material/input";
+import {NgForOf, NgIf} from "@angular/common";
+import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
-    selector: 'app-lieferant-edit-component',
-    templateUrl: './lieferant-edit-component.component.html',
-    styleUrl: './lieferant-edit-component.component.css'
+  selector: 'app-lieferant-edit-component',
+  templateUrl: './lieferant-edit-component.component.html',
+  imports: [
+    MatDialogTitle,
+    ReactiveFormsModule,
+    MatDialogContent,
+    MatFormField,
+    MatInput,
+    NgIf,
+    NgForOf,
+    MatButton,
+    MatToolbar,
+    MatIconButton,
+    MatIcon,
+    MatTooltip,
+    MatFormFieldModule,
+    MatInputModule
+  ],
+  styleUrl: './lieferant-edit-component.component.css'
 })
 export class LieferantEditComponentComponent implements OnInit {
     lieferantForm: any;

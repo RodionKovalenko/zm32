@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
 import {Hersteller} from "../../models/Hersteller";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {HttpService} from "../../services/http.service";
@@ -12,10 +12,35 @@ import {HttpParams} from "@angular/common/http";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
 import {Lieferant} from "../../models/Lieferant";
 import {LieferantEditComponentComponent} from "../../data-grid-artikel/lieferant-edit-component/lieferant-edit-component.component";
+import {MatToolbar} from "@angular/material/toolbar";
+import {NgForOf, NgIf} from "@angular/common";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
 @Component({
-    selector: 'app-lieferant-grid',
-    templateUrl: './lieferant-grid.component.html',
-    styleUrl: './lieferant-grid.component.css'
+  selector: 'app-lieferant-grid',
+  templateUrl: './lieferant-grid.component.html',
+  imports: [
+    MatToolbar,
+    NgIf,
+    MatIcon,
+    MatIconButton,
+    MatTooltip,
+    MatTable,
+    MatSort,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatPaginator,
+    NgForOf
+  ],
+  styleUrl: './lieferant-grid.component.css'
 })
 export class LieferantGridComponent implements OnInit {
     @Input() departmentId: Number = 0;

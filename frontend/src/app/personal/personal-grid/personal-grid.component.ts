@@ -1,21 +1,47 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
 import {HttpService} from "../../services/http.service";
 import {MatDialog} from "@angular/material/dialog";
-import {AbstractControlOptions, FormBuilder} from "@angular/forms";
+import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {HttpParams} from "@angular/common/http";
 import {Artikel} from "../../models/Artikel";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
 import {Mitarbeiter} from "../../models/Mitarbeiter";
-import {IDropdownSettings} from "ng-multiselect-dropdown";
+import {IDropdownSettings, NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {PersonalFormComponent} from "../personal-form/personal-form.component";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {NgIf} from "@angular/common";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
-    selector: 'app-personal-grid',
-    templateUrl: './personal-grid.component.html',
-    styleUrl: './personal-grid.component.css'
+  selector: 'app-personal-grid',
+  templateUrl: './personal-grid.component.html',
+  imports: [
+    MatToolbar,
+    MatIcon,
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule,
+    MatIconButton,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    MatHeaderRow,
+    MatRow,
+    MatPaginator,
+    NgIf,
+    MatTooltip,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatHeaderCellDef,
+    MatCellDef
+  ],
+  styleUrl: './personal-grid.component.css'
 })
 export class PersonalGridComponent implements OnInit {
     @ViewChild(MatSort) sort!: MatSort;

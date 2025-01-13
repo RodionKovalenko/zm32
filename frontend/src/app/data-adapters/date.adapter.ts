@@ -1,5 +1,9 @@
 import { NativeDateAdapter } from '@angular/material/core';
+import {Injectable} from "@angular/core";
 
+@Injectable({
+  providedIn: 'root',  // You can define the provider scope as 'root' for application-wide availability
+})
 export class CustomDateAdapter extends NativeDateAdapter {
     // Override the format method
     override format(date: Date, displayFormat: Object): string {

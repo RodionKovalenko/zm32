@@ -1,22 +1,61 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpService} from "../services/http.service";
 import {BestellungEditComponentComponent} from "./bestellung-edit-component/bestellung-edit-component.component";
 import {Bestellung} from "../models/Bestellung";
-import {IDropdownSettings} from "ng-multiselect-dropdown";
-import {AbstractControlOptions, FormBuilder, Validators} from "@angular/forms";
+import {IDropdownSettings, NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import {AbstractControlOptions, FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginErrorComponent} from "../login/login-error/login-error.component";
 import {HttpParams} from "@angular/common/http";
 import {dateRangeValidator} from "../data-adapters/date.validator";
-
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {NgForOf, NgIf} from "@angular/common";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {MatOption, MatSelect} from "@angular/material/select";
 
 @Component({
-    selector: 'app-data-grid-bestellungen',
-    templateUrl: './data-grid-bestellungen.component.html',
-    styleUrls: ['./data-grid-bestellungen.component.css']
+  selector: 'app-data-grid-bestellungen',
+  templateUrl: './data-grid-bestellungen.component.html',
+  standalone: true,
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatFormFieldModule,
+    MatInputModule,
+    NgIf,
+    MatIconButton,
+    MatTooltip,
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    NgForOf,
+    MatSelect,
+    MatOption,
+    FormsModule,
+    MatHeaderRow,
+    MatRow,
+    MatPaginator,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatHeaderCellDef,
+    MatCellDef
+  ],
+  styleUrls: ['./data-grid-bestellungen.component.css']
 })
 export class DataGridBestellungenComponent implements OnInit {
     @ViewChild(MatSort) sort!: MatSort;

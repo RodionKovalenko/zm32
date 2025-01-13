@@ -1,10 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpService} from "../services/http.service";
 import {DepartmentData} from "../models/Department";
+import {DataGridArtikelComponent} from "../data-grid-artikel/data-grid-artikel.component";
 
 @Component({
   selector: 'app-artikelliste',
   templateUrl: './artikelliste.component.html',
+  imports: [
+    DataGridArtikelComponent
+  ],
   styleUrl: './artikelliste.component.css'
 })
 export class ArtikellisteComponent implements OnInit {

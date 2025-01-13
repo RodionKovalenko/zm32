@@ -7,6 +7,7 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[Route(path: '/api/login')]
 class LoginController extends BaseController
@@ -14,7 +15,8 @@ class LoginController extends BaseController
     public function __construct(
         SerializerInterface $serializer,
         private readonly UserRepository $userRepository,
-        private readonly FormFactoryInterface $formFactory
+        private readonly FormFactoryInterface $formFactory,
+       // private readonly TokenStorageInterface $tokenStorage
     ) {
         parent::__construct($serializer, $this->formFactory);
     }
@@ -26,6 +28,7 @@ class LoginController extends BaseController
 
         $user = $this->userRepository->findOneBy(['mitarbeiterId' => $mitarbeiterId]);
         if ($user !== null) {
+          // $currentUser = $this->tokenStorage->getToken()->getUser();
             $data = [
                 'success' => true,
                 'message' => 'Mitarbeiter Login successful!',

@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {HttpService} from "../../services/http.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -11,11 +11,40 @@ import {HttpParams} from "@angular/common/http";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
 import {Hersteller} from "../../models/Hersteller";
 import {HerstellerEditComponentComponent} from "../../data-grid-artikel/hersteller-edit-component/hersteller-edit-component.component";
+import {MatToolbar} from "@angular/material/toolbar";
+import {NgForOf, NgIf} from "@angular/common";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatIconButton} from "@angular/material/button";
 
 @Component({
-    selector: 'app-hersteller-grid',
-    templateUrl: './hersteller-grid.component.html',
-    styleUrl: './hersteller-grid.component.css'
+  selector: 'app-hersteller-grid',
+  templateUrl: './hersteller-grid.component.html',
+  imports: [
+    MatToolbar,
+    NgIf,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIcon,
+    MatTooltip,
+    MatIconButton,
+    MatTable,
+    MatSort,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    NgForOf,
+    MatHeaderRow,
+    MatRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatPaginator,
+  ],
+  styleUrl: './hersteller-grid.component.css'
 })
 export class HerstellerGridComponent implements OnInit {
     @Input() departmentId: Number = 0;

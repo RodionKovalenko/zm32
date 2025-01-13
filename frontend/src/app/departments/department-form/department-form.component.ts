@@ -1,13 +1,32 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {HttpService} from "../../services/http.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
 import {DepartmentData} from "../../models/Department";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {NgIf} from "@angular/common";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatIcon} from "@angular/material/icon";
 @Component({
-    selector: 'app-department-form',
-    templateUrl: './department-form.component.html',
-    styleUrl: './department-form.component.css'
+  selector: 'app-department-form',
+  templateUrl: './department-form.component.html',
+  imports: [
+    MatDialogTitle,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    NgIf,
+    MatToolbar,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatDialogContent,
+  ],
+  styleUrl: './department-form.component.css'
 })
 export class DepartmentFormComponent implements OnInit {
     departmentForm: any;

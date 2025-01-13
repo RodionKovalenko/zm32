@@ -4,11 +4,26 @@ import {filter} from "rxjs";
 import {AuthService} from "../auth.service";
 import {LoginErrorComponent} from "./login-error/login-error.component";
 import {MatDialog} from "@angular/material/dialog";
+import {MatFormField} from "@angular/material/form-field";
+import {FormsModule} from "@angular/forms";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatInput} from "@angular/material/input";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  imports: [
+    MatFormField,
+    FormsModule,
+    MatIcon,
+    MatIconButton,
+    MatInput,
+    NgIf,
+    NgForOf
+  ],
+  styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
     title = 'IBA';

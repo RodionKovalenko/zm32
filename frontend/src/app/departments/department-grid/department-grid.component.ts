@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
 import {Artikel} from "../../models/Artikel";
 import {HttpService} from "../../services/http.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -10,11 +10,35 @@ import {LoginErrorComponent} from "../../login/login-error/login-error.component
 import {HttpParams} from "@angular/common/http";
 import {DepartmentFormComponent} from "../department-form/department-form.component";
 import {DepartmentData} from "../../models/Department";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-department-grid',
-    templateUrl: './department-grid.component.html',
-    styleUrl: './department-grid.component.css'
+  selector: 'app-department-grid',
+  templateUrl: './department-grid.component.html',
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatIconButton,
+    MatTooltip,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatHeaderRow,
+    MatRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatPaginator,
+    NgIf
+  ],
+  styleUrl: './department-grid.component.css'
 })
 
 export class DepartmentGridComponent implements OnInit {

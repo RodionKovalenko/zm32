@@ -45,7 +45,7 @@
         "league/csv": "^9.8",
         "league/factory-muffin": "^3.3",
         "league/factory-muffin-faker": "^2.3",
-        "lexik/jwt-authentication-bundle": "^2.16",
+        "lexik/jwt-authentication-bundle": "^2.21",
         "liip/imagine-bundle": "^2.10",
         "neitanod/forceutf8": "^2.0",
         "nelmio/cors-bundle": "^2.2",

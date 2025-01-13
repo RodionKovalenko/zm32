@@ -1,13 +1,47 @@
-FROM node:latest
+# Use Node.js as the base image
+FROM node:18
 
-RUN apt-get update && apt-get install -y vim
+# Install build dependencies (Python, build-essential, etc.)
+RUN apt-get update && apt-get install -y python3 make g++ && apt-get clean
 
+# Install vim (optional, for debugging purposes)
+RUN apt-get update && apt-get install -y vim && apt-get clean
+
+# Expose the default Angular port
 EXPOSE 4200
 
-USER node
-
-RUN mkdir /home/node/.npm-global
+# Set up npm global installation path
+RUN mkdir -p /home/node/.npm /home/node/.npm-global && \
+    chown -R node:node /home/node/.npm /home/node/.npm-global
 ENV PATH=/home/node/.npm-global/bin:$PATH
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
-RUN npm install -g @angular/cli@8.0.6
+# Update npm to the latest version
+RUN npm install -g npm@10.8.3 && npm cache clean --force
+
+# Set the working directory
+WORKDIR /app
+
+RUN rm -rf package-lock.json node_modules
+
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+
+# Ensure permissions for the node user
+RUN chown -R node:node /app /home/node/.npm /home/node/.npm-global
+
+# Switch to non-root user
+USER node
+
+# Install dependencies without optional dependencies
+RUN npm install --no-optional --legacy-peer-deps --ignore-platform --force
+
+# Install Angular CLI globally
+RUN npm install -g @angular/cli@10.2.1
+
+# Attempt to install Rollup (if necessary)
+#RUN npm install -g @rollup/rollup-linux-x64-gnu@4.18.0 || echo "Skipping optional Rollup dependency"
+
+# Copy the rest of the application code
+COPY --chown=node:node . .
+

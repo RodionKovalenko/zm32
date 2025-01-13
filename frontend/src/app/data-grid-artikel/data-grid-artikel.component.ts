@@ -1,25 +1,52 @@
 import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatDialog} from "@angular/material/dialog";
 import {HttpService} from "../services/http.service";
 import {MaterialEditComponentComponent} from "./material-edit-component/material-edit-component.component";
 import {Artikel} from "../models/Artikel";
-import {IDropdownSettings} from "ng-multiselect-dropdown";
+import {IDropdownSettings, NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {dateRangeValidator} from "../data-adapters/date.validator";
 import {HttpParams} from "@angular/common/http";
-import {AbstractControlOptions, FormBuilder} from "@angular/forms";
+import {AbstractControlOptions, FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {LoginErrorComponent} from "../login/login-error/login-error.component";
 import {BestellungEditComponentComponent} from "../data-grid-bestellungen/bestellung-edit-component/bestellung-edit-component.component";
+import {MatToolbar} from "@angular/material/toolbar";
+import {NgForOf, NgIf} from "@angular/common";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
-    selector: 'app-data-grid-artikel',
-    templateUrl: './data-grid-artikel.component.html',
-    styleUrls: ['./data-grid-artikel.component.css'],
-    animations: [
-        // Your animation configurations here
-    ]
+  selector: 'app-data-grid-artikel',
+  templateUrl: './data-grid-artikel.component.html',
+  styleUrls: ['./data-grid-artikel.component.css'],
+  imports: [
+    MatToolbar,
+    NgIf,
+    MatIcon,
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule,
+    MatIconButton,
+    MatTooltip,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatHeaderRow,
+    MatRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatPaginator,
+    NgForOf
+  ],
+  animations: [
+    // Your animation configurations here
+  ]
 })
 
 export class DataGridArtikelComponent implements OnInit {

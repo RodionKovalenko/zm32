@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
 import {Artikel} from "../../models/Artikel";
 import {Lieferant} from "../../models/Lieferant";
 import {HttpService} from "../../services/http.service";
@@ -7,14 +7,38 @@ import {LoginErrorComponent} from "../../login/login-error/login-error.component
 import {LieferantEditComponentComponent} from "../lieferant-edit-component/lieferant-edit-component.component";
 import {Hersteller} from "../../models/Hersteller";
 import {HerstellerEditComponentComponent} from "../hersteller-edit-component/hersteller-edit-component.component";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {IDropdownSettings} from "ng-multiselect-dropdown";
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {IDropdownSettings, NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {DepartmentData} from "../../models/Department";
+import {MatError, MatFormField, MatFormFieldModule} from "@angular/material/form-field";
+import {NgForOf, NgIf} from "@angular/common";
+import {MatInput, MatInputModule} from "@angular/material/input";
+import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatIcon} from "@angular/material/icon";
+import {MatToolbar} from "@angular/material/toolbar";
 
 @Component({
-    selector: 'app-material-edit-component',
-    templateUrl: './material-edit-component.component.html',
-    styleUrl: './material-edit-component.component.css',
+  selector: 'app-material-edit-component',
+  templateUrl: './material-edit-component.component.html',
+  styleUrl: './material-edit-component.component.css',
+  imports: [
+    MatDialogContent,
+    ReactiveFormsModule,
+    MatFormField,
+    MatError,
+    NgIf,
+    MatInput,
+    NgMultiSelectDropDownModule,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    NgForOf,
+    MatButton,
+    MatToolbar,
+    MatFormFieldModule,
+    MatInputModule
+  ]
 })
 export class MaterialEditComponentComponent implements OnInit {
     lieferants: any[] = [];
@@ -82,13 +106,13 @@ export class MaterialEditComponentComponent implements OnInit {
             artikelToHerstRefnummers: this.fb.array(
                 (this.data?.artikelToHerstRefnummers || []).map(st => this.fb.group({
                     refnummer: [st.refnummer || '', Validators.required],
-                    hersteller: [[st.hersteller] || null],
+                    hersteller: [[st.hersteller || null]],
                     filteredHerstellers: [this.herstellers]
                 }))
             ),
             artikelToLieferantBestellnummers: this.fb.array(
                 (this.data?.artikelToLieferantBestellnummers || []).map(st => this.fb.group({
-                    lieferant: [[st.lieferant] || null],
+                    lieferant: [[st.lieferant || null]],
                     bestellnummer: [st.bestellnummer || ''],
                     filteredLieferants: [this.lieferants]
                 }))

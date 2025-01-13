@@ -3,7 +3,7 @@ services:
   symfony:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-nginx
     volumes:
       - symfony_code:/var/www/symfony
     environment:
@@ -66,7 +66,7 @@ services:
       - symfony-angular-network
     depends_on:
       - symfony
-  
+
   # certbot:
   #   build:
   #     context: .
