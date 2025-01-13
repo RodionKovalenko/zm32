@@ -1,0 +1,6 @@
+
+generate public and private keys for jwt
+
+// in terminal
+openssl genpkey -algorithm RSA -out var/keys/private.pem -pkeyopt rsa_keygen_bits:4096
+openssl rsa -pubout -in var/keys/private.pem -out var/keys/public.pem
