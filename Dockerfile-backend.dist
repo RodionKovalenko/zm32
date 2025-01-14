@@ -1,0 +1,84 @@
+# Use PHP 8.2 with FPM as the base image
+FROM php:8.2-fpm
+
+# Switch to root user for installing system dependencies
+USER root
+
+# Set environment variables
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Install system dependencies and tools
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libicu-dev \
+    libpq-dev \
+    libzip-dev \
+    zlib1g-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    netcat-openbsd \
+    default-mysql-client \
+    dos2unix \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql intl zip opcache gd bcmath \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Composer globally from the official Composer image
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN chmod +x /usr/local/bin/composer
+
+# Set the working directory to /var/www/symfony (inside the container)
+WORKDIR /var/www/symfony
+
+# Copy Composer configuration files (composer.json and composer.lock)
+COPY backend/composer.json backend/composer.lock ./
+
+# Set permissions for Composer cache and vendor directory
+RUN mkdir -p /var/www/.composer/cache && \
+    chown -R www-data:www-data /var/www/.composer && \
+    mkdir -p /var/www/symfony/vendor && \
+    chown -R www-data:www-data /var/www/symfony/vendor
+
+# Install PHP dependencies as the www-data user
+USER www-data
+RUN composer install --no-interaction --no-scripts --prefer-dist
+
+# Switch back to root to copy the rest of the project files and set permissions
+USER root
+
+# Copy the entire backend folder (including project files) into the container
+COPY backend/ .
+
+# Ensure `bin/console` has Unix-style line endings
+RUN dos2unix /var/www/symfony/bin/console
+
+# Create var/Migrations directory if it doesn't exist, and set correct ownership
+RUN mkdir -p /var/www/symfony/var/Migrations && \
+    chown -R www-data:www-data /var/www/symfony/var/Migrations
+
+# Ensure necessary directories have the correct permissions
+RUN chown -R www-data:www-data /var/www/symfony/var /var/www/symfony/vendor
+
+# Copy the PHP-FPM configuration file for the container
+COPY backend/fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+# Copy entrypoint and wait-for-it scripts, ensuring they have Unix line endings
+COPY backend/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY backend/wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/wait-for-it && dos2unix /usr/local/bin/entrypoint.sh /usr/local/bin/wait-for-it
+
+# Fix line endings for entrypoint.sh
+RUN dos2unix /usr/local/bin/entrypoint.sh
+
+# Switch back to the non-root user (www-data)
+USER www-data
+
+# Expose port 9000 for PHP-FPM
+EXPOSE 9000
+
+# Define the entrypoint and command for the container
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["php-fpm"]

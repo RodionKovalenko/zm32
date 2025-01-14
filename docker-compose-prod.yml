@@ -2,8 +2,8 @@
 services:
   symfony:
     build:
-      context: ./backend
-      dockerfile: Dockerfile-nginx
+      context: ./
+      dockerfile: Dockerfile-backend
     volumes:
       - symfony_code:/var/www/symfony
     environment:
