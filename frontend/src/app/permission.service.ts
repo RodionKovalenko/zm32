@@ -1,15 +1,24 @@
-import { inject, Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from './auth.service';
+import {inject, Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot} from '@angular/router';
+import {AuthService} from './auth.service';
+import {JwtHelperService} from "./services/jwt-helper.service";
 
 @Injectable({
   providedIn: 'root',
 })
 class PermissionsService {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private jwtHelper: JwtHelperService) {
+  }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const isLoggedIn = this.authService.isLoggedIn();
+    const token = localStorage.getItem('access_token');
+    const istValidToken: boolean = !!token && !this.jwtHelper.isTokenExpired(token);
+
+    if (!istValidToken) {
+      this.router.navigate(['/app-login']);
+      return false;
+    }
 
     // Avoid redirect loops
     if (state.url === '/app-login' && isLoggedIn) {
@@ -21,7 +30,7 @@ class PermissionsService {
       return false;
     }
 
-    return true; // Allow access if logged in
+    return true;
   }
 }
 

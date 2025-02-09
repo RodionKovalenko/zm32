@@ -16,13 +16,13 @@ class BaseController
     {
     }
 
-    public function getJsonResponse($data, array $groups = ['Default']): JsonResponse
+    public function getJsonResponse($data, array $groups = ['Default'], $status = 200): JsonResponse
     {
         $context = new SerializationContext();
         $context->setGroups($groups);
         $context->enableMaxDepthChecks();
 
-        return new JsonResponse($this->serializer, $data, 200, [], $context);
+        return new JsonResponse($this->serializer, $data, $status, [], $context);
     }
 
     /**

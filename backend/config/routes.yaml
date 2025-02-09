@@ -1,13 +1,8 @@
-index:
-    path: /materialliste
-    controller: App\Controller\IndexController::getmaterialliste
+#index:
+#    path: /materialliste
+#    controller: App\Controller\IndexController::getmaterialliste
 
-#login_check:
-#    path: /login_check
-#    options:
-#        expose: true
-#
-#app_login_check:
-#    path: /app/login_check
-#    options:
-#        expose: true
+login_check:
+    path: /login_check
+    options:
+        expose: true

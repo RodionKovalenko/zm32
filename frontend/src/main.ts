@@ -13,6 +13,8 @@ import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideRouter} from "@angular/router";
 import {routes} from "./app/app.routes";
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { AuthInterceptorService } from './app/services/auth-interceptor.service';
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
@@ -20,6 +22,11 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     // Add your interceptors to the HTTP_INTERCEPTORS multi-provider
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true  // Ensure multiple interceptors can be used
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpAppInterceptor,

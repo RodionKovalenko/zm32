@@ -48,7 +48,20 @@ import {PersonalFormComponent} from "./personal/personal-form/personal-form.comp
 import {DepartmentFormComponent} from "./departments/department-form/department-form.component";
 import {HerstellersComponent} from "./herstellers/herstellers.component";
 import {LieferantsComponent} from "./lieferants/lieferants.component";
-import { FocusOnClickDirective } from './shared/focus-on-click.directive';
+import {FocusOnClickDirective} from './shared/focus-on-click.directive';
+import {HttpService} from "./services/http.service";
+
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
+
+// Factory function to initialize HttpService and get the base URL
+export function appInitializer(httpService: HttpService) {
+  return () => httpService.getBaseUrl().then(baseUrl => {
+    // Store baseUrl in a global variable, service, or a state management solution
+    localStorage.setItem('apiBaseUrl', baseUrl); // Example: saving to localStorage
+  });
+}
 
 @NgModule({
   declarations: [],
@@ -108,10 +121,18 @@ import { FocusOnClickDirective } from './shared/focus-on-click.directive';
     MatDatepickerToggle,
     MatDatepicker,
     MatDatepickerInput,
+    MatDatepickerInput,
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
-    FocusOnClickDirective
+    FocusOnClickDirective,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: [localStorage.getItem('apiBaseUrl')],// Specify your API domain
+        disallowedRoutes: [localStorage.getItem('apiBaseUrl') + '/api/login'],
+      },
+    }),
   ],
   exports: [
     PersonalGridComponent

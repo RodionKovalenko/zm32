@@ -2,13 +2,19 @@
 
 namespace App\Entity;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Blameable\Traits\BlameableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @method string getUserIdentifier()
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface
 {
     use TimestampableEntity;
     use BlameableEntity;
@@ -17,6 +23,9 @@ class User
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private $username;
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private $firstname;
@@ -29,6 +38,23 @@ class User
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $mitarbeiterId;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $refreshToken = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $refreshTokenExpiry = null;
+
+    #[ORM\Column(type: 'string')]
+    private ?string $email = null;
+
+    /** @var Collection<int, Rolle> */
+    #[Groups(['User_Rolle', 'Rolle'])]
+    #[ORM\ManyToMany(targetEntity: Rolle::class)]
+    #[ORM\JoinTable(name: 'rolle_to_benutzer')]
+    #[ORM\JoinColumn(name: 'benutzer_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'rolle_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $rolle;
 
     public function getId(): ?int
     {
@@ -100,6 +126,100 @@ class User
     public function setMitarbeiter(?Mitarbeiter $mitarbeiter): User
     {
         $this->mitarbeiter = $mitarbeiter;
+        return $this;
+    }
+
+    public function getRefreshToken(): ?string
+    {
+        return $this->refreshToken;
+    }
+
+    public function setRefreshToken(?string $refreshToken): self
+    {
+        $this->refreshToken = $refreshToken;
+        return $this;
+    }
+
+    public function getRefreshTokenExpiry(): ?\DateTimeInterface
+    {
+        return $this->refreshTokenExpiry;
+    }
+
+    public function setRefreshTokenExpiry(?\DateTimeInterface $refreshTokenExpiry): User
+    {
+        $this->refreshTokenExpiry = $refreshTokenExpiry;
+        return $this;
+    }
+
+    public function getRolle(): Collection
+    {
+        return $this->rolle;
+    }
+
+    public function setRolle(Collection $rolle): User
+    {
+        $this->rolle = $rolle;
+        return $this;
+    }
+
+
+    public function getPassword()
+    {
+        return $this->getMitarbeiterId();
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function eraseCredentials(): void
+    {
+
+    }
+
+    /**
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param mixed $username
+     * @return User
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    public function getRoles()
+    {
+        $roles = [];
+        if (!empty($this->rolle)) {
+            foreach ($this->rolle as $role) {
+                /* @var Rolle $role */
+                $roles[] = $role->getRole();
+            }
+        }
+
+        if (empty($roles)) {
+            $roles[] = Rolle::ROLE_USER;
+        }
+
+        return $roles;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
         return $this;
     }
 }

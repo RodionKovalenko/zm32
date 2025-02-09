@@ -63,6 +63,8 @@ services:
         tags: ['controller.service_arguments']
 
     # Security
+    Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager:
+        alias: Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface
 
     # Drittanbieter (Overrides)
     jms_serializer.naming_strategy:
