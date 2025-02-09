@@ -18,6 +18,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
 import {floatValidator} from "../../shared/float_validator";
+import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
 
 @Component({
   selector: 'app-material-edit-component',
@@ -38,7 +39,8 @@ import {floatValidator} from "../../shared/float_validator";
     MatButton,
     MatToolbar,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    FocusOnClickDirective
   ]
 })
 export class MaterialEditComponentComponent implements OnInit {
@@ -73,18 +75,18 @@ export class MaterialEditComponentComponent implements OnInit {
             idField: 'id',
             textField: 'name',
             allowSearchFilter: true,
-            enableCheckAll: true,
+            enableCheckAll: false,
             searchPlaceholderText: 'Suchen',
             selectAllText: 'Alle auswählen',
-            unSelectAllText: 'Alle deaktivieren'
+            unSelectAllText: 'Alle deaktivieren',
         };
 
         this.dropdownDepartmentSettings = {
             idField: 'id',
             textField: 'name',
             allowSearchFilter: true,
-            enableCheckAll: false,
             searchPlaceholderText: 'Suchen',
+            enableCheckAll: false,
         };
 
         this.singleSelectSettings = {
@@ -92,7 +94,7 @@ export class MaterialEditComponentComponent implements OnInit {
             idField: 'id',
             textField: 'name',
             itemsShowLimit: 3,
-            allowSearchFilter: true
+            allowSearchFilter: true,
         };
 
         this.artikelForm = this.fb.group({

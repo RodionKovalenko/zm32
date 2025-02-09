@@ -17,33 +17,35 @@ import {NgForOf, NgIf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
+import {FocusOnClickDirective} from "../shared/focus-on-click.directive";
 
 @Component({
   selector: 'app-data-grid-artikel',
   templateUrl: './data-grid-artikel.component.html',
   styleUrls: ['./data-grid-artikel.component.css'],
-  imports: [
-    MatToolbar,
-    NgIf,
-    MatIcon,
-    ReactiveFormsModule,
-    NgMultiSelectDropDownModule,
-    MatIconButton,
-    MatTooltip,
-    MatTable,
-    MatSort,
-    MatColumnDef,
-    MatHeaderCell,
-    MatCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatHeaderRow,
-    MatRow,
-    MatHeaderRowDef,
-    MatRowDef,
-    MatPaginator,
-    NgForOf
-  ],
+    imports: [
+        MatToolbar,
+        NgIf,
+        MatIcon,
+        ReactiveFormsModule,
+        NgMultiSelectDropDownModule,
+        MatIconButton,
+        MatTooltip,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderRow,
+        MatRow,
+        MatHeaderRowDef,
+        MatRowDef,
+        MatPaginator,
+        NgForOf,
+        FocusOnClickDirective
+    ],
   animations: [
     // Your animation configurations here
   ]

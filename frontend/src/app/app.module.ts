@@ -48,6 +48,7 @@ import {PersonalFormComponent} from "./personal/personal-form/personal-form.comp
 import {DepartmentFormComponent} from "./departments/department-form/department-form.component";
 import {HerstellersComponent} from "./herstellers/herstellers.component";
 import {LieferantsComponent} from "./lieferants/lieferants.component";
+import { FocusOnClickDirective } from './shared/focus-on-click.directive';
 
 @NgModule({
   declarations: [],
@@ -98,7 +99,6 @@ import {LieferantsComponent} from "./lieferants/lieferants.component";
     MatNavList,
     MatListItem,
     MatSidenav,
-    FlexModule,
     MatTooltip,
     ReactiveFormsModule,
     NgMultiSelectDropDownModule.forRoot(),
@@ -111,6 +111,7 @@ import {LieferantsComponent} from "./lieferants/lieferants.component";
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
+    FocusOnClickDirective
   ],
   exports: [
     PersonalGridComponent

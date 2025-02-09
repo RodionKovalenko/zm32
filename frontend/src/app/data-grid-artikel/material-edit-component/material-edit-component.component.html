@@ -42,7 +42,7 @@
         <div class="dropdown-section">
             <label>Abteilung:</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown id="departments"
+                <ng-multiselect-dropdown appFocusOnClick
                                          class="custom-select-no-margin"
                                          [placeholder]="'Abteilung auswählen'"
                                          (onSelect)="onDepartmentSelect($event)"
@@ -67,7 +67,7 @@
             <div class="dropdown-section">
                 <label>Hersteller (Optional):</label>
                 <div class="dropdown-wrapper">
-                    <ng-multiselect-dropdown id="herstellers"
+                    <ng-multiselect-dropdown appFocusOnClick
                                              class="custom-select-no-margin"
                                              [placeholder]="'Hersteller auswählen (Optional)'"
                                              [settings]="dropdownSettings"
@@ -113,6 +113,7 @@
                         <label>Hersteller:</label>
                         <div class="dropdown-wrapper">
                             <ng-multiselect-dropdown class="custom-select-no-margin"
+                                                     appFocusOnClick
                                                      [placeholder]="'Hersteller auswählen'"
                                                      [settings]="singleSelectSettings"
                                                      (onSelect)="onHerstellerSelect($event)"
@@ -148,6 +149,7 @@
                 <label>Lieferant (Optional):</label>
                 <div class="dropdown-wrapper">
                     <ng-multiselect-dropdown class="custom-select-no-margin"
+                                             appFocusOnClick
                                              [placeholder]="'Lieferant auswählen (Optional)'"
                                              [settings]="dropdownSettings"
                                              [data]="lieferants"
@@ -191,7 +193,8 @@
                     <div class="dropdown-section">
                         <label>Lieferant:</label>
                         <div class="dropdown-wrapper">
-                            <ng-multiselect-dropdown id="lieferant"
+                            <ng-multiselect-dropdown
+                                                     appFocusOnClick
                                                      class="custom-select-no-margin"
                                                      [placeholder]="'Lieferant auswählen'"
                                                      [settings]="singleSelectSettings"

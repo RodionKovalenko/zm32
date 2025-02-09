@@ -17,6 +17,7 @@
                 <label>Abteilung:</label>
                 <div class="dropdown-wrapper">
                     <ng-multiselect-dropdown class="custom-select-no-margin"
+                                             appFocusOnClick
                                              [placeholder]="'Abteilung auswählen'"
                                              [settings]="dropdownDepartmentSettings"
                                              (onSelect)="onDepartmentSelect($event)"

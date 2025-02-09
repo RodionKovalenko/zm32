@@ -20,6 +20,7 @@ import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatOption, MatSelect} from "@angular/material/select";
+import {FocusOnClickDirective} from "../shared/focus-on-click.directive";
 
 @Component({
   selector: 'app-data-grid-bestellungen',
@@ -53,7 +54,8 @@ import {MatOption, MatSelect} from "@angular/material/select";
     MatHeaderRowDef,
     MatRowDef,
     MatHeaderCellDef,
-    MatCellDef
+    MatCellDef,
+    FocusOnClickDirective
   ],
   styleUrls: ['./data-grid-bestellungen.component.css']
 })
