@@ -28,4 +28,7 @@ export class JwtHelperService {
       return true;  // If there's an error (e.g., invalid token), assume expired
     }
   }
+  setToken(newToken: string) {
+    localStorage.setItem('access_token', newToken);
+  }
 }

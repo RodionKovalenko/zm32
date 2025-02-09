@@ -43,7 +43,7 @@ export class HttpService {
   }
 
   refreshToken() {
-    const refresh_token = localStorage.getItem('refresh-token');  // The API endpoint URL
+    const refresh_token = localStorage.getItem('refresh_token');  // The API endpoint URL
     return this.httpClient.post(this.refreshJWTURL, {refresh_token: refresh_token});
   }
 }

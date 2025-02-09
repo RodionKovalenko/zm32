@@ -29,8 +29,12 @@ export class AuthService {
       if (ibaApp && response && response.data) {
 
         const token = response.data['jwt'] || localStorage.getItem('access_token');
+        const refreshToken = response.data['refresh_token'] || localStorage.getItem('refresh_token');
         istJwtTokenValid = !!token && !this.jwtHelper.isTokenExpired(token);
+
         localStorage.setItem('access_token', token);
+        localStorage.setItem('refresh_token', refreshToken);
+
         this.loggedIn.next(istJwtTokenValid);
 
         ibaApp.user = response.data['user'];

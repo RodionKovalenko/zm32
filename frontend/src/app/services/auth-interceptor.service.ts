@@ -1,15 +1,17 @@
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable, throwError, EMPTY } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
+import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent} from '@angular/common/http';
+import {Observable, throwError, EMPTY} from 'rxjs';
+import { catchError, switchMap, take } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {AuthService} from '../auth.service';
+import {Router} from '@angular/router';
+import {JwtHelperService} from './jwt-helper.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private jwtHelperService: JwtHelperService) {
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.url.includes('/api/login')) {
@@ -18,39 +20,46 @@ export class AuthInterceptorService implements HttpInterceptor {
     // Get the JWT token from AuthService
     const token = this.authService.getToken();
 
-    // If token is present, clone the request and attach the token
-    const clonedRequest = token
-      ? req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      : req;
+    // Check if the token is expired or invalid (you can implement your logic here)
+    const isTokenExpired = this.jwtHelperService.isTokenExpired(token);
+
+    // If the token is expired, refresh it
+    if (isTokenExpired) {
+      return this.authService.refreshToken().pipe(
+        take(1), // Make sure we only take one value from the refresh observable
+        switchMap((newToken: string) => {
+          // Update the token in the service
+          this.jwtHelperService.setToken(newToken);
+
+          // Clone the request and add the new token
+          const clonedRequest = req.clone({
+            setHeaders: {
+              Authorization: `Bearer ${newToken}`,
+            },
+          });
+
+          // Continue with the request after refreshing the token
+          return next.handle(clonedRequest);
+        }),
+        catchError(() => {
+          // If refresh fails, log the user out and navigate to login
+          this.authService.logout();
+          this.router.navigate(['/login']);
+          return EMPTY; // Don't propagate further errors
+        })
+      );
+    }
+
+    // If the token is valid, just proceed with the original request
+    const clonedRequest = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return next.handle(clonedRequest).pipe(
       catchError((error) => {
-        // If the error status is 401 (unauthorized), attempt to refresh the token
-        if (error.status === 401) {
-          return this.authService.refreshToken().pipe(
-            switchMap((newToken: string) => {
-              // Retry the failed request with the new token
-              const newRequest = req.clone({
-                setHeaders: {
-                  Authorization: `Bearer ${newToken}`,
-                },
-              });
-              return next.handle(newRequest);
-            }),
-            catchError(() => {
-              // If refresh fails, log the user out and navigate to login
-              this.authService.logout();
-              this.router.navigate(['/login']);
-              return EMPTY; // Don't propagate further errors
-            })
-          );
-        }
-
-        // For other errors, just propagate them
+        // Handle other errors (not 401)
         return throwError(error);
       })
     );
