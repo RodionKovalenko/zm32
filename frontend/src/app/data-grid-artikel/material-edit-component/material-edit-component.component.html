@@ -31,6 +31,10 @@
         <mat-form-field appearance="fill">
           <mat-label>Preis</mat-label>
           <input matInput id="preis" formControlName="preis">
+
+          <mat-error *ngIf="artikelForm.get('preis').invalid && artikelForm.get('preis').touched">
+            Preis enthält ungültige Zeichen.
+          </mat-error>
         </mat-form-field>
       </div>
 

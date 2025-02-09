@@ -26,9 +26,9 @@ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 
 
 mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 192.168.1.90  192.168.2.106 ::1
-mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 127.0.0.1 ::1
-
 mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba localhost 127.0.0.1 ::1
+
+mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 127.0.0.1 192.168.178.21 192.168.1.90 192.168.2.106 server ::1
 
 
 FRONTEND:
@@ -36,6 +36,10 @@ FRONTEND:
 cd frontend in dev mode
 docker-compose -f docker-compose-dev.yml up --build
 https://localhost:4201/#/app-login
+
+// RUN ANGULAR IN DEV MODE WITH SSL
+npm run ng serve --ssl --ssl-key="ssl/server.key" --ssl-cert="ssl/server.crt"
+
 
 // remove all containers
 docker-compose -f docker-compose-dev.yml down --rmi all --volumes --remove-orphans

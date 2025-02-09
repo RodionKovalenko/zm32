@@ -4,7 +4,7 @@ import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
 import {MaterialEditComponentComponent} from "../../data-grid-artikel/material-edit-component/material-edit-component.component";
 import {LoginErrorComponent} from "../../login/login-error/login-error.component";
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Hersteller} from "../../models/Hersteller";
 import {IDropdownSettings, MultiSelectComponent, NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {Artikel} from "../../models/Artikel";
@@ -19,6 +19,7 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {NgIf} from "@angular/common";
+import { floatValidator } from '../../shared/float_validator';
 
 @Component({
   selector: 'app-bestellung-edit-component',
@@ -33,7 +34,7 @@ import {NgIf} from "@angular/common";
     MatToolbar,
     MatIconButton,
     MatTooltip,
-    NgIf,
+    NgIf
   ],
   styleUrl: './bestellung-edit-component.component.css'
 })
@@ -121,7 +122,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             id: [this.data?.id || 0],
             description: [this.data?.description || ''],
             amount: [this.data?.amount || '', Validators.required],
-            preis: [this.data?.preis || '', this.floatValidator],
+            preis: [this.data?.preis || '', floatValidator],
             artikels: [this.data?.artikels || [], Validators.required],
             departments: [this.data?.departments || [], Validators.required],
             herstellers: [this.data?.herstellers || []],
@@ -382,15 +383,6 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                 }
             }
         });
-    }
-
-    private floatValidator(control: AbstractControl): ValidationErrors | null {
-        const value = control.value;
-        const floatRegex = /^[+-]?\d+(\.\d+)?(,\d+)?$/;
-        if (value && !floatRegex.test(value)) {
-            return {invalidFloat: true};
-        }
-        return null;
     }
 
     onArtikelChange(event: any) {

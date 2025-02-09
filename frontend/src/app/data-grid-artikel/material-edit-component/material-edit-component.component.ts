@@ -17,6 +17,7 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
+import {floatValidator} from "../../shared/float_validator";
 
 @Component({
   selector: 'app-material-edit-component',
@@ -98,7 +99,7 @@ export class MaterialEditComponentComponent implements OnInit {
             id: [this.data?.id || 0],
             name: [this.data?.name || '', Validators.required],
             url: [this.data?.url || ''],
-            preis: [this.data?.preis || ''],
+            preis: [this.data?.preis || '', floatValidator],
             description: [this.data?.description || ''],
             departments: [this.data?.departments || [], Validators.required],
             lieferants: [this.data?.lieferants || []],

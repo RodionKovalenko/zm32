@@ -27,7 +27,6 @@ import {MaterialEditComponentComponent} from "./data-grid-artikel/material-edit-
 import {DataGridBestellungenComponent} from "./data-grid-bestellungen/data-grid-bestellungen.component";
 import {BestellungEditComponentComponent} from "./data-grid-bestellungen/bestellung-edit-component/bestellung-edit-component.component";
 import {BestelllisteComponent} from "./bestellliste/bestellliste.component";
-import {FlexModule} from "@angular/flex-layout";
 import {NavigationMenuComponent} from "./navigation-menu/navigation-menu.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {LoginErrorComponent} from "./login/login-error/login-error.component";
@@ -111,7 +110,7 @@ import {LieferantsComponent} from "./lieferants/lieferants.component";
     MatDatepickerInput,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatFormFieldModule
+    MatFormFieldModule,
   ],
   exports: [
     PersonalGridComponent

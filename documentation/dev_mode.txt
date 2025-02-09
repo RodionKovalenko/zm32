@@ -1,0 +1,10 @@
+
+Backend: run ddev restart in backend directory
+ddev restart
+
+Frontend: update   private baseUrl = 'https://127.0.0.1:57684/api'; with the port from backend
+Update contructor in frontend/src/app/services/http.service.ts
+
+Run frontend with ssl (not in docker)
+npm run ng serve --ssl --ssl-key="ssl/server.key" --ssl-cert="ssl/server.crt"
+
