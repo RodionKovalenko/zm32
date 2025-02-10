@@ -162,3 +162,10 @@ npm run ng generate component data-griddd-artikel/hersteller-edit-component
  docker exec -it angularcontainer sh
  # run inside the container
  npm install @auth0/angular-jwt --save
+
+
+
+ // Restart only symfony without rebuilding
+ docker-compose -f docker-compose-prod.yml down symfony
+ docker-compose -f docker-compose-prod.yml build symfony
+ docker-compose -f docker-compose-prod.yml up symfony

@@ -11,11 +11,24 @@ if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TA
     if [ -z "$TABLES" ]; then
         echo "No tables found in the database. Initializing database setup..."
 
-        # Ensure migration files exist and are properly synchronized
-        if [ ! "$(ls -A var/Migrations)" ]; then
-            echo "No migration files found. Generating new migration files..."
-            php bin/console doctrine:migrations:diff --allow-empty-diff --no-interaction
+        # Remove all previous migrations
+        echo "Removing all migration files..."
+        rm -rf var/Migrations/*
+
+        # Reset migration history in the database (only if the table exists)
+        echo "Checking if migration_versions table exists..."
+        TABLE_EXISTS=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES LIKE 'migration_versions';" $MYSQL_DATABASE)
+
+        if [ -z "$TABLE_EXISTS" ]; then
+            echo "migration_versions table does not exist. Skipping reset."
+        else
+            echo "Resetting migration history in the database..."
+            mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "DELETE FROM $MYSQL_DATABASE.migration_versions;"
         fi
+
+        # Ensure migration files exist and are properly synchronized
+        echo "Generating new migration files..."
+        php bin/console doctrine:migrations:diff --allow-empty-diff --no-interaction
 
         echo "Running migrations to set up the database..."
         php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
@@ -26,7 +39,25 @@ if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TA
         echo "Tables found in the database. Ensuring consistency..."
         echo "$TABLES"
 
+        # Remove all previous migrations
+        echo "Removing all migration files..."
+        rm -rf var/Migrations/*
+
+        # Reset migration history in the database (only if the table exists)
+        echo "Checking if migration_versions table exists..."
+        TABLE_EXISTS=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES LIKE 'migration_versions';" $MYSQL_DATABASE)
+
+        if [ -z "$TABLE_EXISTS" ]; then
+            echo "migration_versions table does not exist. Skipping reset."
+        else
+            echo "Resetting migration history in the database..."
+            mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "DELETE FROM $MYSQL_DATABASE.migration_versions;"
+        fi
+
+        # Generate new migration files
         php bin/console doctrine:migrations:diff --allow-empty-diff --no-interaction
+
+        # Run migrations to update the database
         php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
     fi
 else
