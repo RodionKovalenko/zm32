@@ -24,9 +24,9 @@ services:
     entrypoint: /usr/local/bin/entrypoint.sh
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9000", "pidof", "php-fpm"]
-      interval: 30s
+      interval: 20s
       timeout: 10s
-      retries: 5
+      retries: 3
 
   database:
     image: mysql:8.0
