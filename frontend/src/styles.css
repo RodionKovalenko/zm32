@@ -3,419 +3,467 @@
 @import "@angular/material/prebuilt-themes/pink-bluegrey.css";
 
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .custom-toolbar {
-    background-color: #1a3088; /* Custom background color */
-    color: white; /* Custom text color */
+  background-color: #1a3088; /* Custom background color */
+  color: white; /* Custom text color */
 }
 
+
 mat-toolbar.custom-toolbar {
-    background-color: #4caf50 !important; /* Custom background color */
-    color: white !important; /* Custom text color */
+  background-color: #4caf50 !important; /* Custom background color */
+  color: white !important; /* Custom text color */
+  position: fixed !important; /* Keep the sidenav fixed */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Full viewport height */
 }
 
 :root {
-    --primary-color: #605DC8;
-    --secondary-color: #8B89E6;
-    --accent-color: #e8e7fa;
-    --shadow-color: #E8E8E8;
+  --primary-color: #605DC8;
+  --secondary-color: #8B89E6;
+  --accent-color: #e8e7fa;
+  --shadow-color: #E8E8E8;
 }
 
 button.primary {
-    padding: 10px;
-    border: solid 1px var(--primary-color);
-    background: var(--primary-color);
-    color: white;
-    border-radius: 8px;
+  padding: 10px;
+  border: solid 1px var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
 }
 
 html {
-    height: 100%;
+  height: 100%;
 }
 
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  height: 100%;
 }
 
 .mat-form-field {
-    display: block;
-    margin-bottom: 16px; /* Optional: add some spacing between fields */
+  display: block;
+  margin-bottom: 16px; /* Optional: add some spacing between fields */
 }
 
 .custom-select {
-    /* Optionally, you can adjust other padding properties as needed */
-    margin: 10px 0 10px 50px;
+  /* Optionally, you can adjust other padding properties as needed */
+  margin: 10px 0 10px 50px;
 
-    display: block;
-    width: 80%;
-    height: calc(2.25rem + 2px);
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #65a0c0;
-    background-color: #e0e6f3 !important;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  display: block;
+  width: 80%;
+  height: calc(2.25rem + 2px);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #65a0c0;
+  background-color: #e0e6f3 !important;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .margin-left-50 {
-    /* Optionally, you can adjust other padding properties as needed */
-    margin: 10px 0 10px 50px;
+  /* Optionally, you can adjust other padding properties as needed */
+  margin: 10px 0 10px 50px;
 }
 
 .custom-select-no-margin {
-    width: 400px; /* Set a fixed width or use a percentage for relative width */
-    box-sizing: border-box;
-    /* Optionally, you can adjust other padding properties as needed */
-    margin: 10px 0 10px 0px !important;
+  width: 400px; /* Set a fixed width or use a percentage for relative width */
+  box-sizing: border-box;
+  /* Optionally, you can adjust other padding properties as needed */
+  margin: 10px 0 10px 0px !important;
 
-    display: block;
-    height: calc(2.25rem + 2px);
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #e0e6f3 !important;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  display: block;
+  height: calc(2.25rem + 2px);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #e0e6f3 !important;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
-    max-height: 400px !important; /* Adjust the height as needed */
+  max-height: 400px !important; /* Adjust the height as needed */
 }
 
 
 /* Style the options */
 .custom-select option {
-    padding: 0.375rem 0.75rem;
+  padding: 0.375rem 0.75rem;
 }
 
 .flex-container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .column-layout {
-    display: flex;
-    flex-direction: column;
-    margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
 }
 
 .margin-bottom {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .margin-bottom-30 {
-    margin-bottom: 30px !important;
+  margin-bottom: 30px !important;
 }
 
 .align-button {
-    margin-top: 30px !important;
+  margin-top: 30px !important;
 }
 
 .dialog-actions {
-    position: sticky !important;
-    bottom: 0;
-    width: 100%;
-    padding: 16px; /* Adjust padding as needed */
-    z-index: 1000; /* Ensure actions bar stays above content */
+  position: sticky !important;
+  bottom: 0;
+  width: 100%;
+  padding: 16px; /* Adjust padding as needed */
+  z-index: 1000; /* Ensure actions bar stays above content */
 }
 
 .dialog-actions > button {
-    position: sticky;
-    margin-left: 8px; /* Adjust spacing between buttons */
+  position: sticky;
+  margin-left: 8px; /* Adjust spacing between buttons */
 }
 
 .mat-mdc-dialog-surface {
-    overflow-y: hidden !important;
+  overflow-y: hidden !important;
 }
 
 .mat-dialog-content {
-    overflow-y: auto !important; /* Enable vertical scrolling for dialog content */
-    max-height: calc(100vh - 166px) !important; /* Adjust max height minus toolbar and padding */
-    padding: 16px !important; /* Add padding for spacing */
-    margin: 0 0 50px 0 !important; /* Reset margin to ensure content doesn't overlap */
+  overflow-y: auto !important; /* Enable vertical scrolling for dialog content */
+  max-height: calc(100vh - 166px) !important; /* Adjust max height minus toolbar and padding */
+  padding: 16px !important; /* Add padding for spacing */
+  margin: 0 0 50px 0 !important; /* Reset margin to ensure content doesn't overlap */
 
-    /* Ensure all input elements take up full width */
+  /* Ensure all input elements take up full width */
 
-    mat-form-field {
-        width: 100% !important; /* Full width for form fields */
-    }
+  mat-form-field {
+    width: 100% !important; /* Full width for form fields */
+  }
 
-    mat-form-field .mat-form-field-infix {
-        width: 100% !important; /* Full width for inner form field content */
-    }
+  mat-form-field .mat-form-field-infix {
+    width: 100% !important; /* Full width for inner form field content */
+  }
 
-    /* Additional styling for input fields directly if needed */
+  /* Additional styling for input fields directly if needed */
 
-    input {
-        width: 100% !important; /* Full width for input fields */
-    }
+  input {
+    width: 100% !important; /* Full width for input fields */
+  }
 
-    .dropdown-wrapper > * {
-        max-height: 800px; /* Feste Höhe für die Dropdownliste */
-    }
+  .dropdown-wrapper > * {
+    max-height: 800px; /* Feste Höhe für die Dropdownliste */
+  }
 }
 
 .fixed-toolbar {
-    position: sticky !important;
-    bottom: 80px !important;
-    width: 100%;
-    height: 0 !important;
-    z-index: 1000; /* Ensure toolbar stays above content */
-    background-color: #3f51b5; /* Adjust toolbar color */
-    color: #faf6f6; /* Adjust toolbar text color */
+  position: sticky !important;
+  bottom: 80px !important;
+  width: 100%;
+  height: 0 !important;
+  z-index: 1000; /* Ensure toolbar stays above content */
+  background-color: #3f51b5; /* Adjust toolbar color */
+  color: #faf6f6; /* Adjust toolbar text color */
 }
 
 .color-confirm {
-    color: #55b45d !important;
+  color: #55b45d !important;
 }
 
 .color-cancel {
-    color: #f44336 !important;
+  color: #f44336 !important;
 }
 
 .spacer {
-    flex: 1 !important; /* Flexible space to push buttons to the right */
+  flex: 1 !important; /* Flexible space to push buttons to the right */
 }
 
 .align-button {
-    margin-left: 8px; /* Adjust spacing between buttons */
+  margin-left: 8px; /* Adjust spacing between buttons */
 }
 
 .multiselect-dropdown .dropdown-btn .selected-item-container .selected-item {
-    border: 1px solid #337ab7 !important;
-    margin-right: 4px !important;
-    background: #337ab7 !important;
-    padding: 0 5px !important;
-    color: #fff !important;
-    border-radius: 2px !important;
-    float: left !important;
-    max-width: 100% !important; /* Changed from 100px to 100% */
+  border: 1px solid #337ab7 !important;
+  margin-right: 4px !important;
+  background: #337ab7 !important;
+  padding: 0 5px !important;
+  color: #fff !important;
+  border-radius: 2px !important;
+  float: left !important;
+  max-width: 100% !important; /* Changed from 100px to 100% */
 }
 
 /* Ensure dropdown behaves well in a flex container */
 .dropdown-container {
-    display: flex !important;
-    flex-direction: column !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .ng-multiselect-dropdown {
-    flex: 1 !important; /* Allow dropdown to take available space */
+  flex: 1 !important; /* Allow dropdown to take available space */
 }
 
 /* manufacturer-form.component.css */
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 input {
-    padding: 5px;
-    font-size: 16px;
+  padding: 5px;
+  font-size: 16px;
 }
 
 button {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .full-width-form-field {
-    width: 100%;
+  width: 100%;
 }
 
 .full-width-form-field .mat-form-field-infix {
-    width: 100%;
+  width: 100%;
 }
 
 .standort-item {
-    color: black;
-    border: 1px solid #122091; /* Light border for separation */
-    border-radius: 4px; /* Rounded corners */
-    padding: 16px; /* Space inside each standort item */
-    margin-bottom: 16px; /* Space between items */
-    background-color: #6f6f72; /* Light background color */
+  color: black;
+  border: 1px solid #122091; /* Light border for separation */
+  border-radius: 4px; /* Rounded corners */
+  padding: 16px; /* Space inside each standort item */
+  margin-bottom: 16px; /* Space between items */
+  background-color: #6f6f72; /* Light background color */
 }
 
 .standort-header {
-    margin-bottom: 12px; /* Space below the header */
-    font-weight: bold; /* Bold text for the index */
+  margin-bottom: 12px; /* Space below the header */
+  font-weight: bold; /* Bold text for the index */
 }
 
 .standort-index {
-    display: inline-block;
-    margin-right: 8px; /* Space between index and form fields */
+  display: inline-block;
+  margin-right: 8px; /* Space between index and form fields */
 }
 
 .dropdown-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Space between the dropdown and the button */
-    position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between the dropdown and the button */
+  position: relative;
 }
 
 .limited-width-input {
-    max-width: 300px; /* Set the maximum width */
-    width: 100%; /* Make it responsive */
+  max-width: 300px; /* Set the maximum width */
+  width: 100%; /* Make it responsive */
 }
 
 .add-button,
 .edit-button {
-    margin-left: 8px; /* Adjust spacing between button and dropdown */
+  margin-left: 8px; /* Adjust spacing between button and dropdown */
 }
 
 .custom-dropdown .multiselect-dropdown {
-    height: 100vh; /* Full viewport height */
-    overflow-y: auto; /* Ensure it is scrollable if it exceeds the viewport height */
+  height: 100vh; /* Full viewport height */
+  overflow-y: auto; /* Ensure it is scrollable if it exceeds the viewport height */
 }
 
 .custom-dropdown .multiselect-item {
-    overflow: hidden; /* Adjust as needed */
+  overflow: hidden; /* Adjust as needed */
 }
 
 button[disabled] .mat-icon-button {
-    background-color: #070707; /* Light grey background */
-    color: #c0c6da !important; /* Dark grey text */
-    cursor: not-allowed; /* Change cursor to indicate non-interactive */
-    opacity: 0.6; /* Lower opacity to give a disabled look */
+  background-color: #070707; /* Light grey background */
+  color: #c0c6da !important; /* Dark grey text */
+  cursor: not-allowed; /* Change cursor to indicate non-interactive */
+  opacity: 0.6; /* Lower opacity to give a disabled look */
 }
 
 button[disabled] mat-icon {
-    color: #faf6f6 !important; /* Change icon color to match text */
+  color: #faf6f6 !important; /* Change icon color to match text */
 }
 
 .dropdown-section {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-item {
-    margin-bottom: 16px; /* Space between form items */
+  margin-bottom: 16px; /* Space between form items */
 }
 
 .background-hersteller {
-    margin-bottom: 16px; /* Space between form items */
-    border: #275681 1px solid;
-    background: #1d2631;
+  margin-bottom: 16px; /* Space between form items */
+  border: #275681 1px solid;
+  background: #1d2631;
 }
 
 .background-lieferant {
-    margin-bottom: 16px; /* Space between form items */
-    border: #2b4624 1px solid;
-    background: #333328;
+  margin-bottom: 16px; /* Space between form items */
+  border: #2b4624 1px solid;
+  background: #333328;
 }
 
 .margin-top-50 {
-    margin-top: 50px !important;
+  margin-top: 50px !important;
 }
 
 .container {
-    background: #494646 !important;
-    width: 100% !important;
-    /* Ensure container takes full width */
-    padding: 20px;
-    box-sizing: border-box;
+  background: #494646 !important;
+  width: 100% !important;
+  /* Ensure container takes full width */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background: #333436 !important;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    width: 100%; /* Make login-form take full width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: #333436 !important;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Make login-form take full width */
 }
 
 mat-form-field {
-    width: 100%; /* Make mat-form-field take full width */
+  width: 100%; /* Make mat-form-field take full width */
 }
 
 .number-pad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px 0;
 }
 
 .number-pad button {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-    border: none;
-    background: #b5b9af;
-    border-radius: 5px;
-    cursor: pointer;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border: none;
+  background: #b5b9af;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #login-button {
-    padding: 10px 20px;
-    font-size: 18px;
-    background: #007bff;
-    color: #3a3232;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 20px;
+  font-size: 18px;
+  background: #007bff;
+  color: #3a3232;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #login-button h3 {
-    margin: 0;
+  margin: 0;
 }
 
 .mat-error {
-    position: absolute !important;
-    bottom: -20px; /* Adjust this based on your form field height */
-    left: 0;
-    color: #f44336 !important; /* Default Angular Material error color */
-    font-size: 0.75rem; /* Adjust as needed */
+  position: absolute !important;
+  bottom: -20px; /* Adjust this based on your form field height */
+  left: 0;
+  color: #f44336 !important; /* Default Angular Material error color */
+  font-size: 0.75rem; /* Adjust as needed */
 }
 
 ::ng-deep .mat-form-field {
-    margin-bottom: 16px; /* Space between form fields */
+  margin-bottom: 16px; /* Space between form fields */
 }
 
 ::ng-deep .mat-form-field .mat-error {
-    display: block; /* Ensure the error is displayed */
-    color: #f44336; /* Default error color */
-    font-size: 12px; /* Adjust font size */
+  display: block; /* Ensure the error is displayed */
+  color: #f44336; /* Default error color */
+  font-size: 12px; /* Adjust font size */
 }
 
 .error-container {
-    color: ghostwhite;
-    background-color: #de504b;
+  color: ghostwhite;
+  background-color: #de504b;
 }
 
 .input-wrapper {
-    position: fixed; /* Fixes the position relative to the viewport */
-    top: 10px; /* Adjust the top position as needed */
-    right: 10px; /* Adjust the right position as needed */
-    z-index: 1000; /* Ensures the input field appears above other elements */
-    background-color: #fff; /* Optional: Set a background color for better visibility */
-    padding: 10px; /* Optional: Add padding to the input wrapper */
-    border-radius: 4px; /* Optional: Add border radius for rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+  position: fixed; /* Fixes the position relative to the viewport */
+  top: 10px; /* Adjust the top position as needed */
+  right: 10px; /* Adjust the right position as needed */
+  z-index: 1000; /* Ensures the input field appears above other elements */
+  background-color: #fff; /* Optional: Set a background color for better visibility */
+  padding: 10px; /* Optional: Add padding to the input wrapper */
+  border-radius: 4px; /* Optional: Add border radius for rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
 }
 
 /* Style for the input field inside the fixed wrapper */
 .input-wrapper input {
-    width: 200px; /* Set a fixed width for the input field */
+  width: 200px; /* Set a fixed width for the input field */
 }
 
 input-wrapper-relative {
   position: relative; /* Fixes the position relative to the viewport */
   z-index: 1000; /* Ensures the input field appears above other elements */
   background-color: #fff; /* Optional: Set a background color for better visibility */
-  padding: 10px; /* Optional: Add padding to the input wrapper */
+  padding: 0px; /* Optional: Add padding to the input wrapper */
   border-radius: 4px; /* Optional: Add border radius for rounded corners */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+}
+
+/* Make the sidenav fixed */
+.fixed-sidenav {
+  position: fixed !important; /* Keep the sidenav fixed */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Full viewport height */
+}
+
+.fixed-sidenav-sub {
+  position: fixed !important; /* Keep the sidenav fixed */
+  top: 90px;
+  left: 0;
+  height: 100vh; /* Full viewport height */
+}
+
+/* Ensure content is pushed to the right of the fixed sidenav */
+.mat-sidenav-container {
+  margin-top: 60px;
+  margin-left: -10px;
+  width: 100vw;
+  padding-bottom: 70px;
+}
+
+.toolbar-content {
+  display: flex;
+  flex: 1; /* Takes the full width */
+  justify-content: center; /* Centers the route name */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* Ensures perfect centering */
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.username {
+  margin-right: auto; /* Pushes the username to the left */
+  padding-left: 16px; /* Adds spacing */
+}
+
+.route-name {
+  font-weight: bold;
+  text-align: center;
 }

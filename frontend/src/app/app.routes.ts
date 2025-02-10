@@ -12,14 +12,14 @@ import {PersonalComponent} from "./personal/personal.component";
 
 export const routes: Routes = [
   {path: 'app-login', component: LoginComponent},
-  {path: 'app-bestellliste', component: BestelllisteComponent, canActivate: [AuthGuard]},
-  {path: 'app-artikelliste', component: ArtikellisteComponent, canActivate: [AuthGuard]},
-  {path: 'app-departments', component: DepartmentsComponent, canActivate: [AuthGuard]},
-  {path: 'app-herstellers', component: HerstellersComponent, canActivate: [AuthGuard]},
-  {path: 'app-lieferants', component: LieferantsComponent, canActivate: [AuthGuard]},
-  {path: 'app-personal', component: PersonalComponent, canActivate: [AuthGuard]},
+  {path: 'app-bestellliste', component: BestelllisteComponent, data: {title: 'Bestellungen'}, canActivate: [AuthGuard]},
+  {path: 'app-artikelliste', component: ArtikellisteComponent, data: {title: 'Artikelliste'}, canActivate: [AuthGuard]},
+  {path: 'app-departments', component: DepartmentsComponent, data: {title: 'Abteilungen'}, canActivate: [AuthGuard]},
+  {path: 'app-herstellers', component: HerstellersComponent, data: {title: 'Hersteller'}, canActivate: [AuthGuard]},
+  {path: 'app-lieferants', component: LieferantsComponent, data: {title: 'Lieferanten'}, canActivate: [AuthGuard]},
+  {path: 'app-personal', component: PersonalComponent, data: {title: 'Mitarbeiter'}, canActivate: [AuthGuard]},
   {path: 'app-logout', component: LogoutComponent, canActivate: [AuthGuard]},
-  { path: '**', component: BestelllisteComponent, pathMatch: 'full', canActivateChild: [false] }
+  {path: '**', component: BestelllisteComponent, pathMatch: 'full', canActivateChild: [false]}
 ];
 
 
