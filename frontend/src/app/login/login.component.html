@@ -1,24 +1,39 @@
 <div class="container">
+
+  <!-- Form should wrap only the login form content -->
+  <form (submit)="onLoginClick()">
     <div class="login-form">
-        <h1>PIN</h1>
+      <h1>PIN</h1>
 
       <mat-form-field appearance="fill">
-        <input matInput type="password" id="personalnummer" placeholder="Bitte geben Sie die PIN ein"
-               [(ngModel)]="mitarbeiterId" (keyup)="onKeyup($event)" (tap)="onLoginClick()" (input)="onLoginChange($event)"
-               autocomplete="new-password"> <!-- Disable autofill -->
-        <button mat-icon-button matSuffix *ngIf="mitarbeiterId" (click)="clearInput()">
+        <input
+          matInput
+          type="password"
+          id="personalnummer"
+          placeholder="Bitte geben Sie die PIN ein"
+          name="personalnummer"
+          [(ngModel)]="mitarbeiterId"
+          (keyup)="onKeyup($event)"
+          (input)="onLoginChange($event)"
+          autocomplete="new-password">
+
+        <button mat-icon-button matSuffix *ngIf="mitarbeiterId" (click)="clearInput()" type="button">
           <mat-icon>clear</mat-icon>
         </button>
       </mat-form-field>
 
-        <div class="number-pad">
-            <button *ngFor="let number of numbers" (click)="onNumberClick(number)" (keydown)="preventEnter($event)">
-                <span *ngIf="number !== 10"> {{ number }} </span>
-                <!-- Add an icon next to number 0 -->
-                <mat-icon *ngIf="number === 10"> login </mat-icon>
-            </button>
-        </div>
+      <div class="number-pad">
+        <button *ngFor="let number of numbers" (click)="onNumberClick(number)" (keydown)="preventEnter($event)" type="button">
+          <span *ngIf="number !== 10"> {{ number }} </span>
+          <mat-icon *ngIf="number === 10"> login</mat-icon>
+        </button>
+      </div>
 
-        <button (click)="onLoginClick()" id="login-button"><h3> Verbinden</h3></button>
+      <!-- Submit button -->
+      <button type="submit" id="login-button">
+        <h3>Verbinden</h3>
+      </button>
     </div>
+  </form>
 </div>
+

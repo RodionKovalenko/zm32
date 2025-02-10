@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ibaApp} from "../enviroments/environment";
+import {ibaApp} from "../environments/environment";
 import {routes} from "./app.routes";
 import {HttpService} from "./services/http.service";
 import {Router} from "@angular/router";

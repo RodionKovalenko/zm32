@@ -105,7 +105,7 @@ export class DataGridBestellungenComponent implements OnInit {
 
         this.bestellungForm = this.fb.group({
             departments: [[]],
-            status: [[]],
+            status: [[this.statusOptions[0]]],
             datum: [dateSinceAgo],
             datumBis: ['']
         }, { validator: dateRangeValidator()} as AbstractControlOptions);

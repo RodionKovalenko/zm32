@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import { environment } from '../../enviroments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
-  private baseUrl = 'https://127.0.0.1:62487/api';
+  private baseUrl = 'https://127.0.0.1:55118/api';
   private loginURL = '';
   private refreshJWTURL = '';
   //baseUrl = 'https://iba.local.de/api';
