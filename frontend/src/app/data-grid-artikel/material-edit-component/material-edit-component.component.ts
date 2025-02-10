@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Artikel} from "../../models/Artikel";
 import {Lieferant} from "../../models/Lieferant";
 import {HttpService} from "../../services/http.service";
@@ -40,7 +40,8 @@ import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
     MatToolbar,
     MatFormFieldModule,
     MatInputModule,
-    FocusOnClickDirective
+    FocusOnClickDirective,
+    MatDialogTitle
   ]
 })
 export class MaterialEditComponentComponent implements OnInit {
