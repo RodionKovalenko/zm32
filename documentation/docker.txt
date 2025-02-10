@@ -28,7 +28,7 @@ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 192.168.1.90  192.168.2.106 ::1
 mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba localhost 127.0.0.1 ::1
 
-mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 127.0.0.1 192.168.178.21 192.168.1.90 192.168.2.106 server ::1
+mkcert -key-file ssl/server.key -cert-file ssl/server.crt iba.local.de localhost 127.0.0.1 192.168.178.21 192.168.1.90 192.168.2.114 server ::1
 
 
 FRONTEND:
