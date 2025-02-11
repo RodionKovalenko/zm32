@@ -22,6 +22,8 @@ class BestellungFormType extends AbstractType
             ->add('description', TextareaType::class)
 //            ->add('descriptionZusatz', TextareaType::class)
             ->add('preis', TextType::class)
+            ->add('gesamtpreis', TextType::class)
+            ->add('packageunit', TextType::class)
             ->add('amount', TextType::class)
             ->add('artikels', EntityType::class, [
                 'class' => Artikel::class, // The entity class

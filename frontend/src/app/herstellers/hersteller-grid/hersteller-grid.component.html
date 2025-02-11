@@ -40,8 +40,8 @@
 </mat-toolbar>
 
 
-<div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource.data" matSort (matSortChange)="sortData($event)">
+<div>
+    <table mat-table [dataSource]="dataSource.data" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8">
 
         <!-- ID Column -->
         <ng-container matColumnDef="id">

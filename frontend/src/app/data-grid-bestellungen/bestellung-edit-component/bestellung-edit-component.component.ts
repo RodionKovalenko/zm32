@@ -1,5 +1,5 @@
 import {AfterViewChecked, AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
 import {MaterialEditComponentComponent} from "../../data-grid-artikel/material-edit-component/material-edit-component.component";
@@ -36,7 +36,8 @@ import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
     MatIconButton,
     MatTooltip,
     NgIf,
-    FocusOnClickDirective
+    FocusOnClickDirective,
+    MatDialogTitle
   ],
   styleUrl: './bestellung-edit-component.component.css'
 })
@@ -123,8 +124,10 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     this.bestellungForm = this.fb.group({
       id: [this.data?.id || 0],
       description: [this.data?.description || ''],
-      amount: [this.data?.amount || '', Validators.required],
+      amount: [this.data?.amount || '', floatValidator],
       preis: [this.data?.preis || '', floatValidator],
+      gesamtpreis: [this.data?.gesamtpreis || '', floatValidator],
+      packageunit: [this.data?.packageunit || ''],
       artikels: [this.data?.artikels || [], Validators.required],
       departments: [this.data?.departments || [], Validators.required],
       herstellers: [this.data?.herstellers || []],
@@ -163,6 +166,15 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
 
     this.bestellungForm.get('url')?.valueChanges.subscribe((value: any) => {
       this.safeUrl = value ? this.sanitizer.bypassSecurityTrustUrl(value) : null;
+    });
+
+    this.bestellungForm.valueChanges.subscribe((values: Bestellung) => {
+      const amount = Number(values.amount) || 0;
+      const preis = values.preis || 0;
+      const gesamtpreis = amount * preis;
+
+      // Update gesamtpreis field
+      this.bestellungForm.patchValue({ gesamtpreis }, { emitEvent: false });
     });
 
     this.markAllAsTouched();
@@ -326,7 +338,9 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     let url = this.httpService.get_baseUrl() + '/bestellung/save';
 
     if (this.bestellungForm.valid && !this.childDialogOpened) {
+      this.bestellungForm.get('gesamtpreis')?.enable();
       const formValue = this.bestellungForm.value;
+
       formValue.departments = formValue.departments.map((dept: any) => (dept.id));
       formValue.lieferants = formValue.lieferants.map((lieferant: any) => (lieferant.id));
       formValue.herstellers = formValue.herstellers.map((hersteller: any) => (hersteller.id));

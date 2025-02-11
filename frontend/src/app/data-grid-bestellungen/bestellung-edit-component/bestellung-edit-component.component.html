@@ -145,25 +145,48 @@
       </mat-form-field>
     </div>
 
+    <!--  Einheit -->
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Verpackungseinheit</mat-label>
+        <input matInput id="packageunit" formControlName="packageunit">
+
+        <mat-error *ngIf="bestellungForm.get('packageunit').invalid && bestellungForm.get('packageunit').touched">
+          Verpackungseinheit ist erforderlich (z.B. Stück, Packung etc.)
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!--  Anzahl -->
     <div>
       <mat-form-field appearance="fill">
         <mat-label>Anzahl</mat-label>
         <input matInput id="amount" formControlName="amount">
 
         <mat-error *ngIf="bestellungForm.get('amount').invalid && bestellungForm.get('amount').touched">
-          Anzahl ist erforderlich.
+          Anzahl muss eine Zahl sein.
         </mat-error>
       </mat-form-field>
     </div>
 
+
+    <!--    Preis pro Einheit -->
     <div>
       <mat-form-field appearance="fill">
-        <mat-label>Preis</mat-label>
+        <mat-label>Preis pro Verpackungseinheit</mat-label>
         <input matInput id="preis" formControlName="preis">
 
         <mat-error *ngIf="bestellungForm.get('preis').invalid && bestellungForm.get('preis').touched">
           Preis enthält ungültige Zeichen.
         </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!--    Gesamtpreis -->
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Gesamtpreis</mat-label>
+        <input matInput id="gesamtpreis" formControlName="gesamtpreis" type="number" readonly>
       </mat-form-field>
     </div>
 

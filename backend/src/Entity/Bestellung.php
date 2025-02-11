@@ -37,6 +37,12 @@ class Bestellung
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $preis = null;
 
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $gesamtpreis = null;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $packageunit = null;
+
     #[Groups(['Bestellung_Department', 'Department'])]
     #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: "bestellungen")]
     #[ORM\JoinTable(name:"bestellung_to_departments")]
@@ -295,6 +301,28 @@ class Bestellung
             $artikel->removeBestellung($this);
         }
 
+        return $this;
+    }
+
+    public function getGesamtpreis(): ?string
+    {
+        return $this->gesamtpreis;
+    }
+
+    public function setGesamtpreis(?string $gesamtpreis): Bestellung
+    {
+        $this->gesamtpreis = $gesamtpreis;
+        return $this;
+    }
+
+    public function getPackageunit(): ?string
+    {
+        return $this->packageunit;
+    }
+
+    public function setPackageunit(?string $packageunit): Bestellung
+    {
+        $this->packageunit = $packageunit;
         return $this;
     }
 }

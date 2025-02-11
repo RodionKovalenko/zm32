@@ -4,10 +4,12 @@ import {Mitarbeiter} from "./Mitarbeiter";
 
 export interface Bestellung {
     id: number;
-    amount: string;
     description: string;
     descriptionZusatz?: string;
+    amount: string;
     preis?: number;
+    gesamtpreis?: number;
+    packageunit?: string;
     artikel?: Artikel
     lieferant?: Lieferant,
     mitarbeiter?: Mitarbeiter,

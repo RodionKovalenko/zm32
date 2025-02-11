@@ -68,33 +68,33 @@
 </mat-toolbar>
 
 
-<div class="mat-elevation-z8 grid-view">
-    <table mat-table [dataSource]="dataSource.data" matSort (matSortChange)="sortData($event)">
+<div>
+    <table mat-table [dataSource]="dataSource.data" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8">
 
         <!-- ID Column -->
         <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <th mat-header-cell *matHeaderCellDef>ID</th>
             <td mat-cell *matCellDef="let element">
                 {{ element.id }}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="firstname">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Vorname</th>
+            <th mat-header-cell *matHeaderCellDef>Vorname</th>
             <td mat-cell *matCellDef="let element">
                 {{ element.firstname }}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="lastname">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nachname</th>
+            <th mat-header-cell *matHeaderCellDef>Nachname</th>
             <td mat-cell *matCellDef="let element">
                 {{ element.lastname }}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="mitarbeiterId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Mitarbeiter-ID</th>
+            <th mat-header-cell *matHeaderCellDef>Mitarbeiter-ID</th>
             <td mat-cell *matCellDef="let element">
                 {{ element.mitarbeiterId }}
             </td>

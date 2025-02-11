@@ -22,6 +22,8 @@ class BestellungExportHelper
         $pdf->setCreator(PDF_CREATOR);
         $pdf->setAuthor('ZM 32');
         $pdf->setHeaderData('', 0, $dokumentTitle, 'ZM 32', array(0, 64, 255), array(0, 64, 128));
+        $pdf->setHeaderMargin(15); // This moves the header 20mm down
+
         $pdf->setHeaderFont(array('helvetica', '', 12));
         $pdf->setFooterFont(array('helvetica', '', 10));
         $pdf->setMargins(15, 30, 15);
@@ -30,7 +32,7 @@ class BestellungExportHelper
         $pdf->addPage();
 
         // Table column widths
-        $fixedWidthColumns = 15 + 20 + 20 + 30; // Menge, Bestellnummer, Preis, Bestellt von
+        $fixedWidthColumns = 20 + 15 + 20 + 20 + 20 + 30; // Datum, Menge, Bestellnummer, Preis, Gesamtpreis, Bestellt von
         $totalPageWidth = 210 - 30; // A4 width minus margins
         $remainingWidth = $totalPageWidth - $fixedWidthColumns;
         $artikelWidth = $remainingWidth * 0.6;
@@ -54,12 +56,14 @@ class BestellungExportHelper
 
             $html .= '<thead>
                     <tr>
-                        <th width="15mm">Menge</th>
                         <th width="20mm">Bestellnummer</th>
                         <th width="' . $artikelWidth . 'mm">Artikel</th>
+                         <th width="15mm">Menge</th>
                         <th width="20mm">Preis</th>
+                        <th width="25mm" style="text-align: right; color: #555;">Gesamtpreis</th> <!-- Brighter column -->
                         <th width="' . $notizenWidth . 'mm">Notizen</th>
                         <th width="30mm">Bestellt von</th>
+                        <th width="20mm">Datum</th> <!-- Move Datum to the end -->
                     </tr>
                   </thead>';
 
@@ -70,27 +74,32 @@ class BestellungExportHelper
                 foreach ($bestellung->getArtikels() as $artikel) {
                     $lieferantBestellnummer = $this->getLieferantBestellnummer($bestellung, $bestellung->getLieferants()[0]);
                     $bestelltVon = $bestellung->getMitarbeiter()->getVorname() . ' ' . $bestellung->getMitarbeiter()->getNachname();
+                    $datum = $bestellung->getDatum()->format('d.m.Y');
                     $preis = $bestellung->getPreis() ?: 0;
                     $preis = (float)str_replace(',', '.', $preis);
+                    $gesamtpreis = $preis * $this->getAmountNumber($bestellung);
                     $formattedPreis = number_format($preis, 2, ',', '.') . ' €';
+                    $formattedGesamtpreis = number_format($gesamtpreis, 2, ',', '.') . ' €';
 
-                    $supplierSum += $preis;
-                    $totalSum += $preis;
+                    $supplierSum += $gesamtpreis;
+                    $totalSum += $gesamtpreis;
 
                     $html .= '<tr>
-                        <td width="15mm">' . $bestellung->getAmount() . '</td>
-                        <td width="20mm">' . ($lieferantBestellnummer ?? 'N/A') . '</td>
-                        <td width="' . $artikelWidth . 'mm">' . $artikel->getName() . '</td>
-                        <td width="20mm" style="text-align: right;">' . $formattedPreis . '</td>
-                        <td width="' . $notizenWidth . 'mm">' . $bestellung->getDescription() . '</td>
-                        <td width="30mm">' . $bestelltVon . '</td>
-                      </tr>';
+                            <td width="20mm">' . ($lieferantBestellnummer ?? 'N/A') . '</td>
+                            <td width="' . $artikelWidth . 'mm">' . $artikel->getName() . '</td>
+                            <td width="15mm">' . $bestellung->getAmount() . '</td>
+                            <td width="20mm" style="text-align: right;">' . $formattedPreis . '</td>
+                            <td width="25mm" style="text-align: right; color: #555;">' . $formattedGesamtpreis . '</td> <!-- Brighter column -->
+                            <td width="' . $notizenWidth . 'mm">' . $bestellung->getDescription() . '</td>
+                            <td width="30mm">' . $bestelltVon . '</td>
+                            <td width="20mm">' . $datum . '</td> <!-- Move Datum to the end -->
+                        </tr>';
                 }
             }
 
             // Add subtotal row
             $html .= '<tr style="font-weight: bold; background-color: #f2f2f2;">
-                <td colspan="3" style="text-align: right;">Summe für ' . $lieferantName . ':</td>
+                <td colspan="4" style="text-align: right;">Summe für ' . $lieferantName . ':</td>
                 <td style="text-align: right;">' . number_format($supplierSum, 2, ',', '.') . ' €</td>
                 <td colspan="2"></td>
               </tr>';
@@ -147,5 +156,14 @@ class BestellungExportHelper
         }
 
         return null;
+    }
+
+    private function getAmountNumber(Bestellung $bestellung)
+    {
+        $amountString = $bestellung->getAmount();
+        preg_match('/\d+(\.\d+)?/', $amountString, $matches);
+        $amount = isset($matches[0]) ? (float)$matches[0] : 1.0;
+
+        return $amount;
     }
 }
