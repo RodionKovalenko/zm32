@@ -403,7 +403,7 @@ mat-form-field {
 .input-wrapper {
   position: fixed; /* Fixes the position relative to the viewport */
   top: 10px; /* Adjust the top position as needed */
-  right: 10px; /* Adjust the right position as needed */
+  right: 70px; /* Adjust the right position as needed */
   z-index: 1000; /* Ensures the input field appears above other elements */
   background-color: #fff; /* Optional: Set a background color for better visibility */
   padding: 10px; /* Optional: Add padding to the input wrapper */
@@ -421,6 +421,17 @@ input-wrapper-relative {
   z-index: 1000; /* Ensures the input field appears above other elements */
   background-color: #fff; /* Optional: Set a background color for better visibility */
   padding: 0px; /* Optional: Add padding to the input wrapper */
+  border-radius: 4px; /* Optional: Add border radius for rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+}
+
+.input-wrapper-cancel-btn {
+  position: fixed !important; /* Fixes the position relative to the viewport */
+  top: 0; /* Adjust the top position as needed */
+  right: 30px; /* Adjust the right position as needed */
+  z-index: 1000; /* Ensures the input field appears above other elements */
+  background-color: #fff; /* Optional: Set a background color for better visibility */
+  padding: 10px; /* Optional: Add padding to the input wrapper */
   border-radius: 4px; /* Optional: Add border radius for rounded corners */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
 }

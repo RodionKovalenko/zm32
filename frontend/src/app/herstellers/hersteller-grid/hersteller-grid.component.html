@@ -1,11 +1,33 @@
 <mat-toolbar>
-    <span class="spacer"></span>
-    <div class="input-wrapper">
-        <input type="text" [value]="searchTerm" (input)="onHerstellerSearchChange($event)" placeholder="Suche" class="limited-width-input"/>
-        <button *ngIf="searchTerm" mat-icon-button class="align-button color-cancel edit-button" matTooltip="Abbrechen" (click)="clearSearch()">
-            <mat-icon>cancel</mat-icon>
-        </button>
-    </div>
+  <input type="text"
+         #searchInput
+         *ngIf="!isSearchIconVisible"
+         [value]="searchTerm"
+         (input)="onHerstellerSearchChange($event)"
+         placeholder="Suche"
+         class="input-wrapper limited-width-input"
+         (blur)="setSearchIconVisible(true)"
+         (focusout)="setSearchIconVisible(false)"
+  />
+
+  <button *ngIf="isSearchIconVisible"
+          mat-icon-button
+          class="input-wrapper-cancel-btn"
+          matTooltip="Suche"
+          [ngStyle]="{'color': searchTerm ? 'red' : 'white'}"
+          (click)="setSearchIconVisible(false)">
+    <mat-icon>search</mat-icon>
+  </button>
+
+  <button *ngIf="searchTerm && !isSearchIconVisible"
+          mat-icon-button
+          (mousedown)="preventBlur($event)"
+          class="input-wrapper-cancel-btn color-cancel"
+          matTooltip="Abbrechen"
+          (click)="clearSearch()"
+  >
+    <mat-icon>cancel</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-toolbar>

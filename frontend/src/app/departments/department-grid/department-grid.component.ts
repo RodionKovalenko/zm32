@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
@@ -14,7 +14,7 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
-import {NgIf} from "@angular/common";
+import {NgIf, NgStyle} from "@angular/common";
 
 @Component({
   selector: 'app-department-grid',
@@ -36,159 +36,177 @@ import {NgIf} from "@angular/common";
     MatHeaderRowDef,
     MatRowDef,
     MatPaginator,
-    NgIf
+    NgIf,
+    NgStyle
   ],
   styleUrl: './department-grid.component.css'
 })
 
 export class DepartmentGridComponent implements OnInit {
-    @ViewChild(MatSort) sort!: MatSort;
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-    displayedColumns: string[] = ['id', 'name', 'edit', 'remove'];
-    dataSource = new MatTableDataSource<DepartmentData>([]);
-    searchTerm: string = '';
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  displayedColumns: string[] = ['id', 'name', 'edit', 'remove'];
+  dataSource = new MatTableDataSource<DepartmentData>([]);
+  searchTerm: string = '';
 
-    constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  isSearchIconVisible: boolean = true;
+
+  constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  }
+
+  ngOnInit() {
+    this.loadDepartments();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  loadDepartments() {
+    let params = new HttpParams();
+
+    if (this.searchTerm) {
+      params = params.append('search', this.searchTerm);
     }
 
-    ngOnInit() {
-        this.loadDepartments();
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    let mitarbeiterRequest = this.httpService.get_httpclient().get(
+      `${this.httpService.get_baseUrl()}/department/get_departments`, {params}
+    );
+    mitarbeiterRequest.subscribe((response: any) => {
+      this.dataSource = new MatTableDataSource<DepartmentData>(response.data);
+      this.cdr.detectChanges(); // Manually trigger change detection
+    });
+  }
+
+  sortData(sort: Sort) {
+    const data = this.dataSource.data.slice();
+    if (!sort.active || sort.direction === '') {
+      this.dataSource.data = data;
+      return;
     }
 
-    loadDepartments() {
-        let params = new HttpParams();
+    this.dataSource.data = data.sort((a: DepartmentData, b: DepartmentData) => {
+      const isAsc = sort.direction === 'asc';
+      let key: string = sort.active.toString();
 
-        if (this.searchTerm) {
-            params = params.append('search', this.searchTerm);
-        }
+      return compare(`${a}.${key}`, `${b}.${key}`, isAsc);
+    });
+  }
 
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(
-            `${this.httpService.get_baseUrl()}/department/get_departments`, {params}
-        );
-        mitarbeiterRequest.subscribe((response: any) => {
-            this.dataSource = new MatTableDataSource<DepartmentData>(response.data);
-            this.cdr.detectChanges(); // Manually trigger change detection
-        });
-    }
+  editRecord(record: Artikel) {
+    record.formTitle = 'Abteilung bearbeiten';
 
-    sortData(sort: Sort) {
-        const data = this.dataSource.data.slice();
-        if (!sort.active || sort.direction === '') {
-            this.dataSource.data = data;
-            return;
-        }
+    const dialogRef = this.dialog.open(DepartmentFormComponent, {
+      width: '550px',
+      data: record,
+      disableClose: true,
+    });
 
-        this.dataSource.data = data.sort((a: DepartmentData, b: DepartmentData) => {
-            const isAsc = sort.direction === 'asc';
-            let key: string = sort.active.toString();
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.data) {
+        // Update the data source with the edited record
+        const index = this.dataSource.data.findIndex(artikel => artikel.id === result.data[0].id);
+        const updatedData = [...this.dataSource.data];
+        updatedData[index] = result.data[0];
+        this.dataSource.data = updatedData;
+        this.dataSource._updateChangeSubscription();
+        this.cdr.detectChanges(); // Manually trigger change detection
+      }
+    });
+  }
 
-            return compare(`${a}.${key}`, `${b}.${key}`, isAsc);
-        });
-    }
+  addRecord() {
+    let data: any = {};
+    data['formTitle'] = 'Neue Abteilung anlegen';
 
-    editRecord(record: Artikel) {
-        record.formTitle = 'Abteilung bearbeiten';
+    const dialogRef = this.dialog.open(DepartmentFormComponent, {
+      width: '550px',
+      data: data,
+      disableClose: true,
+    });
 
-        const dialogRef = this.dialog.open(DepartmentFormComponent, {
-            width: '550px',
-            data: record,
-            disableClose: true,
-        });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Update the data source with the edited record
+        const updatedData = [...this.dataSource.data];
+        updatedData.unshift(result.data[0]);
+        this.dataSource.data = updatedData;
+        this.dataSource._updateChangeSubscription();
+        this.cdr.detectChanges(); // Manually trigger change detection
+      }
+    });
+  }
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && result.data) {
-                // Update the data source with the edited record
-                const index = this.dataSource.data.findIndex(artikel => artikel.id === result.data[0].id);
-                const updatedData = [...this.dataSource.data];
-                updatedData[index] = result.data[0];
-                this.dataSource.data = updatedData;
-                this.dataSource._updateChangeSubscription();
-                this.cdr.detectChanges(); // Manually trigger change detection
-            }
-        });
-    }
+  removeRecord(record: Artikel) {
+    let url = this.httpService.get_baseUrl() + '/department/delete/' + record.id;
 
-    addRecord() {
-        let data: any = {};
-        data['formTitle'] = 'Neue Abteilung anlegen';
-
-        const dialogRef = this.dialog.open(DepartmentFormComponent, {
-            width: '550px',
-            data: data,
-            disableClose: true,
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                // Update the data source with the edited record
-                const updatedData = [...this.dataSource.data];
-                updatedData.unshift(result.data[0]);
-                this.dataSource.data = updatedData;
-                this.dataSource._updateChangeSubscription();
-                this.cdr.detectChanges(); // Manually trigger change detection
-            }
-        });
-    }
-
-    removeRecord(record: Artikel) {
-        let url = this.httpService.get_baseUrl() + '/department/delete/' + record.id;
-
-        this.httpService.get_httpclient().post(url, record.id).subscribe({
-            next: (response: any) => {
-                if (response && response.success && Boolean(response?.success)) {
-                    this.dataSource.data = this.dataSource.data.filter((value, key) => {
-                        return value.id !== record.id;
-                    });
-                    this.dataSource._updateChangeSubscription();
-                } else {
-                    this.dialog.open(LoginErrorComponent, {
-                        width: '450px',
-                        height: '150px',
-                        data: {
-                            title: response?.message
-                        }
-                    });
-                }
-            },
-            error: (err) => {
-                console.log(err);
-                this.dialog.open(LoginErrorComponent, {
-                    width: '450px',
-                    height: '150px',
-                    data: {
-                        title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
-                    }
-                });
-            }
-        });
-    }
-
-    onArtikelSearchChange(searchWord: any) {
-        let search: any = '';
-
-        if (searchWord && searchWord?.target && searchWord.target.value) {
-            search = searchWord.target.value;
+    this.httpService.get_httpclient().post(url, record.id).subscribe({
+      next: (response: any) => {
+        if (response && response.success && Boolean(response?.success)) {
+          this.dataSource.data = this.dataSource.data.filter((value, key) => {
+            return value.id !== record.id;
+          });
+          this.dataSource._updateChangeSubscription();
         } else {
-            search = searchWord;
+          this.dialog.open(LoginErrorComponent, {
+            width: '450px',
+            height: '150px',
+            data: {
+              title: response?.message
+            }
+          });
         }
+      },
+      error: (err) => {
+        console.log(err);
+        this.dialog.open(LoginErrorComponent, {
+          width: '450px',
+          height: '150px',
+          data: {
+            title: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut'
+          }
+        });
+      }
+    });
+  }
 
-        if (search && search.length > 0) {
-            this.searchTerm = search;
-        } else {
-            this.searchTerm = '';
-        }
+  onArtikelSearchChange(searchWord: any) {
+    let search: any = '';
 
-        this.loadDepartments();
+    if (searchWord && searchWord?.target && searchWord.target.value) {
+      search = searchWord.target.value;
+    } else {
+      search = searchWord;
     }
 
-    clearSearch() {
-        this.searchTerm = '';
-        this.loadDepartments();
+    if (search && search.length > 0) {
+      this.searchTerm = search;
+    } else {
+      this.searchTerm = '';
     }
+
+    this.loadDepartments();
+  }
+
+  setSearchIconVisible(isVisible: boolean) {
+    this.isSearchIconVisible = isVisible;
+
+    if (!isVisible) {
+      setTimeout(() => this.searchInput?.nativeElement?.focus(), 0); // Focus input when it appears
+    }
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.isSearchIconVisible = true;
+    this.loadDepartments();
+  }
+
+  preventBlur(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
