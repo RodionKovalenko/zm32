@@ -60,7 +60,7 @@ class BestellungExportHelper
                         <th width="' . $artikelWidth . 'mm">Artikel</th>
                          <th width="15mm">Menge</th>
                         <th width="20mm">Preis</th>
-                        <th width="25mm" style="text-align: right; color: #555;">Gesamtpreis</th> <!-- Brighter column -->
+                        <th width="25mm">Gesamtpreis</th> <!-- Brighter column -->
                         <th width="' . $notizenWidth . 'mm">Notizen</th>
                         <th width="30mm">Bestellt von</th>
                         <th width="20mm">Datum</th> <!-- Move Datum to the end -->
@@ -87,9 +87,9 @@ class BestellungExportHelper
                     $html .= '<tr>
                             <td width="20mm">' . ($lieferantBestellnummer ?? 'N/A') . '</td>
                             <td width="' . $artikelWidth . 'mm">' . $artikel->getName() . '</td>
-                            <td width="15mm">' . $bestellung->getAmount() . '</td>
+                            <td width="15mm" style="text-align: right;">' . $bestellung->getAmount() . '</td>
                             <td width="20mm" style="text-align: right;">' . $formattedPreis . '</td>
-                            <td width="25mm" style="text-align: right; color: #555;">' . $formattedGesamtpreis . '</td> <!-- Brighter column -->
+                            <td width="25mm" style="text-align: right;">' . $formattedGesamtpreis . '</td> 
                             <td width="' . $notizenWidth . 'mm">' . $bestellung->getDescription() . '</td>
                             <td width="30mm">' . $bestelltVon . '</td>
                             <td width="20mm">' . $datum . '</td> <!-- Move Datum to the end -->

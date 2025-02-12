@@ -98,11 +98,11 @@ class BestellungController extends BaseController
             if ($bestellung->getDatum() === null) {
                 $bestellung->setDatum(new \DateTime());
                 $bestellung->setStatus(BestellungStatus::OFFEN->value);
-            }
 
-            /** @var Mitarbeiter $mitarbeiter */
-            $mitarbeiter = $this->mitarbeiterRepository->getMitarbeiterByUserMitarbeiterId($data['mitarbeiterId']);
-            $bestellung->setMitarbeiter($mitarbeiter);
+                /** @var Mitarbeiter $mitarbeiter */
+                $mitarbeiter = $this->mitarbeiterRepository->getMitarbeiterByUserMitarbeiterId($data['mitarbeiterId']);
+                $bestellung->setMitarbeiter($mitarbeiter);
+            }
 
             $form = $this->createForm(BestellungFormType::class, $bestellung);
             $form->submit($data, false);

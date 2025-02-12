@@ -169,8 +169,8 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     });
 
     this.bestellungForm.valueChanges.subscribe((values: Bestellung) => {
-      const amount = Number(values.amount) || 0;
-      const preis = values.preis || 0;
+      const amount = Number((values.amount || "").toString().replace(",", ".")) || 0;
+      const preis = Number((values.preis || "").toString().replace(",", ".")) || 0;
       const gesamtpreis = amount * preis;
 
       // Update gesamtpreis field
@@ -425,6 +425,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         this.bestellungForm.patchValue({
           descriptionZusatz: data[0].description,
           url: data[0].url,
+          preis: data[0].preis,
         });
 
         this.bestellungForm.get('artikels').setValue(data);

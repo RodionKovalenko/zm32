@@ -73,7 +73,7 @@
 
         <!-- ID Column -->
         <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <th mat-header-cell *matHeaderCellDef>ID</th>
             <td mat-cell *matCellDef="let element">
                 {{element.id}}
             </td>
@@ -81,7 +81,7 @@
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element">
                 {{element.name}}
             </td>
@@ -89,7 +89,7 @@
 
         <!-- description Column -->
         <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Beschreibung</th>
+            <th mat-header-cell *matHeaderCellDef>Beschreibung</th>
             <td mat-cell *matCellDef="let element">
                 {{element.description}}
             </td>
@@ -98,7 +98,7 @@
 
         <!-- Departments Column -->
         <ng-container matColumnDef="departments">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Abteilung</th>
+            <th mat-header-cell *matHeaderCellDef>Abteilung</th>
             <td mat-cell *matCellDef="let element">
                 <div *ngFor="let department of element.departments">
                     {{ department?.name }}
@@ -108,7 +108,7 @@
 
         <!-- Lieferants Column -->
         <ng-container matColumnDef="lieferants">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Lieferant</th>
+            <th mat-header-cell *matHeaderCellDef>Lieferant</th>
             <td mat-cell *matCellDef="let element">
                 <div *ngFor="let lieferant of element.lieferants">
                     {{ lieferant?.name }}
@@ -118,7 +118,7 @@
 
         <!-- Lieferants Column -->
         <ng-container matColumnDef="herstellers">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hersteller</th>
+            <th mat-header-cell *matHeaderCellDef>Hersteller</th>
             <td mat-cell *matCellDef="let element">
                 <div *ngFor="let hersteller of element.herstellers">
                     {{ hersteller?.name }}
