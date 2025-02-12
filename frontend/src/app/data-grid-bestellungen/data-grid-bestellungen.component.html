@@ -139,7 +139,7 @@
         <ng-container matColumnDef="artikels">
             <th mat-header-cell *matHeaderCellDef class="medium-column">Artikel</th>
             <td mat-cell *matCellDef="let element" class="medium-column">
-                <div *ngFor="let artikel of element.artikels" [matTooltip]="artikel?.name">
+                <div *ngFor="let artikel of element.artikels">
                     {{ artikel?.name }}
                 </div>
             </td>
@@ -149,7 +149,7 @@
         <ng-container matColumnDef="departments">
             <th mat-header-cell *matHeaderCellDef class="small-column">Abteilung</th>
             <td mat-cell *matCellDef="let element" class="small-column">
-                <div *ngFor="let department of element.departments" [matTooltip]="department?.name">
+                <div *ngFor="let department of element.departments">
                     {{ department?.name }}
 
                 </div>
@@ -160,7 +160,7 @@
         <ng-container matColumnDef="lieferants">
             <th mat-header-cell *matHeaderCellDef class="small-column">Lieferant</th>
             <td mat-cell *matCellDef="let element" class="small-column">
-                <div *ngFor="let lieferant of element.lieferants" [matTooltip]="lieferant?.name">
+                <div *ngFor="let lieferant of element.lieferants">
                     {{ lieferant?.name }}
                 </div>
             </td>
@@ -170,7 +170,7 @@
         <ng-container matColumnDef="herstellers">
             <th mat-header-cell *matHeaderCellDef class="small-column">Hersteller</th>
             <td mat-cell *matCellDef="let element" class="small-column">
-                <div *ngFor="let hersteller of element.herstellers" [matTooltip]="hersteller?.name">
+                <div *ngFor="let hersteller of element.herstellers">
                     {{ hersteller?.name }}
                 </div>
             </td>
@@ -179,7 +179,7 @@
         <!-- description Column -->
         <ng-container matColumnDef="descriptionZusatz">
             <th mat-header-cell *matHeaderCellDef class="medium-column">Zusatzinfo</th>
-            <td mat-cell *matCellDef="let element" class="medium-column" [matTooltip]="getArtikelDescription(element)">
+            <td mat-cell *matCellDef="let element" class="medium-column">
                 {{ getArtikelDescription(element) }}
             </td>
         </ng-container>
@@ -187,7 +187,7 @@
         <!-- Quantity Column -->
         <ng-container matColumnDef="amount">
             <th mat-header-cell *matHeaderCellDef class="small-column" >Anzahl</th>
-            <td mat-cell *matCellDef="let element" class="small-column" [matTooltip]="element?.amount">
+            <td mat-cell *matCellDef="let element" class="small-column">
                 {{ element.amount }}
             </td>
         </ng-container>
@@ -195,7 +195,7 @@
         <!-- Preis Column -->
         <ng-container matColumnDef="preis">
             <th mat-header-cell *matHeaderCellDef>Preis</th>
-            <td mat-cell *matCellDef="let element" [matTooltip]="element?.preis">
+            <td mat-cell *matCellDef="let element">
                 {{ element.preis }}
             </td>
         </ng-container>
@@ -203,7 +203,7 @@
         <!-- Preis Column -->
         <ng-container matColumnDef="mitarbeiter">
             <th mat-header-cell *matHeaderCellDef>Bestellung von</th>
-            <td mat-cell *matCellDef="let element" [matTooltip]="element?.mitarbeiter?.vorname + ' ' + element?.mitarbeiter?.nachname">
+            <td mat-cell *matCellDef="let element">
                 {{ element?.mitarbeiter?.vorname }}  {{ element?.mitarbeiter?.nachname }}
             </td>
         </ng-container>
@@ -211,7 +211,7 @@
         <!-- description Column -->
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef class="medium-column">Notizen</th>
-            <td mat-cell *matCellDef="let element" class="medium-column" [matTooltip]="element?.description">
+            <td mat-cell *matCellDef="let element" class="medium-column">
                 {{ element.description }}
             </td>
         </ng-container>
