@@ -7,4 +7,4 @@ Update contructor in frontend/src/app/services/http.service.ts
 
 Run frontend with ssl (not in docker)
 npm run ng serve --ssl --ssl-key="ssl/server.key" --ssl-cert="ssl/server.crt"
-
+npm run ng serve --host 192.168.2.114 --ssl --ssl-cert="ssl/server.crt" --ssl-key="ss/server.key"
