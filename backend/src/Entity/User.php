@@ -45,7 +45,7 @@ class User implements UserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $refreshTokenExpiry = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING,  nullable: true)]
     private ?string $email = null;
 
     /** @var Collection<int, Rolle> */
