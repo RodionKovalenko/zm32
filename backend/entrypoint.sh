@@ -33,6 +33,8 @@ if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TA
         echo "Running migrations to set up the database..."
         php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
+        php bin/console doctrine:schema:update --force --complete
+
         echo "Generating default articles..."
         php bin/console zm:generate-default-artikels
     else
@@ -59,6 +61,8 @@ if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TA
 
         # Run migrations to update the database
         php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+
+        php bin/console doctrine:schema:update --force --complete
     fi
 else
     echo "Failed to connect to the database."

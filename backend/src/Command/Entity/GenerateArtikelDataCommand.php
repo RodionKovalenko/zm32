@@ -2220,6 +2220,7 @@ class GenerateArtikelDataCommand extends Command
             $user->setMitarbeiterId((int)$userArrayItem['mitarbeiterId'])
                 ->setFirstname($userArrayItem['vorname'])
                 ->setLastname($userArrayItem['nachname'])
+                ->setEmail($userArrayItem['vorname'] . '.' . $userArrayItem['nachname'] . '@test.de')
                 ->setCreatedAt(new \DateTime())
                 ->setUpdatedAt(new \DateTime());
 
