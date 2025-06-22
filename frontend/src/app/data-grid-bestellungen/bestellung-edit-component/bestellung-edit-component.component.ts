@@ -86,6 +86,14 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                     this.loadArtikel();      // Will include this.cdr.detectChanges()
                     this.resetForm();
                 });
+                this.dropdownArtikels.onDropDownClose.subscribe(() => {
+                    this.loadDepartments();
+                    this.loadArtikel();      // Will include this.cdr.detectChanges()
+
+                    if (this.bestellungForm.get('artikels').value && this.bestellungForm.get('artikels').value.length === 0) {
+                        this.resetForm();
+                    }
+                });
 
                 // Optional: manually trigger change detection
                 this.cdr.detectChanges();
@@ -415,6 +423,9 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     }
 
     onArtikelChange(event: any) {
+        if (!event || !event.id) {
+            this.resetForm();
+        }
         this.loadArtikelFullData(event.id).then((data) => {
             this.updateDropdowns(data);
         });
@@ -424,18 +435,16 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         if (Array.isArray(this.artikels)) { // Ensure it is an array
             let artikel = null;
             let index = 0;
-            this.artikels.forEach((record, ind) => {
+            this.artikelList.forEach((record, ind) => {
                 if (record.id === data[0].id) {
                     artikel = record;
                     index = ind;
                 }
             });
 
-            this.bestellungForm.get('artikels').setValue(data);
-
             if (artikel) {
                 // Update the record at the found index
-                this.artikels[index] = data[0];
+                this.artikelList[index] = data[0];
 
                 this.bestellungForm.patchValue({
                     descriptionZusatz: data[0].description,
@@ -567,13 +576,5 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
 
     resetForm(): void {
         this.bestellungForm.reset(); // This will reset the form to its initial state
-    }
-
-    onSelect() {
-        // Focus the search field after a selection is made
-        setTimeout(() => {
-            debugger;
-
-        }, 200);
     }
 }
