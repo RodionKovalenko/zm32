@@ -36,7 +36,7 @@ import {FocusInputDirective} from "../shared/focus-input.directive";
 export class LoginComponent implements OnInit {
     title = 'IBA';
     mitarbeiterId: String = '';
-    numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 10, 11];
+    numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 0, 10];
 
     constructor(private router: Router, private authService: AuthService, private dialog: MatDialog) {
     }
