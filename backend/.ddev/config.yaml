@@ -13,6 +13,8 @@ use_dns_when_possible: true
 composer_version: "2"
 web_environment: []
 nodejs_version: "18"
+webimage_extra_packages: [tzdata]
+web_extra_service: false
 hooks:
     post-start:
         - exec: mysql -uroot -proot -hdb -e "CREATE DATABASE IF NOT EXISTS db_test; GRANT ALL ON db_test.* TO 'db'@'%';"

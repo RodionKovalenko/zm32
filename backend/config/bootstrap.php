@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Europe/Berlin'); // ✅ Set timezone early
 
 use Symfony\Component\Dotenv\Dotenv;
 

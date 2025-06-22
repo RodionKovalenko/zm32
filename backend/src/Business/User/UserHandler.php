@@ -17,9 +17,8 @@ class UserHandler
         private readonly UserRepository $userRepository,
         private readonly DepartmentRepository $departmentRepository,
         private readonly MitarbeiterRepository $mitarbeiterRepository,
-        private readonly MitarbeiterToDepartmentRepository $mitarbeiterToDepartmentRepository
-    ) {
-    }
+        private readonly MitarbeiterToDepartmentRepository $mitarbeiterToDepartmentRepository,
+    ) {}
 
     public function saveUser(array $data): User
     {
@@ -33,12 +32,17 @@ class UserHandler
         $user->setFirstname(trim($data['firstname']));
         $user->setLastname(trim($data['lastname']));
         $user->setMitarbeiterId((int)$data['mitarbeiterId']);
+
         $user->setUpdatedAt(new \DateTime());
 
         if ($user->getCreatedAt() === null) {
             $user->setCreatedAt(new \DateTime());
         }
+
+        $user->setEmail($user->getMitarbeiterId() . '-' . $user->getFirstname());
         $this->userRepository->save($user);
+
+        $user->setUsername($user->getId() . '-' . $user->getMitarbeiterId() . '-' . $user->getFirstname());
 
         $mitarbeiter = $this->mitarbeiterRepository->findOneBy(['user' => $user]);
 
@@ -86,7 +90,7 @@ class UserHandler
                     $mitarbeiterToDepartment = $mitarbeiter->getMitarbeiterToDepartments()->filter(
                         function (MitarbeiterToDepartment $mitarbeiterToDepartment) use ($removeDepartmentId) {
                             return $mitarbeiterToDepartment->getDepartment()->getId() === $removeDepartmentId;
-                        }
+                        },
                     )->first();
                     $this->mitarbeiterToDepartmentRepository->remove($mitarbeiterToDepartment);
                 }

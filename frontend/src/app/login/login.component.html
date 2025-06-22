@@ -1,39 +1,50 @@
 <div class="container">
 
-  <!-- Form should wrap only the login form content -->
-  <form (submit)="onLoginClick()">
-    <div class="login-form">
-      <h1>PIN</h1>
+    <!-- Form should wrap only the login form content -->
+    <form (submit)="onLoginClick()">
+        <div class="login-form">
+            <mat-form-field appearance="fill">
+                <input
+                        (input)="onLoginChange($event)"
+                        (keyup)="onKeyup($event)"
+                        [(ngModel)]="mitarbeiterId"
+                        appFocusInput
+                        autocomplete="new-password"
+                        id="personalnummer"
+                        matInput
+                        name="personalnummer"
+                        placeholder="Bitte geben Sie die PIN ein"
+                        type="password">
 
-      <mat-form-field appearance="fill">
-        <input
-          matInput
-          type="password"
-          id="personalnummer"
-          placeholder="Bitte geben Sie die PIN ein"
-          name="personalnummer"
-          [(ngModel)]="mitarbeiterId"
-          (keyup)="onKeyup($event)"
-          (input)="onLoginChange($event)"
-          autocomplete="new-password">
+                <span *ngIf="mitarbeiterId" matSuffix class="clear-icon-button">
+                  <button (click)="clearInput()" aria-label="Clear input" mat-icon-button type="button">
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                </span>
+            </mat-form-field>
 
-        <button mat-icon-button matSuffix *ngIf="mitarbeiterId" (click)="clearInput()" type="button">
-          <mat-icon>clear</mat-icon>
-        </button>
-      </mat-form-field>
+            <div class="number-pad">
+                <button (click)="onNumberClick(number)"
+                        (keydown)="preventEnter($event)"
+                        *ngFor="let number of numbers"
+                        type="button">
 
-      <div class="number-pad">
-        <button *ngFor="let number of numbers" (click)="onNumberClick(number)" (keydown)="preventEnter($event)" type="button">
-          <span *ngIf="number !== 10"> {{ number }} </span>
-          <mat-icon *ngIf="number === 10"> login</mat-icon>
-        </button>
-      </div>
+                    <!-- Regular number buttons -->
+                    <span *ngIf="number !== 10 && number !== 11"> {{ number }} </span>
 
-      <!-- Submit button -->
-      <button type="submit" id="login-button">
-        <h3>Verbinden</h3>
-      </button>
-    </div>
-  </form>
+                    <!-- Login icon -->
+                    <mat-icon *ngIf="number === 10">login</mat-icon>
+
+                    <!-- Remove icon -->
+                    <mat-icon *ngIf="number === 11">backspace</mat-icon>
+                </button>
+            </div>
+
+            <!-- Submit button -->
+<!--            <button id="login-button" type="submit">-->
+<!--                <h3>Verbinden</h3>-->
+<!--            </button>-->
+        </div>
+    </form>
 </div>
 

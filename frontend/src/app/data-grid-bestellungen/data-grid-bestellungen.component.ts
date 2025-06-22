@@ -106,6 +106,7 @@ export class DataGridBestellungenComponent implements OnInit {
     let dateSinceAgo = new Date();
 
     currentDate.setHours(0, 0, 0, 0);
+    dateSinceAgo.setHours(0, 0, 0, 0);
     dateSinceAgo.setDate(currentDate.getDate() - 60);
 
     this.bestellungForm = this.fb.group({
@@ -165,17 +166,27 @@ export class DataGridBestellungenComponent implements OnInit {
     }
     if (datum instanceof Date) {
       datum.setHours(0, 0, 0, 0);
-      params = params.append('createdAfter', datum.toISOString());
+      let datumString = this.toLocalMidnightISOString(datum);
+
+      params = params.append('createdAfter', datumString);
     }
     if (datumBis instanceof Date) {
       datumBis.setHours(23, 59, 59, 999);
-      params = params.append('datumBis', datumBis.toISOString());
+      let datumBisString = this.toLocalMidnightISOString(datumBis);
+
+      params = params.append('datumBis', datumBisString);
     }
     if (this.searchTerm) {
       params = params.append('search', this.searchTerm);
     }
 
     return params;
+  }
+
+  toLocalMidnightISOString(date: Date) {
+    // Create a new Date at UTC midnight for the given date
+    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    return utcDate.toISOString();
   }
 
   fetchDataByDepartmentId(): void {
