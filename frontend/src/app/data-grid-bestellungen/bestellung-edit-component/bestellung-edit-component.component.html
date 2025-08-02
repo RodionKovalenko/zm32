@@ -7,7 +7,8 @@
         <div class="dropdown-section">
             <label>Abteilung:</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown (onSelect)="onDepartmentSelect($event)"
+                <ng-multiselect-dropdown #dropdownDepartments
+                                        (onSelect)="onDepartmentSelect($event)"
                                          [data]="departments"
                                          [placeholder]="'Abteilung auswählen'"
                                          [settings]="dropdownDepartmentSettings"
@@ -41,7 +42,9 @@
             <div class="dropdown-wrapper">
                 <ng-multiselect-dropdown #dropdownArtikels
                                          (onSelect)="onArtikelChange($event)"
-                                         [data]="artikelList"
+                                         (click)              ="onArtikelsClick()"
+                                         (onDropDownClose)="onDropdownClosed()"
+                                         [data]="artikels"
                                          [placeholder]="'Artikel auswählen'"
                                          [settings]="singleSelectSettings"
                                          appFocusOnClick
@@ -79,7 +82,8 @@
         <div class="dropdown-section">
             <label>Lieferant (Optional):</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown [data]="lieferants"
+                <ng-multiselect-dropdown #dropdownLieferants
+                                         [data]="lieferants"
                                          [placeholder]="'Lieferant auswählen (Optional)'"
                                          [settings]="singleSelectSettings"
                                          appFocusOnClick
@@ -113,7 +117,7 @@
         <div class="dropdown-section">
             <label>Hersteller (Optional):</label>
             <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown
+                <ng-multiselect-dropdown #dropdownHerstellers
                         [data]="herstellers"
                         [placeholder]="'Hersteller auswählen (Optional)'"
                         [settings]="singleSelectSettings"

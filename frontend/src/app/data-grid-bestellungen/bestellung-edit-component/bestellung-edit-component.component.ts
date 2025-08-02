@@ -48,7 +48,6 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
 
     herstellers: any[] = [];
     lieferants: any[] = [];
-    artikelList: any[] = [];
     artikels: any[] = [];
     departments: any[] = [];
     childDialogOpened: boolean = false;
@@ -57,6 +56,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     singleSelectSettings: IDropdownSettings = {};
     bestellungForm: any;
     safeUrl: any;
+    artikelsWasClicked = false;
 
     searchTerm: string = '';
 
@@ -65,42 +65,39 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                 @Inject(MAT_DIALOG_DATA) public data: Bestellung,
                 private fb: FormBuilder,
                 private sanitizer: DomSanitizer,
-                private cdr: ChangeDetectorRef,
-                public dialog: MatDialog,
-                private ngZone: NgZone) {
+                public dialog: MatDialog) {
     }
 
 
     ngAfterViewInit(): void {
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-            if (this.dropdownArtikels) {
-                this.dropdownArtikels.onFilterChange.subscribe((filterData: any) => {
-                    this.onArtikelSearchChange(filterData);
-                });
+        if (this.dropdownArtikels) {
+            this.dropdownArtikels.onFilterChange.subscribe((filterData: any) => {
+                this.onArtikelSearchChange(filterData);
+            });
 
-                this.dropdownArtikels.onDeSelect.subscribe(() => {
-                    if (this.searchTerm && this.searchTerm.length > 0) {
-                        return;
-                    }
+            this.dropdownArtikels.onDeSelect.subscribe(() => {
+                if (this.searchTerm && this.searchTerm.length > 0) {
+                    return;
+                }
+                this.loadDepartments();
+                this.loadArtikel();
+                this.resetForm();
+            });
+            this.dropdownArtikels.onDropDownClose.subscribe(() => {
+                if (this.artikelsWasClicked) {
                     this.loadDepartments();
-                    this.loadArtikel();      // Will include this.cdr.detectChanges()
-                    this.resetForm();
-                });
-                this.dropdownArtikels.onDropDownClose.subscribe(() => {
-                    this.loadDepartments();
-                    this.loadArtikel();      // Will include this.cdr.detectChanges()
+                    this.loadArtikel();
 
                     if (this.bestellungForm.get('artikels').value && this.bestellungForm.get('artikels').value.length === 0) {
                         this.resetForm();
                     }
-                });
 
-                // Optional: manually trigger change detection
-                this.cdr.detectChanges();
-            } else {
-                console.error("Dropdown component is undefined. Ensure @ViewChild reference is correct.");
-            }
-        });
+                    this.artikelsWasClicked = false;
+                }
+            });
+        } else {
+            console.error("Dropdown component is undefined. Ensure @ViewChild reference is correct.");
+        }
     }
 
     ngOnInit(): void {
@@ -122,6 +119,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             textField: 'name',
             allowSearchFilter: true,
             enableCheckAll: false,
+            itemsShowLimit: 3,
             searchPlaceholderText: 'Suchen',
         };
 
@@ -154,30 +152,6 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             url: [{value: '', disabled: true}],
         });
 
-        if (this.data?.artikels) {
-            this.data.artikels.forEach(st => this.addArtikel(st));
-        }
-
-        if (this.data?.departments) {
-            this.data.departments.forEach(st => this.addDepartments(st));
-        }
-
-        // Add existing standorte to the form if available
-        if (this.data?.lieferantStandorte) {
-            this.data.lieferantStandorte.forEach(st => this.addLieferantStandorte(st));
-        }
-
-        if (this.data?.herstellerStandorte) {
-            this.data.herstellerStandorte.forEach(st => this.addHerstellerStandorte(st));
-        }
-
-        if (this.data?.lieferants) {
-            this.data.lieferants.forEach(st => this.addLieferants(st));
-        }
-        if (this.data?.herstellers) {
-            this.data.herstellers.forEach(st => this.addHerstellers(st));
-        }
-
         this.bestellungForm.get('url')?.valueChanges.subscribe((value: any) => {
             this.safeUrl = value ? this.sanitizer.bypassSecurityTrustUrl(value) : null;
         });
@@ -192,68 +166,6 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         });
 
         this.markAllAsTouched();
-    }
-
-    addArtikel(value?: any): void {
-        const valueGroup = this.fb.group({
-            id: [value?.id || 0],
-            name: [value?.name || 0],
-        });
-        this.artikels.push(valueGroup);
-    }
-
-    addHerstellers(value?: any): void {
-        if (value.id) {
-            const valueGroup = this.fb.group({
-                id: [value?.id || 0],
-                name: [value?.name || 0],
-            });
-            this.herstellers.push(valueGroup);
-        }
-    }
-
-    addLieferants(value?: any): void {
-        if (value.id) {
-            const valueGroup = this.fb.group({
-                id: [value?.id || 0],
-                name: [value?.name || 0],
-            });
-            this.lieferants.push(valueGroup);
-        }
-    }
-
-    addDepartments(value?: any): void {
-        if (value.id) {
-            const valueGroup = this.fb.group({
-                id: [value?.id || 0],
-                name: [value?.name || 0],
-            });
-            this.departments.push(valueGroup);
-        }
-    }
-
-    get lieferantStandorte(): FormArray {
-        return this.bestellungForm.get('lieferantStandorte') as FormArray;
-    }
-
-    addLieferantStandorte(value?: any): void {
-        const valueGroup = this.fb.group({
-            id: [value?.id || 0],
-            name: [value?.name || 0],
-        });
-        this.lieferantStandorte.push(valueGroup);
-    }
-
-    get herstellerStandorte(): FormArray {
-        return this.bestellungForm.get('herstellerStandorte') as FormArray;
-    }
-
-    addHerstellerStandorte(value?: any): void {
-        const valueGroup = this.fb.group({
-            id: [value?.id || 0],
-            name: [value?.name || 0],
-        });
-        this.herstellerStandorte.push(valueGroup);
     }
 
     isOnlyOneArtikelSelected(): boolean {
@@ -279,11 +191,11 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
 
             if (this.searchTerm && this.searchTerm.length > 0) {
                 artikelData = artikelData.map((artikel: any) => {
-                    artikel.name += this.searchTerm;
+                    artikel.name += '(@' + this.searchTerm + ')';
                     return artikel;
                 });
             }
-            this.artikelList = artikelData;
+            this.artikels = artikelData;
 
             if (this.data.artikels && this.data.artikels.length > 0) {
                 this.loadArtikelFullData(this.data.artikels[0].id);
@@ -435,7 +347,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         if (Array.isArray(this.artikels)) { // Ensure it is an array
             let artikel = null;
             let index = 0;
-            this.artikelList.forEach((record, ind) => {
+            this.artikels.forEach((record, ind) => {
                 if (record.id === data[0].id) {
                     artikel = record;
                     index = ind;
@@ -444,7 +356,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
 
             if (artikel) {
                 // Update the record at the found index
-                this.artikelList[index] = data[0];
+                this.artikels[index] = data[0];
 
                 this.bestellungForm.patchValue({
                     descriptionZusatz: data[0].description,
@@ -548,7 +460,8 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         if (departments && departments.length > 0) {
             const hasIdZero = departments.some((dept: any) => dept.typ === 0);
             if (!hasIdZero) {
-                params = params.append('departments', departments.map((dept: any) => dept.id).join(','));
+                let departmendIds = departments.map((dept: any) => dept.id).join(',');
+                params = params.append('departments', departmendIds);
             }
         }
 
@@ -562,11 +475,20 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             this.searchTerm = search;
         }
         if ((search && search.length > 0) || (departments && departments.length > 0)) {
-            params = params.append('search', search);
+            if (search && search.length > 0) {
+                params = params.append('search', search);
+            }
             this.loadArtikel(params);
         } else {
             this.loadArtikel()
         }
+    }
+    onDropdownClosed() {
+        this.searchTerm = '';
+        this.artikelsWasClicked = false;
+    }
+
+    onArtikelsClick() {
     }
 
     clearSearch() {

@@ -123,7 +123,7 @@ export class MaterialEditComponentComponent implements OnInit {
             ),
         });
 
-        this.initDropdownFromData();
+        //this.initDropdownFromData();
         this.markAllAsTouched();
     }
 
