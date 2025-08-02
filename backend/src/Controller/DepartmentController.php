@@ -3,17 +3,24 @@
 namespace App\Controller;
 
 use App\Entity\Department;
+use App\Entity\User;
 use App\Forms\DepartmentFormType;
 use App\Repository\DepartmentRepository;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 #[Route(path: '/api/department')]
 class DepartmentController extends BaseController
 {
-    public function __construct(SerializerInterface $serializer, private readonly DepartmentRepository $departmentRepository, private readonly FormFactoryInterface $formFactory)
+    public function __construct(
+        SerializerInterface $serializer,
+        private readonly DepartmentRepository $departmentRepository,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly Security $security,
+    )
     {
         parent::__construct($serializer, $this->formFactory);
     }
@@ -23,6 +30,15 @@ class DepartmentController extends BaseController
     {
         $params = [];
         $search = $request->query->get('search') ?? null;
+
+        /** @var User $user */
+        $user = $this->security->getUser();
+
+        $userDepartments = $user->getDepartments();
+
+        if (!empty($userDepartments)) {
+           $params['departmentIds'] = $userDepartments;
+        }
 
         if (!empty($search)) {
             $params['search'] = $search;

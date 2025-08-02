@@ -16,9 +16,15 @@ class DepartmentRepository extends DefaultRepository
     public function getDeparmentByParams(array $params)
     {
         $search = $params['search'] ?? null;
+        $departmentIds = $params['departmentIds'] ?? null;
 
         $q = $this->createQueryBuilder('l')
             ->orderBy('l.name', Order::Ascending->value);
+
+        if (!empty($departmentIds)) {
+            $q->andWhere('l IN (:departmentIds)')
+                ->setParameter('departmentIds', $departmentIds);
+        }
 
         if ($search) {
             $q->andWhere('l.name LIKE :search')

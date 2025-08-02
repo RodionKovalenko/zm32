@@ -222,5 +222,20 @@ class User implements UserInterface
         $this->email = $email;
         return $this;
     }
+
+    public function getDepartments(): array
+    {
+        $mitarbeiter = $this->getMitarbeiter();
+
+        $departments = [];
+        if ($mitarbeiter !== null) {
+            foreach($mitarbeiter->getMitarbeiterToDepartments() as $mitarbeiterToDepartment) {
+                $department = $mitarbeiterToDepartment->getDepartment();
+                $departments[] = $department->getId();
+            }
+        }
+
+        return $departments;
+    }
 }
 
