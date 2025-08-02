@@ -30,13 +30,13 @@ class DepartmentController extends BaseController
     {
         $params = [];
         $search = $request->query->get('search') ?? null;
+        $alleDepartments = filter_var($request->query->get('alleDepartments'), FILTER_VALIDATE_BOOL);
 
         /** @var User $user */
         $user = $this->security->getUser();
+        $userDepartments = $user->getDepartmentIds();
 
-        $userDepartments = $user->getDepartments();
-
-        if (!empty($userDepartments)) {
+        if (!empty($userDepartments) && !$alleDepartments) {
            $params['departmentIds'] = $userDepartments;
         }
 
@@ -94,7 +94,7 @@ class DepartmentController extends BaseController
     }
 
     #[Route(path: '/delete/{id}', name: 'app_department_delete_department', defaults: ['id' => null], methods: ['POST'])]
-    public function deleteDepartment($id, Request $request)
+    public function deleteDepartment($id)
     {
         try {
             /** @var Department $department */

@@ -12,6 +12,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {NgIf} from "@angular/common";
+import {HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-personal-form',
@@ -69,7 +70,9 @@ export class PersonalFormComponent implements OnInit {
     }
 
     loadDepartments() {
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/department/get_departments');
+        let params = new HttpParams();
+        params = params.append('alleDepartments', true);
+        let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/department/get_departments', {params});
         mitarbeiterRequest.subscribe((response: any) => {
             this.departments = response.data;
 

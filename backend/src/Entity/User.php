@@ -223,7 +223,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDepartments(): array
+    public function getDepartmentIds(): array
     {
         $mitarbeiter = $this->getMitarbeiter();
 
@@ -231,6 +231,9 @@ class User implements UserInterface
         if ($mitarbeiter !== null) {
             foreach($mitarbeiter->getMitarbeiterToDepartments() as $mitarbeiterToDepartment) {
                 $department = $mitarbeiterToDepartment->getDepartment();
+                if ($department->getTyp() === DepartmentTyp::ALLE->value) {
+                    return [];
+                }
                 $departments[] = $department->getId();
             }
         }

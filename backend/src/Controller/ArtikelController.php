@@ -12,6 +12,7 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 #[Route(path: '/api/artikel')]
 class ArtikelController extends BaseController
@@ -20,7 +21,8 @@ class ArtikelController extends BaseController
         SerializerInterface $serializer,
         private readonly ArtikelRepository $artikelRepository,
         private readonly FormFactoryInterface $formFactory,
-        private readonly DepartmentRepository $departmentRepository
+        private readonly DepartmentRepository $departmentRepository,
+        private readonly Security $security,
     ) {
         parent::__construct($serializer, $this->formFactory);
     }
@@ -30,14 +32,15 @@ class ArtikelController extends BaseController
     {
         $params = [];
         $search = $request->query->get('search') ?? null;
-        $departmentIds = $request->query->get('departments') ?? null;
         $withAssociatedDate = $request->query->get('withAssociatedData') ?? false;
 
-        if (!empty($departmentIds)) {
-            $departmentIds = explode(',', $departmentIds);
-            $params['departmentIds'] = $departmentIds;
+        $user = $this->security->getUser();
+        $userDepartments = $user->getDepartmentIds();
 
-            $departments = $this->departmentRepository->findBy(['id' => $departmentIds]);
+        if (!empty($userDepartments)) {
+            $params['departmentIds'] = $userDepartments;
+
+            $departments = $this->departmentRepository->findBy(['id' => $userDepartments]);
 
             // Check if department of type Alle is
             $isAllDepartment = array_filter($departments, function (Department $department) {
