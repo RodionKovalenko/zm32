@@ -4,7 +4,7 @@ set -e
 /usr/local/bin/wait-for-it database:3306 --
 
 # Check if there are any tables in the database
-if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES IN $MYSQL_DATABASE;"); then
+if TABLES=$(mysql --skip-ssl -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES IN $MYSQL_DATABASE;"); then
     # Remove the first line (header)
     TABLES=$(echo "$TABLES" | sed -n '2,$p')
 
@@ -17,13 +17,13 @@ if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TA
 
         # Reset migration history in the database (only if the table exists)
         echo "Checking if migration_versions table exists..."
-        TABLE_EXISTS=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES LIKE 'migration_versions';" $MYSQL_DATABASE)
+        TABLE_EXISTS=$(mysql --skip-ssl -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES LIKE 'migration_versions';" $MYSQL_DATABASE)
 
         if [ -z "$TABLE_EXISTS" ]; then
             echo "migration_versions table does not exist. Skipping reset."
         else
             echo "Resetting migration history in the database..."
-            mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "DELETE FROM $MYSQL_DATABASE.migration_versions;"
+            mysql --skip-ssl --skip-ssl -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "DELETE FROM $MYSQL_DATABASE.migration_versions;"
         fi
 
         # Ensure migration files exist and are properly synchronized
@@ -47,13 +47,13 @@ if TABLES=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TA
 
         # Reset migration history in the database (only if the table exists)
         echo "Checking if migration_versions table exists..."
-        TABLE_EXISTS=$(mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES LIKE 'migration_versions';" $MYSQL_DATABASE)
+        TABLE_EXISTS=$(mysql --skip-ssl -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW TABLES LIKE 'migration_versions';" $MYSQL_DATABASE)
 
         if [ -z "$TABLE_EXISTS" ]; then
             echo "migration_versions table does not exist. Skipping reset."
         else
             echo "Resetting migration history in the database..."
-            mysql -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "DELETE FROM $MYSQL_DATABASE.migration_versions;"
+            mysql --skip-ssl -h "$DB_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "DELETE FROM $MYSQL_DATABASE.migration_versions;"
         fi
 
         # Generate new migration files
