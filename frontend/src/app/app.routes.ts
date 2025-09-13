@@ -9,17 +9,19 @@ import {DepartmentsComponent} from "./departments/departments.component";
 import {HerstellersComponent} from "./herstellers/herstellers.component";
 import {LieferantsComponent} from "./lieferants/lieferants.component";
 import {PersonalComponent} from "./personal/personal.component";
+import {Artikelimporter} from "./artikelimporter/artikelimporter";
 
 export const routes: Routes = [
   {path: 'app-login', component: LoginComponent},
   {path: 'app-bestellliste', component: BestelllisteComponent, data: {title: 'Bestellungen'}, canActivate: [AuthGuard]},
   {path: 'app-artikelliste', component: ArtikellisteComponent, data: {title: 'Artikelliste'}, canActivate: [AuthGuard]},
+  {path: 'app-artikelimport', component: Artikelimporter, data: {title: 'Artikelimport'}, canActivate: [AuthGuard]},
   {path: 'app-departments', component: DepartmentsComponent, data: {title: 'Abteilungen'}, canActivate: [AuthGuard]},
   {path: 'app-herstellers', component: HerstellersComponent, data: {title: 'Hersteller'}, canActivate: [AuthGuard]},
   {path: 'app-lieferants', component: LieferantsComponent, data: {title: 'Lieferanten'}, canActivate: [AuthGuard]},
   {path: 'app-personal', component: PersonalComponent, data: {title: 'Mitarbeiter'}, canActivate: [AuthGuard]},
   {path: 'app-logout', component: LogoutComponent, canActivate: [AuthGuard]},
-  {path: '**', component: BestelllisteComponent, pathMatch: 'full', canActivateChild: [false]}
+  {path: '**', component: BestelllisteComponent, pathMatch: 'full', canActivateChild: [AuthGuard]}
 ];
 
 

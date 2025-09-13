@@ -180,10 +180,10 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     }
 
     loadArtikel(params: any = null) {
-        let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/0');
+        let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/get_artikels');
 
         if (params) {
-            mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/0', {params});
+            mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/artikel/get_artikels', {params});
         }
 
         mitarbeiterRequest.subscribe((response: any) => {

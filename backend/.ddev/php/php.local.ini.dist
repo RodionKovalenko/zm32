@@ -1,0 +1,8 @@
+error_reporting=E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED
+;memory_limit=4G
+
+
+[xdebug]
+xdebug.var_display_max_data=1000
+xdebug.var_display_max_depth=6
+xdebug.max_nesting_level=500

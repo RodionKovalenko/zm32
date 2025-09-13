@@ -29,6 +29,7 @@ class LoginController extends BaseController
 
         /** @var User|null $user */
         $user = $this->userRepository->findOneBy(['mitarbeiterId' => $mitarbeiterId]);
+
         if ($user !== null) {
             // Generate a refresh token (random string)
             $refreshToken = bin2hex(random_bytes(32));

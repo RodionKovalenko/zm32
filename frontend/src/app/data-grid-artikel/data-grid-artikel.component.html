@@ -60,6 +60,13 @@
 
     <mat-toolbar>
         <span class="spacer"></span>
+        <button mat-icon-button class="color-download" matTooltip="Exportieren" (click)="exportArtikels()">
+            <mat-icon>download</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <mat-toolbar>
+        <span class="spacer"></span>
         <button mat-icon-button class="color-confirm" matTooltip="Neuen Artikel hinzufügen" (click)="addRecord()">
             <mat-icon>add</mat-icon>
         </button>

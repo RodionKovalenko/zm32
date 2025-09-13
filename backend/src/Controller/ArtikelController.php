@@ -2,17 +2,19 @@
 
 namespace App\Controller;
 
+use App\Business\Export\ArtikelExporter;
+use App\Business\Import\ArtikelImporter;
 use App\Entity\Department;
 use App\Entity\DepartmentTyp;
 use App\Entity\Material\Artikel;
 use App\Forms\ArtikelFormType;
 use App\Repository\DepartmentRepository;
 use App\Repository\Material\ArtikelRepository;
+use Exception;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
 #[Route(path: '/api/artikel')]
 class ArtikelController extends BaseController
@@ -22,25 +24,25 @@ class ArtikelController extends BaseController
         private readonly ArtikelRepository $artikelRepository,
         private readonly FormFactoryInterface $formFactory,
         private readonly DepartmentRepository $departmentRepository,
-        private readonly Security $security,
+        private readonly ArtikelImporter $artikelImporter,
+        private readonly ArtikelExporter $artikelExporter,
     ) {
         parent::__construct($serializer, $this->formFactory);
     }
 
-    #[Route(path: '/{departmentId}', name: 'app_artikel_get_artikels', defaults: ['departmentId' => null], methods: ['GET'])]
-    public function getArtikels(int $departmentId, Request $request)
+    #[Route(path: '/get_artikels', name: 'app_artikel_get_artikels', methods: ['GET'])]
+    public function getArtikels(Request $request)
     {
         $params = [];
         $search = $request->query->get('search') ?? null;
+        $departmentIds = $request->query->get('departments') ?? null;
         $withAssociatedDate = $request->query->get('withAssociatedData') ?? false;
 
-        $user = $this->security->getUser();
-        $userDepartments = $user->getDepartmentIds();
+        if (!empty($departmentIds)) {
+            $departmentIds = explode(',', $departmentIds);
+            $params['departmentIds'] = $departmentIds;
 
-        if (!empty($userDepartments)) {
-            $params['departmentIds'] = $userDepartments;
-
-            $departments = $this->departmentRepository->findBy(['id' => $userDepartments]);
+            $departments = $this->departmentRepository->findBy(['id' => $departmentIds]);
 
             // Check if department of type Alle is
             $isAllDepartment = array_filter($departments, function (Department $department) {
@@ -51,6 +53,7 @@ class ArtikelController extends BaseController
                 $params['departmentIds'] = null;
             }
         }
+
 
         if (!empty($search)) {
             $params['search'] = $search;
@@ -103,19 +106,19 @@ class ArtikelController extends BaseController
             if ($form->isValid()) {
                 $this->artikelRepository->save($artikel);
                 return $this->getJsonResponse(['success' => true, 'data' => [$artikel]],
-                                              [
-                                                  'Default',
-                                                  'Artikel_Department',
-                                                  'Artikel_Hersteller',
-                                                  'Artikel_Lieferant',
-                                                  'Artikel_ArtikelToLieferBestellnummer',
-                                                  'Artikel_ArtikelToHerstRefnummer'
-                                              ]
+                    [
+                        'Default',
+                        'Artikel_Department',
+                        'Artikel_Hersteller',
+                        'Artikel_Lieferant',
+                        'Artikel_ArtikelToLieferBestellnummer',
+                        'Artikel_ArtikelToHerstRefnummer'
+                    ]
                 );
             }
 
             return $this->getJsonResponse(['success' => false, 'message' => (string)$form->getErrors(true)]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response = [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -139,7 +142,7 @@ class ArtikelController extends BaseController
             $artikel->getArtikelToLieferantBestellnummers()->clear();
 
             $this->artikelRepository->remove($artikel);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response = [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -154,6 +157,37 @@ class ArtikelController extends BaseController
 
         return $this->getJsonResponse($response);
     }
+
+    #[Route(path: '/import', name: 'app_artikel_import_artikels', methods: ['POST'])]
+    public function importArtikels(Request $request)
+    {
+        try {
+            $file = $request->files->get('files');
+            if (!$file) {
+                return $this->getJsonResponse(['success' => false, 'message' => 'No file uploaded']);
+            }
+
+            $savedArtikels = $this->artikelImporter->importExcel($file);
+
+            return $this->getJsonResponse(['success' => true, 'data' => $savedArtikels]);
+        } catch (Exception $e) {
+            $response = [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+
+            return $this->getJsonResponse($response);
+        }
+    }
+
+    #[Route(path: '/export', name: 'app_artikel_export_artikels', methods: ['GET'])]
+    public function exportArtikels()
+    {
+        $base64Content = $this->artikelExporter->generateArtikelExcelExport();
+
+        return $this->getJsonResponse(['success' => true, 'data' => $base64Content]);
+    }
+
 
     #[Route(path: '/get_by_id/{id}', name: 'app_artikel_get_artikel_by_id', methods: ['GET'])]
     public function getArtikelById(int $id, Request $request)
@@ -176,5 +210,4 @@ class ArtikelController extends BaseController
             ]
         );
     }
-
 }
