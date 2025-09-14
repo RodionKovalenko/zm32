@@ -18,6 +18,8 @@ import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {FocusOnClickDirective} from "../shared/focus-on-click.directive";
+import {DepartmentData} from "../models/Department";
+import {UserService} from "../services/user.service";
 
 @Component({
     selector: 'app-data-grid-artikel',
@@ -69,7 +71,7 @@ export class DataGridArtikelComponent implements OnInit {
     @ViewChild('searchInput') searchInput!: ElementRef;
     isSearchIconVisible: boolean = true;
 
-    constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+    constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef, private userService: UserService) {
     }
 
     ngOnInit() {
@@ -95,6 +97,17 @@ export class DataGridArtikelComponent implements OnInit {
         mitarbeiterRequest.subscribe((response: any) => {
             this.departments = response.data;
             this.originalDepartments = response.data;
+
+            let user = this.userService.getUser();
+            if (user && user.departmentIds && user.departmentIds.length > 0) {
+                let userDepartments = this.departments.filter(
+                    (d: DepartmentData) => (user.departmentIds as number[]).includes(Number(d.id))
+                );
+                this.artikelGridForm.get('departments')!.setValue(userDepartments);
+
+                this.selectedDepartments = userDepartments;
+                this.artikelGridForm.get('departments')!.setValue(this.selectedDepartments);
+            }
             this.fetchDataByDepartmentId();
             this.cdr.detectChanges(); // Manually trigger change detection
         });
@@ -294,7 +307,7 @@ export class DataGridArtikelComponent implements OnInit {
                         byteNumbers[i] = byteCharacters.charCodeAt(i);
                     }
                     const byteArray = new Uint8Array(byteNumbers);
-                    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    const blob = new Blob([byteArray], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
 
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');

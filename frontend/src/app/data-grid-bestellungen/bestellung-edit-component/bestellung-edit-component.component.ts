@@ -22,6 +22,7 @@ import {NgIf} from "@angular/common";
 import {floatValidator} from '../../shared/float_validator';
 import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
 import {take} from "rxjs/operators";
+import {UserService} from "../../services/user.service";
 
 @Component({
     selector: 'app-bestellung-edit-component',
@@ -57,6 +58,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
     bestellungForm: any;
     safeUrl: any;
     artikelsWasClicked = false;
+    istFirstDepartmentLoad = false;
 
     searchTerm: string = '';
 
@@ -65,6 +67,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                 @Inject(MAT_DIALOG_DATA) public data: Bestellung,
                 private fb: FormBuilder,
                 private sanitizer: DomSanitizer,
+                private userService: UserService,
                 public dialog: MatDialog) {
     }
 
@@ -176,6 +179,17 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         let mitarbeiterRequest = this.httpService.get_httpclient().get(this.httpService.get_baseUrl() + '/department/get_departments');
         mitarbeiterRequest.subscribe((response: any) => {
             this.departments = response.data;
+
+            let user = this.userService.getUser();
+            if (user && user.departmentIds && user.departmentIds.length > 0 && !this.istFirstDepartmentLoad) {
+                let userDepartments = this.departments.filter(
+                    (d: DepartmentData) => (user.departmentIds as number[]).includes(Number(d.id))
+                );
+                this.bestellungForm.get('departments')!.setValue(userDepartments);
+                this.onDepartmentSelect(userDepartments[0]);
+
+                this.istFirstDepartmentLoad = true;
+            }
         });
     }
 

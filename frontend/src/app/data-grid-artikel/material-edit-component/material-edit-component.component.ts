@@ -19,6 +19,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
 import {floatValidator} from "../../shared/float_validator";
 import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-material-edit-component',
@@ -53,6 +54,7 @@ export class MaterialEditComponentComponent implements OnInit {
     dropdownDepartmentSettings: IDropdownSettings = {};
     singleSelectSettings: IDropdownSettings = {};
     artikelForm: any;
+    istFirstDepartmentLoad: boolean = false;
 
     childDialogOpened: boolean = false;
     dynamicTitleHerstellers: string[] = [];
@@ -63,6 +65,7 @@ export class MaterialEditComponentComponent implements OnInit {
         public dialogRef: MatDialogRef<MaterialEditComponentComponent>,
         public dialog: MatDialog,
         private fb: FormBuilder,
+        private userService: UserService,
         @Inject(MAT_DIALOG_DATA) public data: Artikel
     ) {
     }
@@ -242,6 +245,17 @@ export class MaterialEditComponentComponent implements OnInit {
             this.departments = response.data;
             if (this.data?.departments) {
                 this.updateDepartmentsDropdown(this.data.departments);
+            }
+
+            let user = this.userService.getUser();
+            if (user && user.departmentIds && user.departmentIds.length > 0 && !this.istFirstDepartmentLoad) {
+                let userDepartments = this.departments.filter(
+                    (d: DepartmentData) => (user.departmentIds as number[]).includes(Number(d.id))
+                );
+                this.artikelForm.get('departments')!.setValue(userDepartments);
+                this.updateDepartmentsDropdown(userDepartments);
+
+                this.istFirstDepartmentLoad = true;
             }
         });
     }

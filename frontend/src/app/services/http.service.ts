@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class HttpService {
-  private baseUrl = 'https://127.0.0.1:58226/api';
+  private baseUrl = 'https://127.0.0.1:54579/api';
   private loginURL = '';
   private refreshJWTURL = '';
   //baseUrl = 'https://iba.local.de/api';
