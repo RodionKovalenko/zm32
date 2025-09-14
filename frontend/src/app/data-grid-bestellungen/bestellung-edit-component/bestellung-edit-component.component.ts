@@ -205,7 +205,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
 
             if (this.searchTerm && this.searchTerm.length > 0) {
                 artikelData = artikelData.map((artikel: any) => {
-                    artikel.name += '(@' + this.searchTerm + ')';
+                    artikel.name += ' (@' + this.searchTerm + ')';
                     return artikel;
                 });
             }
