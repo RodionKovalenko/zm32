@@ -51,7 +51,7 @@ class ArtikelExporter
             $sheet->setCellValueExplicit([$columnIndex++, $rowIndex], $artikel->getDescription(), DataType::TYPE_STRING);
             $sheet->setCellValueExplicit([$columnIndex++, $rowIndex], $artikel->getUrl(), DataType::TYPE_STRING);
             $sheet->setCellValueExplicit([$columnIndex++, $rowIndex], $artikel->getPackageunit(), DataType::TYPE_STRING);
-            $sheet->setCellValueExplicit([$columnIndex++, $rowIndex], $artikel->getPreis(), DataType::TYPE_NUMERIC);
+            $sheet->setCellValueExplicit([$columnIndex++, $rowIndex], $this->normalizeDecimal($artikel->getPreis()), DataType::TYPE_NUMERIC);
 
             $departmentNames = '';
             foreach ($artikel->getDepartments() as $department) {
@@ -107,5 +107,23 @@ class ArtikelExporter
 
         // Kodieren als Base64
         return base64_encode($excelContent);
+    }
+
+    private function normalizeDecimal($value) {
+        if (is_string($value)) {
+            // Remove spaces (if any)
+            $num = str_replace(' ', '', $value);
+            // If the decimal separator is a comma and dot is present as thousand sep
+            if (strpos($num, ',') !== false && strpos($num, '.') !== false) {
+                $num = str_replace('.', '', $num); // remove thousand separator
+                $num = str_replace(',', '.', $num); // convert decimal separator
+            }
+            // If only comma is present (e.g. "123,02"), treat it as decimal sep
+            elseif (strpos($num, ',') !== false) {
+                $num = str_replace(',', '.', $num);
+            }
+            return floatval($num);
+        }
+        return floatval($value);
     }
 }
