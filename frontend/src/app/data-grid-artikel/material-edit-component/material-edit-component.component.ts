@@ -105,6 +105,7 @@ export class MaterialEditComponentComponent implements OnInit {
             id: [this.data?.id || 0],
             name: [this.data?.name || '', Validators.required],
             url: [this.data?.url || ''],
+            packageunit: [this.data?.packageunit || ''],
             preis: [this.data?.preis || '', floatValidator],
             description: [this.data?.description || ''],
             departments: [this.data?.departments || [], Validators.required],
@@ -248,7 +249,7 @@ export class MaterialEditComponentComponent implements OnInit {
             }
 
             let user = this.userService.getUser();
-            if (user && user.departmentIds && user.departmentIds.length > 0 && !this.istFirstDepartmentLoad) {
+            if (user && user.departmentIds && user.departmentIds.length > 0 && !this.istFirstDepartmentLoad && !this.data.id) {
                 let userDepartments = this.departments.filter(
                     (d: DepartmentData) => (user.departmentIds as number[]).includes(Number(d.id))
                 );

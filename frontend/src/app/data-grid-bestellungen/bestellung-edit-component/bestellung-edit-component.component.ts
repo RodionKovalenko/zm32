@@ -376,6 +376,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                     descriptionZusatz: data[0].description,
                     url: data[0].url,
                     preis: data[0].preis,
+                    packageunit: data[0].packageunit,
                 });
 
                 this.bestellungForm.get('artikels').setValue(data);

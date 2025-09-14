@@ -27,6 +27,18 @@
             </mat-form-field>
         </div>
 
+        <!--  Einheit -->
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Verpackungseinheit</mat-label>
+                <input formControlName="packageunit" id="packageunit" matInput>
+
+                <mat-error *ngIf="artikelForm.get('packageunit').invalid && artikelForm.get('packageunit').touched">
+                    Verpackungseinheit ist erforderlich (z.B. Stück, Packung etc.)
+                </mat-error>
+            </mat-form-field>
+        </div>
+
       <div>
         <mat-form-field appearance="fill">
           <mat-label>Preis</mat-label>

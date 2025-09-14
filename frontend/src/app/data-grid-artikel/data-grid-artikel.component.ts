@@ -20,6 +20,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {FocusOnClickDirective} from "../shared/focus-on-click.directive";
 import {DepartmentData} from "../models/Department";
 import {UserService} from "../services/user.service";
+import {ConfirmDialog} from "../confirm-dialog/confirm-dialog";
 
 @Component({
     selector: 'app-data-grid-artikel',
@@ -257,6 +258,22 @@ export class DataGridArtikelComponent implements OnInit {
         });
     }
 
+    onRemoveArtikelClick(record: Artikel) {
+        const dialogRef = this.dialog.open(ConfirmDialog, {
+            data: {
+                title: 'Löschen bestätigen',
+                message: 'Wollen Sie diesen Artikel wirklich löschen?',
+                confirmText: 'Löschen',
+                cancelText: 'Abbrechen'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result === 'confirmed') {
+                this.removeRecord(record);
+            }
+        });
+    }
     removeRecord(record: Artikel) {
         let url = this.httpService.get_baseUrl() + '/artikel/delete/' + record.id;
 

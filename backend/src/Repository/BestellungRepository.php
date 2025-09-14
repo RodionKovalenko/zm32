@@ -79,7 +79,7 @@ class BestellungRepository extends DefaultRepository
                 ->setParameter('searchWord', '%' . $search . '%');
         }
 
-        return $q->orderBy('d.name', Order::Ascending->value)
+        return $q->orderBy('b.id', Order::Descending->value)
             ->getQuery()
             ->getResult();
     }
