@@ -40,6 +40,8 @@ class ArtikelExporter
             $columnIndex++;
         }
 
+        $sheet->setAutoFilter("B1:L1");
+
         $sheet->freezePane('A2');
 
         $rowIndex = 2;
