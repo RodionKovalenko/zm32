@@ -77,6 +77,8 @@ class ArtikelImporter
             $artikel = null;
             if (!empty($artikelId)) {
                 $artikel = $this->artikelRepository->findOneBy(['id' => $artikelId]);
+            } else {
+                $artikel = $this->artikelRepository->findOneByNameInsensitive($artikelName);
             }
 
             if ($artikel === null) {
