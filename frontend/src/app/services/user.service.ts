@@ -5,6 +5,7 @@ interface User {
     firstname: string;
     lastname: string;
     mitarbeiterId: number;
+    departmentIds: [];
 }
 
 @Injectable({

@@ -29,6 +29,7 @@ class LoginController extends BaseController
 
         /** @var User|null $user */
         $user = $this->userRepository->findOneBy(['mitarbeiterId' => $mitarbeiterId]);
+
         if ($user !== null) {
             // Generate a refresh token (random string)
             $refreshToken = bin2hex(random_bytes(32));
@@ -37,6 +38,7 @@ class LoginController extends BaseController
             $user->setRefreshTokenExpiry(new \DateTime('+10 hours'));
             $user->setUsername($user->getId() . '-' . $user->getMitarbeiterId() . '-' . $user->getFirstname());
             $this->userRepository->save($user);
+            $departments = $user->getDepartmentIds();
 
             $jwtToken = $this->jwtManager->create($user);
 
@@ -46,7 +48,8 @@ class LoginController extends BaseController
                 'data' => [
                     'user' => $user,
                     'jwt' => $jwtToken,
-                    'refresh_token' => $refreshToken
+                    'refresh_token' => $refreshToken,
+                    'departmentIds' => $departments
                 ]
             ];
         }

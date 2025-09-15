@@ -3,6 +3,7 @@ export interface Artikel {
     id: number;
     name: string;
     description?: string;
+    packageunit?: string,
     preis?: number;
     formTitle?: string;
     quantity?: number;

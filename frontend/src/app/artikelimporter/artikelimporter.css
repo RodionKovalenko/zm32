@@ -1,0 +1,8 @@
+.custom-dropzone {
+    height: 500px;
+    display: block; /* important so height applies */
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #fafafa;
+}

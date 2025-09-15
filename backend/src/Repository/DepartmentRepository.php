@@ -33,4 +33,24 @@ class DepartmentRepository extends DefaultRepository
 
         return $q->getQuery()->getResult();
     }
+
+    public function findByNamesCaseInsenstitive(array $names): array
+    {
+        if (empty($names)) {
+            return [];
+        }
+
+        $qb = $this->createQueryBuilder('d');
+        $orX = $qb->expr()->orX();
+
+        foreach ($names as $key => $name) {
+            $paramName = 'name' . $key;
+            $orX->add($qb->expr()->eq('LOWER(d.name)', ':' . $paramName));
+            $qb->setParameter($paramName, strtolower($name));
+        }
+
+        $qb->where($orX);
+
+        return $qb->getQuery()->getResult();
+    }
 }

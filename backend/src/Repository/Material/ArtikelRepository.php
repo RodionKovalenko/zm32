@@ -18,6 +18,7 @@ class ArtikelRepository extends DefaultRepository
     {
         $searchWord = $params['search'] ?? null;
         $departmentsId =  $params['departmentIds'] ?? null;
+        $withoutLimit = $params['withoutLimit'] ?? false;
 
         $q = $this->createQueryBuilder('a')
             ->leftJoin('a.departments', 'd');
@@ -43,9 +44,22 @@ class ArtikelRepository extends DefaultRepository
                 ->setParameter('searchWord', '%' . $searchWord . '%');
         }
 
+        if (!$withoutLimit) {
+            $q->setMaxResults(1000);
+        }
+
         return $q->orderBy('a.name', Order::Ascending->value)
-            ->setMaxResults(1000)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOneByNameInsensitive(string $name): ?Artikel
+    {
+        return $this->createQueryBuilder('a')
+            ->where('LOWER(a.name) = LOWER(:name)')
+            ->setParameter('name', $name)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

@@ -135,7 +135,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-grapheme" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-normalizer" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-idn" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php73" />
@@ -171,7 +170,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/behat/transliterator" />
       <path value="$PROJECT_DIR$/backend/vendor/lexik/jwt-authentication-bundle" />
       <path value="$PROJECT_DIR$/backend/vendor/sroze/companienv" />
-      <path value="$PROJECT_DIR$/backend/vendor/ezyang/htmlpurifier" />
       <path value="$PROJECT_DIR$/backend/vendor/defuse/php-encryption" />
       <path value="$PROJECT_DIR$/backend/vendor/league/factory-muffin" />
       <path value="$PROJECT_DIR$/backend/vendor/league/csv" />
@@ -248,6 +246,18 @@
       <path value="$PROJECT_DIR$/backend/vendor/sebastian/recursion-context" />
       <path value="$PROJECT_DIR$/backend/vendor/sebastian/object-reflector" />
       <path value="$PROJECT_DIR$/backend/vendor/tecnickcom/tcpdf" />
+      <path value="$PROJECT_DIR$/backend/vendor/react/event-loop" />
+      <path value="$PROJECT_DIR$/backend/vendor/react/dns" />
+      <path value="$PROJECT_DIR$/backend/vendor/react/child-process" />
+      <path value="$PROJECT_DIR$/backend/vendor/react/cache" />
+      <path value="$PROJECT_DIR$/backend/vendor/clue/ndjson-react" />
+      <path value="$PROJECT_DIR$/backend/vendor/react/stream" />
+      <path value="$PROJECT_DIR$/backend/vendor/react/socket" />
+      <path value="$PROJECT_DIR$/backend/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php85" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php84" />
+      <path value="$PROJECT_DIR$/backend/vendor/evenement/evenement" />
+      <path value="$PROJECT_DIR$/backend/vendor/fidry/cpu-core-counter" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -361,6 +371,11 @@
   </component>
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
+  </component>
+  <component name="PhpStepFilterConfiguration">
+    <skipped_functions>
+      <skipped_function name="App\Business\Export\ArtikelExporter-&gt;generateArtikelExcelExport" />
+    </skipped_functions>
   </component>
   <component name="PhpUnit">
     <phpunit_settings>

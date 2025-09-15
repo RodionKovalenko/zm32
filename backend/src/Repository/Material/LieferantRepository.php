@@ -22,6 +22,17 @@ class LieferantRepository extends DefaultRepository
                 ->setParameter('search', '%' . $params['search'] . '%');
         }
 
+        $q->orderBy('l.name', 'ASC');
+
+        return $q->getQuery()->getResult();
+    }
+
+    public function findByNamesCaseInsenstitive(array $names): array
+    {
+        $q = $this->createQueryBuilder('l')
+            ->where('LOWER(l.name) IN (:names)')
+            ->setParameter('names', array_map('strtolower', $names));
+
         return $q->getQuery()->getResult();
     }
 }

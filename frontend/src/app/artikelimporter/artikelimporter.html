@@ -1,0 +1,21 @@
+<div>
+    <mat-form-field appearance="fill" style="width: 100%;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: rgba(0,0,0,0.54);">
+            <fa-icon [icon]="faUpload" style="font-size: 48px;"></fa-icon>
+            <span>Datei hier ablegen oder klicken zum Hochladen</span>
+        </div>
+
+        <ngx-mat-dropzone style="height: 500px; display: block;">
+            <input
+                    type="file"
+                    fileInput
+                    accept=".xlsx,.xls,.csv"
+                    [formControl]="profilefile"
+            />
+        </ngx-mat-dropzone>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="uploadFiles()" [disabled]="!profilefile.value || isUploading">
+        Upload Files
+    </button>
+</div>

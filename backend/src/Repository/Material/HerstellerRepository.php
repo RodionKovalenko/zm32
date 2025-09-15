@@ -23,6 +23,23 @@ class HerstellerRepository extends DefaultRepository
                 ->setParameter('search', '%' . $params['search'] . '%');
         }
 
+        $qb->orderBy('h.name', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findByNamesCaseInsenstitive(array $names): array
+    {
+        $qb = $this->createQueryBuilder('h');
+        $orX = $qb->expr()->orX();
+
+        foreach ($names as $key => $name) {
+            $orX->add($qb->expr()->eq('LOWER(h.name)', ':name' . $key));
+            $qb->setParameter('name' . $key, strtolower($name));
+        }
+
+        $qb->where($orX);
+
         return $qb->getQuery()->getResult();
     }
 }

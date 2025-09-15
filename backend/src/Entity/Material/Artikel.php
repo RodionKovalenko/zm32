@@ -40,6 +40,9 @@ class Artikel
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private ?string $preis = null;
 
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $packageunit = null;
+
     #[Groups(['Artikel_Department', 'Department'])]
     #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: 'artikels')]
     #[ORM\JoinTable(name: 'artikel_to_departments')]
@@ -348,4 +351,13 @@ class Artikel
         return $this;
     }
 
+    public function getPackageunit(): ?string
+    {
+        return $this->packageunit;
+    }
+    public function setPackageunit(?string $packageunit): Artikel
+    {
+        $this->packageunit = $packageunit;
+        return $this;
+    }
 }
