@@ -3,10 +3,8 @@
 namespace App\Business\Export;
 
 use App\Entity\Bestellung;
-use App\Entity\BestellungStatus;
 use App\Entity\Material\Artikel;
 use App\Entity\Material\ArtikelToHerstRefnummer;
-use App\Entity\Material\ArtikelToLieferBestellnummer;
 use App\Entity\Material\Hersteller;
 use App\Entity\Material\Lieferant;
 

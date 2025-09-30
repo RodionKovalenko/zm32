@@ -24,13 +24,15 @@ class BestellungFormType extends AbstractType
             ->add('preis', TextType::class)
             ->add('gesamtpreis', TextType::class)
             ->add('packageunit', TextType::class)
-            ->add('amount', TextType::class)
+            ->add('amount', TextType::class, [
+                'required' => true,
+            ])
             ->add('artikels', EntityType::class, [
                 'class' => Artikel::class, // The entity class
                 'choice_label' => 'name', // Field to display in the dropdown
                 'multiple' => true, // Allow multiple selections
                 'expanded' => false, // Use dropdown (set to true for checkboxes)
-                'required' => false, // Field is optional
+                'required' => true, // Field is mandatory
                 'placeholder' => 'Select artikel', // Placeholder text
             ])
             ->add('departments', EntityType::class, [
@@ -38,7 +40,7 @@ class BestellungFormType extends AbstractType
                 'choice_label' => 'name', // Field to display in the dropdown
                 'multiple' => true, // Allow multiple selections
                 'expanded' => false, // Use dropdown (set to true for checkboxes)
-                'required' => false, // Field is optional
+                'required' => true, // Field is mandatory
                 'placeholder' => 'Select departments', // Placeholder text
             ])
             ->add('herstellers', EntityType::class, [
