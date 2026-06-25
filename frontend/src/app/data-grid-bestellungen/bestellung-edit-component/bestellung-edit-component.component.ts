@@ -20,6 +20,7 @@ import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {NgIf} from "@angular/common";
 import {floatValidator} from '../../shared/float_validator';
+import {formatPreisDE, parsePreis} from '../../shared/preis-utils';
 import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
 import {take} from "rxjs/operators";
 import {UserService} from "../../services/user.service";
@@ -140,8 +141,8 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
             id: [this.data?.id || 0],
             description: [this.data?.description || ''],
             amount: [this.data?.amount || '', floatValidator],
-            preis: [this.data?.preis || '', floatValidator],
-            gesamtpreis: [this.data?.gesamtpreis || '', floatValidator],
+            preis: [this.data?.preis ? formatPreisDE(this.data.preis) : '', floatValidator],
+            gesamtpreis: [this.data?.gesamtpreis ? formatPreisDE(this.data.gesamtpreis) : '', floatValidator],
             packageunit: [this.data?.packageunit || ''],
             artikels: [this.data?.artikels || [], Validators.required],
             departments: [this.data?.departments || [], Validators.required],
@@ -160,12 +161,12 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         });
 
         this.bestellungForm.valueChanges.subscribe((values: Bestellung) => {
-            const amount = Number((values.amount || "").toString().replace(",", ".")) || 0;
-            const preis = Number((values.preis || "").toString().replace(",", ".")) || 0;
-            const gesamtpreis = amount * preis;
+            const amount = parsePreis(values.amount);
+            const preis = parsePreis(values.preis);
+            const gesamtpreis = Math.round(amount * preis * 100) / 100;
+            const gesamtpreisFormatted = formatPreisDE(gesamtpreis);
 
-            // Update gesamtpreis field
-            this.bestellungForm.patchValue({gesamtpreis}, {emitEvent: false});
+            this.bestellungForm.patchValue({gesamtpreis: gesamtpreisFormatted}, {emitEvent: false});
         });
 
         this.markAllAsTouched();
@@ -375,7 +376,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
                 this.bestellungForm.patchValue({
                     descriptionZusatz: data[0].description,
                     url: data[0].url,
-                    preis: data[0].preis,
+                    preis: data[0].preis ? formatPreisDE(data[0].preis) : '',
                     packageunit: data[0].packageunit,
                 });
 

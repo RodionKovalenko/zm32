@@ -18,6 +18,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
 import {floatValidator} from "../../shared/float_validator";
+import {formatPreisDE} from "../../shared/preis-utils";
 import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
 import {UserService} from "../../services/user.service";
 
@@ -106,7 +107,7 @@ export class MaterialEditComponentComponent implements OnInit {
             name: [this.data?.name || '', Validators.required],
             url: [this.data?.url || ''],
             packageunit: [this.data?.packageunit || ''],
-            preis: [this.data?.preis || '', floatValidator],
+            preis: [this.data?.preis ? formatPreisDE(this.data.preis) : '', floatValidator],
             description: [this.data?.description || ''],
             departments: [this.data?.departments || [], Validators.required],
             lieferants: [this.data?.lieferants || []],

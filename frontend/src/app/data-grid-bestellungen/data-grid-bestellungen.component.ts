@@ -23,6 +23,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {FocusOnClickDirective} from "../shared/focus-on-click.directive";
 import {UserService} from "../services/user.service";
 import {DepartmentData} from "../models/Department";
+import {formatPreisDE} from "../shared/preis-utils";
 
 @Component({
     selector: 'app-data-grid-bestellungen',
@@ -88,6 +89,11 @@ export class DataGridBestellungenComponent implements OnInit {
     ];
 
     constructor(private httpService: HttpService, public dialog: MatDialog, private fb: FormBuilder, private cdr: ChangeDetectorRef, private userService: UserService) {
+    }
+
+    formatPreis(value: string | number | null | undefined): string {
+        const formatted = formatPreisDE(value);
+        return formatted ? formatted + ' €' : '';
     }
 
     ngOnInit() {

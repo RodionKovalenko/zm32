@@ -196,7 +196,7 @@
         <ng-container matColumnDef="preis">
             <th mat-header-cell *matHeaderCellDef>Preis</th>
             <td mat-cell *matCellDef="let element">
-                {{ element.preis }}
+                {{ formatPreis(element.preis) }}
             </td>
         </ng-container>
 
