@@ -71,7 +71,7 @@
         "symfony/monolog-bundle": "^3.8",
         "symfony/process": "*",
         "symfony/property-access": "*",
-        "symfony/runtime": "5.4.*",
+        "symfony/runtime": "^6.4",
         "symfony/security-bundle": "*",
         "symfony/templating": "*",
         "symfony/twig-bundle": "*",

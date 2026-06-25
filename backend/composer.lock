@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "213ba5e4ae5d2f624dd6a6a372a169f7",
+    "content-hash": "f7565d2b1219b0483ccef11e3fc54c60",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -10541,16 +10541,16 @@
         },
         {
             "name": "symfony/runtime",
-            "version": "v5.4.46",
+            "version": "v5.4.53",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/runtime.git",
-                "reference": "242b4d773c004fa258e1b412f3f49fc2ac78353a"
+                "reference": "aab86e248c9af2aec5eeaa62eef757c5af6e5d9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/runtime/zipball/242b4d773c004fa258e1b412f3f49fc2ac78353a",
-                "reference": "242b4d773c004fa258e1b412f3f49fc2ac78353a",
+                "url": "https://api.github.com/repos/symfony/runtime/zipball/aab86e248c9af2aec5eeaa62eef757c5af6e5d9f",
+                "reference": "aab86e248c9af2aec5eeaa62eef757c5af6e5d9f",
                 "shasum": ""
             },
             "require": {
@@ -10601,7 +10601,7 @@
                 "runtime"
             ],
             "support": {
-                "source": "https://github.com/symfony/runtime/tree/v5.4.46"
+                "source": "https://github.com/symfony/runtime/tree/v5.4.53"
             },
             "funding": [
                 {
@@ -10613,11 +10613,15 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-06T08:58:41+00:00"
+            "time": "2026-05-23T12:08:41+00:00"
         },
         {
             "name": "symfony/security-bundle",
@@ -18017,5 +18021,5 @@
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
