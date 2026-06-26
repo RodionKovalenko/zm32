@@ -8,22 +8,32 @@ use App\Entity\Material\ArtikelToHerstRefnummer;
 use App\Entity\Material\Hersteller;
 use App\Entity\Material\Lieferant;
 
+class TcpdfWithPageNumbers extends \TCPDF
+{
+    public function Footer(): void
+    {
+        $this->SetY(-15);
+        $this->SetFont('helvetica', '', 9);
+        $this->Cell(0, 10, 'Seite ' . $this->getAliasNumPage() . ' / ' . $this->getAliasNbPages(), 0, false, 'C');
+    }
+}
+
 class BestellungExportHelper
 {
     public function generateExport($bestellungen)
     {
-        // Create new PDF document
-        $pdf = new \TCPDF();
+        $pdf = new TcpdfWithPageNumbers();
         $currentDateString = (new \DateTime())->format('d.m.Y H:i');
         $dokumentTitle = 'Bestellungen ' . $currentDateString;
 
         $pdf->setCreator(PDF_CREATOR);
         $pdf->setAuthor('ZM 32');
         $pdf->setHeaderData('', 0, $dokumentTitle, 'ZM 32', array(0, 64, 255), array(0, 64, 128));
-        $pdf->setHeaderMargin(15); // This moves the header 20mm down
+        $pdf->setHeaderMargin(15);
+        $pdf->setFooterMargin(10);
 
         $pdf->setHeaderFont(array('helvetica', '', 12));
-        $pdf->setFooterFont(array('helvetica', '', 10));
+        $pdf->setFooterFont(array('helvetica', '', 9));
         $pdf->setMargins(15, 30, 15);
         $pdf->setAutoPageBreak(true, 20);
         $pdf->setFont('helvetica', '', 10);
@@ -36,7 +46,6 @@ class BestellungExportHelper
         $artikelWidth = $remainingWidth * 0.6;
         $notizenWidth = $remainingWidth * 0.4;
 
-        $html = '';
         $totalSum = 0;
         $bestellungenByLieferant = [];
 
@@ -47,9 +56,17 @@ class BestellungExportHelper
             $bestellungenByLieferant[$lieferantName][] = $bestellung;
         }
 
-        // Generate table for each supplier
-        foreach ($bestellungenByLieferant as $lieferantName => $bestellungen) {
-            $html .= '<h2 style="font-size: 14px; margin: 5px 0;">Lieferant: ' . $lieferantName . '</h2>';
+        // Generate table for each supplier — written individually to prevent orphaned headings
+        foreach ($bestellungenByLieferant as $lieferantName => $lieferantBestellungen) {
+            // Ensure heading + table header + at least one data row fit on the same page (min. 26mm)
+            $availableSpace = $pdf->getPageHeight() - $pdf->GetY() - $pdf->getBreakMargin();
+            if ($availableSpace < 26) {
+                $pdf->AddPage();
+            }
+
+            $supplierSum = 0;
+
+            $html = '<h2 style="font-size: 14px; margin: 5px 0;">Lieferant: ' . $lieferantName . '</h2>';
             $html .= '<table border="1" cellpadding="3" cellspacing="0" width="100%" style="border-collapse: collapse;">';
 
             $html .= '<thead>
@@ -58,17 +75,16 @@ class BestellungExportHelper
                         <th width="' . $artikelWidth . 'mm">Artikel</th>
                          <th width="15mm">Menge</th>
                         <th width="20mm">Preis</th>
-                        <th width="25mm">Gesamtpreis</th> <!-- Brighter column -->
+                        <th width="25mm">Gesamtpreis</th>
                         <th width="' . $notizenWidth . 'mm">Notizen</th>
                         <th width="30mm">Bestellt von</th>
-                        <th width="20mm">Datum</th> <!-- Move Datum to the end -->
+                        <th width="20mm">Datum</th>
                     </tr>
                   </thead>';
 
             $html .= '<tbody>';
-            $supplierSum = 0;
 
-            foreach ($bestellungen as $bestellung) {
+            foreach ($lieferantBestellungen as $bestellung) {
                 foreach ($bestellung->getArtikels() as $artikel) {
                     $lieferantBestellnummer = $this->getLieferantBestellnummer($bestellung, $bestellung->getLieferants()[0]);
                     $bestelltVon = $bestellung->getMitarbeiter()->getVorname() . ' ' . $bestellung->getMitarbeiter()->getNachname();
@@ -87,29 +103,34 @@ class BestellungExportHelper
                             <td width="' . $artikelWidth . 'mm">' . $artikel->getName() . '</td>
                             <td width="15mm" style="text-align: right;">' . $bestellung->getAmount() . '</td>
                             <td width="20mm" style="text-align: right;">' . $formattedPreis . '</td>
-                            <td width="25mm" style="text-align: right;">' . $formattedGesamtpreis . '</td> 
+                            <td width="25mm" style="text-align: right;">' . $formattedGesamtpreis . '</td>
                             <td width="' . $notizenWidth . 'mm">' . $bestellung->getDescription() . '</td>
                             <td width="30mm">' . $bestelltVon . '</td>
-                            <td width="20mm">' . $datum . '</td> <!-- Move Datum to the end -->
+                            <td width="20mm">' . $datum . '</td>
                         </tr>';
                 }
             }
 
-            // Add subtotal row
+            // Subtotal row for this supplier
             $html .= '<tr style="font-weight: bold; background-color: #f2f2f2;">
                 <td colspan="4" style="text-align: right;">Summe für ' . $lieferantName . ':</td>
                 <td style="text-align: right;">' . number_format($supplierSum, 2, ',', '.') . ' €</td>
-                <td colspan="2"></td>
+                <td colspan="3"></td>
               </tr>';
 
             $html .= '</tbody></table><br>';
+
+            $pdf->writeHTML($html, true, false, true, false, '');
         }
 
-        // Add final total sum row
-        $html .= '<h2 style="text-align: right; margin-top: 15px;">Gesamtsumme: ' . number_format($totalSum, 2, ',', '.') . ' €</h2>';
+        // Final total — start new page if not enough room
+        $availableSpace = $pdf->getPageHeight() - $pdf->GetY() - $pdf->getBreakMargin();
+        if ($availableSpace < 15) {
+            $pdf->AddPage();
+        }
 
-        // Output the content
-        $pdf->writeHTML($html, true, false, true, false, '');
+        $totalHtml = '<h2 style="text-align: right; margin-top: 15px;">Gesamtsumme: ' . number_format($totalSum, 2, ',', '.') . ' €</h2>';
+        $pdf->writeHTML($totalHtml, true, false, true, false, '');
 
         // Set HTTP headers
         header('Access-Control-Allow-Origin: *');
