@@ -510,3 +510,25 @@ input-wrapper-relative {
 .spacer {
   flex: 1 1 auto;
 }
+
+/* Doppeltipp-Zoom auf Touch-Geräten verhindern */
+button, a, input, mat-icon, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* iPad / Tablet: Suchsymbol korrekt innerhalb der Toolbar positionieren */
+@media (max-width: 1024px) {
+  .input-wrapper-cancel-btn {
+    top: 12px;
+  }
+
+  .input-wrapper {
+    top: 15px;
+    width: calc(100vw - 120px);
+    right: 65px;
+  }
+
+  .input-wrapper input {
+    width: 100%;
+  }
+}
