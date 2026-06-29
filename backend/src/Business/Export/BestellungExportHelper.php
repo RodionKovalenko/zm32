@@ -10,6 +10,20 @@ use App\Entity\Material\Lieferant;
 
 class TcpdfWithPageNumbers extends \TCPDF
 {
+    public function Header(): void
+    {
+        $this->SetFont('helvetica', 'B', 12);
+        $this->SetTextColor(0, 64, 255);
+        $pageWidth = $this->getPageWidth() - $this->lMargin - $this->rMargin;
+        $this->SetX($this->lMargin);
+        $this->Cell($pageWidth * 0.75, 10, $this->header_title, 0, 0, 'L');
+        $this->SetFont('helvetica', '', 11);
+        $this->Cell($pageWidth * 0.25, 10, $this->header_string, 0, 1, 'R');
+        $this->SetDrawColor(0, 64, 128);
+        $this->Line($this->lMargin, $this->GetY(), $this->getPageWidth() - $this->rMargin, $this->GetY());
+        $this->Ln(2);
+    }
+
     public function Footer(): void
     {
         $this->SetY(-15);
@@ -60,7 +74,7 @@ class BestellungExportHelper
         foreach ($bestellungenByLieferant as $lieferantName => $lieferantBestellungen) {
             // Ensure heading + table header + at least one data row fit on the same page (min. 26mm)
             $availableSpace = $pdf->getPageHeight() - $pdf->GetY() - $pdf->getBreakMargin();
-            if ($availableSpace < 26) {
+            if ($availableSpace < 55) {
                 $pdf->AddPage();
             }
 

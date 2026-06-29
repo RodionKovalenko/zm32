@@ -516,16 +516,24 @@ button, a, input, mat-icon, [role="button"] {
   touch-action: manipulation;
 }
 
-/* iPad / Tablet: Suchsymbol korrekt innerhalb der Toolbar positionieren */
+/* iPad / Tablet: Suchsymbol als normales Flex-Element in der Toolbar (kein position:fixed) */
 @media (max-width: 1024px) {
   .input-wrapper-cancel-btn {
-    top: 12px;
+    position: relative !important;
+    top: auto;
+    right: auto;
+    margin-left: auto;
+    background-color: transparent;
+    box-shadow: none;
   }
 
   .input-wrapper {
-    top: 15px;
-    width: calc(100vw - 120px);
-    right: 65px;
+    position: relative;
+    top: auto;
+    right: auto;
+    flex: 1;
+    background-color: transparent;
+    box-shadow: none;
   }
 
   .input-wrapper input {
