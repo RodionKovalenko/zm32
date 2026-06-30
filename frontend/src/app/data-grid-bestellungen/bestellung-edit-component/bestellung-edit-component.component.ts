@@ -140,7 +140,7 @@ export class BestellungEditComponentComponent implements OnInit, AfterViewChecke
         this.bestellungForm = this.fb.group({
             id: [this.data?.id || 0],
             description: [this.data?.description || ''],
-            amount: [this.data?.amount || '', floatValidator],
+            amount: [this.data?.amount || '', [Validators.required, floatValidator]],
             preis: [this.data?.preis ? formatPreisDE(this.data.preis) : '', floatValidator],
             gesamtpreis: [this.data?.gesamtpreis ? formatPreisDE(this.data.gesamtpreis) : '', floatValidator],
             packageunit: [this.data?.packageunit || ''],

@@ -193,7 +193,7 @@ class BestellungExportHelper
 
     private function getAmountNumber(Bestellung $bestellung)
     {
-        $amountString = $bestellung->getAmount();
+        $amountString = $bestellung->getAmount() ?? '';
         preg_match('/\d+(\.\d+)?/', $amountString, $matches);
         $amount = isset($matches[0]) ? (float)$matches[0] : 1.0;
 
