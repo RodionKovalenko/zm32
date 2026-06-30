@@ -2,3 +2,20 @@
   display: block;
   margin-bottom: 16px; /* Optional: add some spacing between fields */
 }
+
+/* Nur-Info-Felder: Werte werden im Artikel-Formular gepflegt, hier nur zur Übersicht */
+.readonly-info-field .mat-mdc-text-field-wrapper {
+  background-color: rgba(0, 0, 0, 0.035);
+}
+
+.readonly-info-field .mdc-text-field__input,
+.readonly-info-field .mat-mdc-form-field-infix input {
+  color: rgba(0, 0, 0, 0.55);
+  font-style: italic;
+  cursor: default;
+}
+
+.readonly-info-field .mat-mdc-form-field-label,
+.readonly-info-field .mdc-floating-label {
+  color: rgba(0, 0, 0, 0.4) !important;
+}

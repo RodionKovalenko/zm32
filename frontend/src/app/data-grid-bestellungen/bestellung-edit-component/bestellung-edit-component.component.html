@@ -161,35 +161,27 @@
             </mat-form-field>
         </div>
 
-        <!--  Einheit -->
+        <!--  Einheit (nur Anzeige - Bearbeitung im Artikel-Formular) -->
         <div>
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" class="readonly-info-field">
                 <mat-label>Verpackungseinheit</mat-label>
-                <input formControlName="packageunit" id="packageunit" matInput>
-
-                <mat-error *ngIf="bestellungForm.get('packageunit').invalid && bestellungForm.get('packageunit').touched">
-                    Verpackungseinheit ist erforderlich (z.B. Stück, Packung etc.)
-                </mat-error>
+                <input formControlName="packageunit" id="packageunit" matInput readonly tabindex="-1">
             </mat-form-field>
         </div>
 
-        <!--    Preis pro Einheit -->
+        <!--    Preis pro Einheit (nur Anzeige - Bearbeitung im Artikel-Formular) -->
         <div>
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" class="readonly-info-field">
                 <mat-label>Preis pro Verpackungseinheit</mat-label>
-                <input formControlName="preis" id="preis" matInput>
-
-                <mat-error *ngIf="bestellungForm.get('preis').invalid && bestellungForm.get('preis').touched">
-                    Preis enthält ungültige Zeichen.
-                </mat-error>
+                <input formControlName="preis" id="preis" matInput readonly tabindex="-1">
             </mat-form-field>
         </div>
 
         <!--    Gesamtpreis -->
         <div>
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" class="readonly-info-field">
                 <mat-label>Gesamtpreis</mat-label>
-                <input formControlName="gesamtpreis" id="gesamtpreis" matInput readonly>
+                <input formControlName="gesamtpreis" id="gesamtpreis" matInput readonly tabindex="-1">
             </mat-form-field>
         </div>
 
