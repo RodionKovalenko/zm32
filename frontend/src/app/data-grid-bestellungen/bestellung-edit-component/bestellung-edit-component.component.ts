@@ -1,5 +1,5 @@
 import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, NgZone, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {HttpService} from "../../services/http.service";
 import {Lieferant} from "../../models/Lieferant";
 import {MaterialEditComponentComponent} from "../../data-grid-artikel/material-edit-component/material-edit-component.component";
@@ -15,7 +15,7 @@ import {Bestellung} from "../../models/Bestellung";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatIcon} from "@angular/material/icon";
-import {MatToolbar} from "@angular/material/toolbar";
+import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {NgIf} from "@angular/common";
@@ -35,7 +35,8 @@ import {UserService} from "../../services/user.service";
         MatInputModule,
         NgMultiSelectDropDownModule,
         MatIcon,
-        MatToolbar,
+        MatExpansionModule,
+        MatDialogActions,
         MatIconButton,
         MatTooltip,
         NgIf,

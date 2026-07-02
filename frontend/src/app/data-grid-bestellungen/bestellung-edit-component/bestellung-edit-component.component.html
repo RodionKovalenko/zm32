@@ -21,23 +21,12 @@
                         </div>
                     </ng-template>
                 </ng-multiselect-dropdown>
-
-                <!--                <mat-error *ngIf="bestellungForm.get('departments').invalid && bestellungForm.get('departments').touched">-->
-                <!--                    Abteilung ist erforderlich.-->
-                <!--                </mat-error>-->
             </div>
         </div>
 
         <!-- Artikel -->
         <div class="dropdown-section">
             <label>Artikel:</label>
-
-            <!--            <span class="input-wrapper-relative">-->
-            <!--                <input type="text" [value]="searchTerm" (input)="onArtikelSearchChange($event)" placeholder="Artikel suchen"  class="limited-width-input" />-->
-            <!--                <button *ngIf="searchTerm" mat-icon-button class="align-button color-cancel"  matTooltip="Abbrechen" (click)="clearSearch()">-->
-            <!--                    <mat-icon>cancel</mat-icon>-->
-            <!--                </button>-->
-            <!--            </span>-->
 
             <div class="dropdown-wrapper">
                 <ng-multiselect-dropdown #dropdownArtikels
@@ -68,92 +57,11 @@
             </div>
         </div>
 
-        <div>
-            <mat-form-field appearance="fill">
-                <mat-label>Zusatzinfo zum Artikel -</mat-label>
-                <textarea #textarea formControlName="descriptionZusatz" id="descriptionZusatz" matInput rows="1"></textarea>
-                <mat-label><a [href]="safeUrl" rel="noopener noreferrer" target="_blank">Link zum Artikel</a></mat-label>
-            </mat-form-field>
-
-        </div>
-
-
-        <!-- Lieferant -->
-        <div class="dropdown-section">
-            <label>Lieferant (Optional):</label>
-            <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown #dropdownLieferants
-                                         [data]="lieferants"
-                                         [placeholder]="'Lieferant auswählen (Optional)'"
-                                         [settings]="singleSelectSettings"
-                                         appFocusOnClick
-                                         class="custom-select-no-margin"
-                                         formControlName="lieferants">
-                    <ng-template let-item="item">
-                        <div class="custom-item">
-                            {{ item.name }}
-                        </div>
-                    </ng-template>
-                </ng-multiselect-dropdown>
-                <!--                <button *ngIf="isOnlyOneLieferantSelected()"-->
-                <!--                        mat-icon-button class="color-confirm"-->
-                <!--                        matTooltip="Lieferant bearbeiten" (click)="addLieferant(true)">-->
-                <!--                    <mat-icon>edit</mat-icon>-->
-                <!--                </button>-->
-                <!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Lieferant hinzufügen" (click)="addLieferant()">-->
-                <!--                    <mat-icon>add</mat-icon>-->
-                <!--                </button>-->
-            </div>
-        </div>
-
-        <div>
-            <mat-form-field appearance="fill">
-                <mat-label>Lieferanten-Bestellnummer</mat-label>
-                <input formControlName="bestellnummer" id="bestellnummer" matInput>
-            </mat-form-field>
-        </div>
-
-        <!-- Hersteller -->
-        <div class="dropdown-section">
-            <label>Hersteller (Optional):</label>
-            <div class="dropdown-wrapper">
-                <ng-multiselect-dropdown #dropdownHerstellers
-                        [data]="herstellers"
-                        [placeholder]="'Hersteller auswählen (Optional)'"
-                        [settings]="singleSelectSettings"
-                        appFocusOnClick
-                        class="custom-select-no-margin"
-                        formControlName="herstellers">
-                    <ng-template let-item="item">
-                        <div class="custom-item">
-                            {{ item.name }}
-                        </div>
-                    </ng-template>
-                </ng-multiselect-dropdown>
-
-                <!--                <button *ngIf="isOnlyOneHerstellerSelected()"-->
-                <!--                        mat-icon-button class="color-confirm"-->
-                <!--                        matTooltip="Hersteller bearbeiten" (click)="addHersteller(true)">-->
-                <!--                    <mat-icon>edit</mat-icon>-->
-                <!--                </button>-->
-                <!--                <button mat-icon-button class="color-confirm" matTooltip="Neuen Hersteller hinzufügen" (click)="addHersteller()">-->
-                <!--                    <mat-icon>add</mat-icon>-->
-                <!--                </button>-->
-            </div>
-        </div>
-
-        <div>
-            <mat-form-field appearance="fill">
-                <mat-label>Hersteller REF-Nummer</mat-label>
-                <input formControlName="refnummer" id="refnummer" matInput>
-            </mat-form-field>
-        </div>
-
-        <!--  Anzahl -->
-        <div>
+        <!--  Anzahl: zentrales Pflichtfeld, direkt nach der Artikelauswahl -->
+        <div class="primary-field">
             <mat-form-field appearance="fill">
                 <mat-label>Anzahl *</mat-label>
-                <input formControlName="amount" id="amount" matInput>
+                <input formControlName="amount" id="amount" inputmode="decimal" matInput>
 
                 <mat-error *ngIf="bestellungForm.get('amount').hasError('required') && bestellungForm.get('amount').touched">
                     Anzahl ist erforderlich.
@@ -164,47 +72,109 @@
             </mat-form-field>
         </div>
 
-        <!--  Einheit (nur Anzeige - Bearbeitung im Artikel-Formular) -->
-        <div>
+        <!-- Verpackungseinheit / Preis / Gesamtpreis: nur Anzeige, kompakt in einer Zeile -->
+        <div class="info-row">
             <mat-form-field appearance="fill" class="readonly-info-field">
-                <mat-label>Verpackungseinheit</mat-label>
+                <mat-label>Verp.-Einheit</mat-label>
                 <input formControlName="packageunit" id="packageunit" matInput readonly tabindex="-1">
             </mat-form-field>
-        </div>
 
-        <!--    Preis pro Einheit (nur Anzeige - Bearbeitung im Artikel-Formular) -->
-        <div>
             <mat-form-field appearance="fill" class="readonly-info-field">
-                <mat-label>Preis pro Verpackungseinheit</mat-label>
+                <mat-label>Preis/Einheit</mat-label>
                 <input formControlName="preis" id="preis" matInput readonly tabindex="-1">
             </mat-form-field>
-        </div>
 
-        <!--    Gesamtpreis -->
-        <div>
             <mat-form-field appearance="fill" class="readonly-info-field">
                 <mat-label>Gesamtpreis</mat-label>
                 <input formControlName="gesamtpreis" id="gesamtpreis" matInput readonly tabindex="-1">
             </mat-form-field>
         </div>
 
-        <div>
-            <mat-form-field appearance="fill">
-                <mat-label>Notizen</mat-label>
-                <input formControlName="description" id="description" matInput>
-            </mat-form-field>
-        </div>
+        <!-- Sekundäre Felder: standardmäßig eingeklappt -->
+        <mat-expansion-panel class="details-panel">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Weitere Details</mat-panel-title>
+                <mat-panel-description>Zusatzinfo, Lieferant, Hersteller, Notizen</mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Zusatzinfo zum Artikel -</mat-label>
+                    <textarea #textarea formControlName="descriptionZusatz" id="descriptionZusatz" matInput rows="1"></textarea>
+                    <mat-label><a [href]="safeUrl" rel="noopener noreferrer" target="_blank">Link zum Artikel</a></mat-label>
+                </mat-form-field>
+            </div>
+
+            <!-- Lieferant -->
+            <div class="dropdown-section">
+                <label>Lieferant (Optional):</label>
+                <div class="dropdown-wrapper">
+                    <ng-multiselect-dropdown #dropdownLieferants
+                                             [data]="lieferants"
+                                             [placeholder]="'Lieferant auswählen (Optional)'"
+                                             [settings]="singleSelectSettings"
+                                             appFocusOnClick
+                                             class="custom-select-no-margin"
+                                             formControlName="lieferants">
+                        <ng-template let-item="item">
+                            <div class="custom-item">
+                                {{ item.name }}
+                            </div>
+                        </ng-template>
+                    </ng-multiselect-dropdown>
+                </div>
+            </div>
+
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Lieferanten-Bestellnummer</mat-label>
+                    <input formControlName="bestellnummer" id="bestellnummer" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Hersteller -->
+            <div class="dropdown-section">
+                <label>Hersteller (Optional):</label>
+                <div class="dropdown-wrapper">
+                    <ng-multiselect-dropdown
+                            [data]="herstellers"
+                            [placeholder]="'Hersteller auswählen (Optional)'"
+                            [settings]="singleSelectSettings"
+                            appFocusOnClick
+                            class="custom-select-no-margin"
+                            formControlName="herstellers">
+                        <ng-template let-item="item">
+                            <div class="custom-item">
+                                {{ item.name }}
+                            </div>
+                        </ng-template>
+                    </ng-multiselect-dropdown>
+                </div>
+            </div>
+
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Hersteller REF-Nummer</mat-label>
+                    <input formControlName="refnummer" id="refnummer" matInput>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Notizen</mat-label>
+                    <input formControlName="description" id="description" matInput>
+                </mat-form-field>
+            </div>
+        </mat-expansion-panel>
 
     </form>
 </div>
 
-
-<mat-toolbar class="fixed-toolbar">
-    <span class="spacer"></span>
+<mat-dialog-actions align="end" class="dialog-actions-bar">
     <button (click)="onNoClick()" class="align-button color-cancel" mat-icon-button matTooltip="Abbrechen">
         <mat-icon>cancel</mat-icon>
     </button>
     <button (click)="onSubmit()" [disabled]="bestellungForm.invalid" class="align-button color-confirm" mat-icon-button matTooltip="Speichern">
         <mat-icon>save</mat-icon>
     </button>
-</mat-toolbar>
+</mat-dialog-actions>

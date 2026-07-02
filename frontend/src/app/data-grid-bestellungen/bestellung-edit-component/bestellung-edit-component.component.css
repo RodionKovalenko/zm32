@@ -19,3 +19,41 @@
 .readonly-info-field .mdc-floating-label {
   color: rgba(0, 0, 0, 0.4) !important;
 }
+
+/* Anzahl: zentrales Pflichtfeld direkt nach der Artikelauswahl, optisch hervorgehoben */
+.primary-field {
+  border-left: 4px solid #3f51b5;
+  padding-left: 10px;
+  margin-bottom: 4px;
+}
+
+/* Verpackungseinheit / Preis / Gesamtpreis kompakt nebeneinander statt gestapelt */
+.info-row {
+  display: flex;
+  gap: 8px;
+}
+
+.info-row mat-form-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Sekundäre Felder eingeklappt, damit das Formular ohne Scrollen nutzbar bleibt */
+.details-panel {
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+/* dvh statt vh: Inhalt schrumpft mit der sichtbaren Fläche, wenn die Bildschirmtastatur
+   auf Mobilgeräten einblendet, damit Speichern/Abbrechen nicht verdeckt werden */
+.mat-dialog-content {
+  max-height: min(65vh, calc(100dvh - 180px)) !important;
+}
+
+.dialog-actions-bar {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 8px 16px !important;
+  margin: 0 !important;
+}

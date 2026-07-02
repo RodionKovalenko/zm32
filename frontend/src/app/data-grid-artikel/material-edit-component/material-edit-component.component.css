@@ -2,3 +2,23 @@
     display: block;
     margin-bottom: 16px; /* Optional: add some spacing between fields */
 }
+
+/* Hersteller/Lieferant-Blöcke eingeklappt, damit das Formular ohne Scrollen nutzbar bleibt */
+.details-panel {
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+/* dvh statt vh: Inhalt schrumpft mit der sichtbaren Fläche, wenn die Bildschirmtastatur
+   auf Mobilgeräten einblendet, damit Speichern/Abbrechen nicht verdeckt werden */
+.mat-dialog-content {
+  max-height: min(65vh, calc(100dvh - 180px)) !important;
+}
+
+.dialog-actions-bar {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 8px 16px !important;
+  margin: 0 !important;
+}

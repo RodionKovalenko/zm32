@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Artikel} from "../../models/Artikel";
 import {Lieferant} from "../../models/Lieferant";
 import {HttpService} from "../../services/http.service";
@@ -16,7 +16,7 @@ import {MatInput, MatInputModule} from "@angular/material/input";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
-import {MatToolbar} from "@angular/material/toolbar";
+import {MatExpansionModule} from "@angular/material/expansion";
 import {floatValidator} from "../../shared/float_validator";
 import {formatPreisDE} from "../../shared/preis-utils";
 import {FocusOnClickDirective} from "../../shared/focus-on-click.directive";
@@ -39,7 +39,8 @@ import {UserService} from "../../services/user.service";
     MatIcon,
     NgForOf,
     MatButton,
-    MatToolbar,
+    MatExpansionModule,
+    MatDialogActions,
     MatFormFieldModule,
     MatInputModule,
     FocusOnClickDirective,

@@ -1,0 +1,29 @@
+UI/UX-Überarbeitung Bestellung/Artikel-Formulare
+==================================================
+
+Problem: In "Bestellung hinzufügen" und "Artikel bearbeiten" musste man scrollen,
+um Pflichtfelder zu erreichen (Anzahl war z.B. das 8. Feld). Auf Mobilgeräten
+überdeckte die Bildschirmtastatur zusätzlich die Speichern/Abbrechen-Buttons.
+
+Ursache: Alle Bearbeiten-Dialoge nutzten einen globalen Sticky-Toolbar-Hack in
+frontend/src/styles.css (.fixed-toolbar: position: sticky; bottom: 80px)
+kombiniert mit .mat-dialog-content { max-height: calc(100vh - 166px) }.
+`vh` reagiert nicht auf die eingeblendete Bildschirmtastatur, daher rutschten
+die Buttons dahinter.
+
+Fix (bisher nur in bestellung-edit-component und material-edit-component,
+Overrides sind komponenten-scoped, styles.css bleibt für die übrigen 5 Dialoge
+unverändert):
+- Anzahl (Bestellung) bzw. Verpackungseinheit (Artikel) als wichtigstes
+  Pflichtfeld direkt hinter das jeweils zentrale Auswahlfeld verschoben
+- Lange/optionale Blöcke (Zusatzinfo, Lieferant, Hersteller inkl. dynamischer
+  REF-/Bestellnummern-Listen) in <mat-expansion-panel> verschoben, standardmäßig
+  eingeklappt
+- .fixed-toolbar/<mat-toolbar> ersetzt durch echtes <mat-dialog-actions>
+- .mat-dialog-content max-height lokal auf
+  `min(65vh, calc(100dvh - 180px))` umgestellt (dvh statt vh), damit der Inhalt
+  korrekt mit der sichtbaren Fläche schrumpft, wenn die Tastatur aufgeht
+
+Offen für spätere Sessions: gleiches Muster ggf. auf die übrigen Dialoge
+anwenden (lieferant-edit-component, hersteller-edit-component, personal-form,
+department-form), falls dort dieselben Probleme auftreten.
