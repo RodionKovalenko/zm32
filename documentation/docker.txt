@@ -169,3 +169,28 @@ npm run ng generate component data-griddd-artikel/hersteller-edit-component
  docker-compose -f docker-compose-prod.yml down symfony
  docker-compose -f docker-compose-prod.yml build symfony
  docker-compose -f docker-compose-prod.yml up symfony
+
+
+// frontend/Dockerfile-dev was broken (Angular CLI schema error on start), fixed:
+// - node:18 -> node:20 (project needs Angular CLI 20.1.4, which needs Node >=20.19);
+//   ng now resolves from the local node_modules/.bin instead of a stale global
+//   @angular/cli@10.2.1 install
+// - only package.json is COPYed (not package-lock.json, which is generated on the
+//   Windows host and resolves the wrong platform-specific optional deps in the
+//   Linux container)
+// - @rollup/rollup-linux-x64-gnu is installed explicitly after `npm install`
+//   (npm/cli#4828 - the native binary can still be missing on a clean install)
+//
+// Gotcha when rebuilding this container after touching Dockerfile-dev/package.json:
+// docker-compose-dev.yml uses an anonymous volume for node_modules
+// (`- /app/node_modules`) which is NOT renewed by a plain `up --build` - it keeps
+// serving the old node_modules from before your Dockerfile change. Use:
+docker compose -f docker-compose-dev.yml down -v
+docker compose -f docker-compose-dev.yml up --build -V
+//
+// Note: the documented local dev workflow (dev_mode.txt) normally runs the backend
+// via `ddev restart` and the frontend via a directly-run `ng serve`, not via this
+// Docker container. Logging in through this Docker dev container did not work in a
+// quick test (no visible error, request likely never reaches a backend with real
+// data) - unresolved, needs follow-up if this container is meant to be a supported
+// dev path.

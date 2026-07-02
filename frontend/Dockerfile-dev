@@ -1,5 +1,5 @@
 # Use Node.js as the base image
-FROM node:18
+FROM node:20
 
 # Install build dependencies (Python, build-essential, etc.)
 RUN apt-get update && apt-get install -y python3 make g++ && apt-get clean
@@ -13,19 +13,22 @@ EXPOSE 4200
 # Set up npm global installation path
 RUN mkdir -p /home/node/.npm /home/node/.npm-global && \
     chown -R node:node /home/node/.npm /home/node/.npm-global
-ENV PATH=/home/node/.npm-global/bin:$PATH
+ENV PATH=/home/node/.npm-global/bin:/app/node_modules/.bin:$PATH
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
-# Update npm to the latest version
-RUN npm install -g npm@10.8.3 && npm cache clean --force
+# npm 10.8.3 has a known optional-dependency resolution bug (npm/cli#4828) that skips
+# platform-specific native binaries (e.g. @rollup/rollup-linux-x64-gnu), breaking the
+# Angular build at runtime. Fixed in later npm releases.
+RUN npm install -g npm@latest && npm cache clean --force
 
 # Set the working directory
 WORKDIR /app
 
-RUN rm -rf package-lock.json node_modules
-
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
+# Only package.json is copied here: package-lock.json is intentionally excluded because it's
+# generated on the host (Windows), which locks in the wrong platform-specific optional deps
+# (e.g. rollup/esbuild native binaries) and reproduces npm/cli#4828 ("Cannot find module
+# @rollup/rollup-linux-x64-gnu") once installed inside this Linux container.
+COPY package.json ./
 
 # Ensure permissions for the node user
 RUN chown -R node:node /app /home/node/.npm /home/node/.npm-global
@@ -33,14 +36,14 @@ RUN chown -R node:node /app /home/node/.npm /home/node/.npm-global
 # Switch to non-root user
 USER node
 
-# Install dependencies without optional dependencies
-RUN npm install --no-optional --legacy-peer-deps --ignore-platform --force
+RUN npm install --legacy-peer-deps
 
-# Install Angular CLI globally
-RUN npm install -g @angular/cli@10.2.1
+# npm/cli#4828 still leaves the platform-specific rollup native binary missing even on a
+# clean install in this container; installing it explicitly sidesteps the resolution bug.
+RUN npm install --no-save @rollup/rollup-linux-x64-gnu
 
-# Attempt to install Rollup (if necessary)
-#RUN npm install -g @rollup/rollup-linux-x64-gnu@4.18.0 || echo "Skipping optional Rollup dependency"
+# ng resolves from the project's local node_modules/.bin (see PATH above),
+# matching whatever @angular/cli version is pinned in package.json.
 
 # Copy the rest of the application code
 COPY --chown=node:node . .
